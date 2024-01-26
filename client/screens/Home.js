@@ -7,14 +7,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
 import { Avatar } from "react-native-paper";
 import { useState } from "react";
 import SearchModal from "../component/SearchModal";
-
+import ProductCard from "../component/ProductCard";
+import Footer from "../component/Footer";
 const Home = () => {
   //misc
+  const navigate = useNavigation();
   const categories = [
     { category: "One", id: 1 },
     { category: "Two", id: 2 },
@@ -138,6 +142,10 @@ const Home = () => {
     setSelectedCategory(val);
   };
 
+  const addToCartHandler = (id) => {
+    console.log({ id });
+  };
+
   return (
     <>
       {activeSearch && (
@@ -224,7 +232,29 @@ const Home = () => {
         </View>
 
         {/* products */}
+        <View style={{ flex: 1 }}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {products?.map((item, idx) => {
+              const { price, _id, name, images } = item;
+              [0].url;
+              return (
+                <ProductCard
+                  key={_id}
+                  id={_id}
+                  image={images[0].url}
+                  stock={5}
+                  name={name}
+                  price={price}
+                  addToCartHandler={addToCartHandler}
+                  navigateHandler={navigate}
+                  idx={idx}
+                />
+              );
+            })}
+          </ScrollView>
+        </View>
       </View>
+      <Footer />
     </>
   );
 };
