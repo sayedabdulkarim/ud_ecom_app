@@ -25,7 +25,108 @@ const Home = () => {
     { category: "Seven", id: 7 },
     { category: "Eight", id: 8 },
   ];
-  const products = [];
+  const products = [
+    {
+      price: 56,
+      _id: "1",
+      name: "Cartoon Item 1",
+      images: [
+        {
+          url: "https://w7.pngwing.com/pngs/768/766/png-transparent-shin-chan-illustration-crayon-shin-chan-drawing-shinnosuke-nohara-desktop-kasukabe-shinchan-love-child-hand.png",
+        },
+      ],
+    },
+    {
+      price: 80,
+      _id: "2",
+      name: "Cartoon Item 2",
+      images: [
+        {
+          url: "https://i.pinimg.com/736x/67/6e/cb/676ecb6b2285efc0fd531383c8567a26.jpg",
+        },
+      ],
+    },
+    {
+      price: 24,
+      _id: "3",
+      name: "Cartoon Item 3",
+      images: [
+        {
+          url: "https://i.pinimg.com/736x/67/6e/cb/676ecb6b2285efc0fd531383c8567a26.jpg",
+        },
+      ],
+    },
+    {
+      price: 40,
+      _id: "4",
+      name: "Cartoon Item 4",
+      images: [
+        {
+          url: "https://i.pinimg.com/736x/67/6e/cb/676ecb6b2285efc0fd531383c8567a26.jpg",
+        },
+      ],
+    },
+    {
+      price: 92,
+      _id: "5",
+      name: "Cartoon Item 5",
+      images: [
+        {
+          url: "https://i.pinimg.com/736x/67/6e/cb/676ecb6b2285efc0fd531383c8567a26.jpg",
+        },
+      ],
+    },
+    {
+      price: 19,
+      _id: "6",
+      name: "Cartoon Item 6",
+      images: [
+        {
+          url: "https://edtimes.in/wp-content/uploads/2020/09/91bUJjlbJ3L._SL1500_-Copy-1.jpg",
+        },
+      ],
+    },
+    {
+      price: 63,
+      _id: "7",
+      name: "Cartoon Item 7",
+      images: [
+        {
+          url: "https://i.pinimg.com/736x/67/6e/cb/676ecb6b2285efc0fd531383c8567a26.jpg",
+        },
+      ],
+    },
+    {
+      price: 61,
+      _id: "8",
+      name: "Cartoon Item 8",
+      images: [
+        {
+          url: "https://www.partysuppliesindia.com/cdn/shop/products/A3_49_8577f2d2-bfd1-437a-990a-b607c1c0b7a0.jpg?v=1619169667&width=3840",
+        },
+      ],
+    },
+    {
+      price: 90,
+      _id: "9",
+      name: "Cartoon Item 9",
+      images: [
+        {
+          url: "https://edtimes.in/wp-content/uploads/2020/09/91bUJjlbJ3L._SL1500_-Copy-1.jpg",
+        },
+      ],
+    },
+    {
+      price: 70,
+      _id: "10",
+      name: "Cartoon Item 10",
+      images: [
+        {
+          url: "https://i.pinimg.com/736x/67/6e/cb/676ecb6b2285efc0fd531383c8567a26.jpg",
+        },
+      ],
+    },
+  ];
   //state
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [activeSearch, setActiveSearch] = useState(false);
@@ -44,6 +145,7 @@ const Home = () => {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           activeSearch={searchQuery}
+          setActiveSearch={setActiveSearch}
           products={products}
         />
       )}

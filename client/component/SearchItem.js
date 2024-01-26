@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { colors } from "../styles/common";
 import { Headline } from "react-native-paper";
 
-const SearchItem = ({ key, imgSrc, name, price, handler }) => {
+const SearchItem = ({ imgSrc, name, price, handler }) => {
   return (
     <TouchableOpacity onPress={handler}>
       <View

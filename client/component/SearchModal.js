@@ -1,4 +1,5 @@
 import {
+  BackHandler,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -10,14 +11,33 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../styles/common";
 import { Searchbar } from "react-native-paper";
+import { useEffect } from "react";
+import SearchItem from "./SearchItem";
 
 const SearchModal = ({
   searchQuery,
   setSearchQuery,
   activeSearch,
+  setActiveSearch,
   products = [],
 }) => {
+  //misc
   const navigate = useNavigation();
+
+  //func
+  const handleBack = () => {
+    setSearchQuery("");
+    setActiveSearch(false);
+    return true;
+  };
+
+  //async
+  useEffect(() => {
+    BackHandler.addEventListener("hardwareBackPress", handleBack);
+
+    return () =>
+      BackHandler.removeEventListener("hardwareBackPress", handleBack);
+  }, []);
 
   return (
     <View
