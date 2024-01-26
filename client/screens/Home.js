@@ -11,6 +11,7 @@ import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
 import { Avatar } from "react-native-paper";
 import { useState } from "react";
+import SearchModal from "../component/SearchModal";
 
 const Home = () => {
   //misc
@@ -24,9 +25,11 @@ const Home = () => {
     { category: "Seven", id: 7 },
     { category: "Eight", id: 8 },
   ];
+  const products = [];
   //state
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [activeSearch, setActiveSearch] = useState("");
+  const [activeSearch, setActiveSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   //func
   const handleCategory = (val) => {
@@ -35,79 +38,92 @@ const Home = () => {
   };
 
   return (
-    <View style={defaultStyle}>
-      <Header back={false} />
+    <>
+      {activeSearch && (
+        <SearchModal
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          activeSearch={searchQuery}
+          products={products}
+        />
+      )}
 
-      {/* heading row */}
-      <View
-        style={{
-          paddingTop: 70,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <View>
-          <Text style={{ fontSize: 25 }}>Our</Text>
-          <Text style={{ fontSize: 25, fontWeight: "900" }}> Products</Text>
-        </View>
+      <View style={defaultStyle}>
+        <Header back={false} />
 
-        {/* searchbar */}
-        <View>
-          <TouchableOpacity>
-            <Avatar.Icon
-              icon={"magnify"}
-              color="gray"
-              size={50}
-              style={{ backgroundColor: colors.color2, elevation: 12 }}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
-      {/* categories */}
-      <View
-        style={{
-          flexDirection: "row",
-          height: 80,
-        }}
-      >
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
+        {/* heading row */}
+        <View
+          style={{
+            paddingTop: 70,
+            flexDirection: "row",
+            justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          {categories.map((item) => {
-            const { category, id } = item;
-            return (
-              <TouchableOpacity
-                key={id}
-                style={[
-                  styles.button,
-                  {
-                    backgroundColor:
-                      selectedCategory === id ? colors.color1 : colors.color5,
-                  },
-                ]}
-                onPress={() => handleCategory(id)}
-              >
-                <Text
-                  style={[
-                    styles.buttonText,
-                    { color: selectedCategory === id ? colors.color2 : "gray" },
-                  ]}
-                >
-                  {category}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-      </View>
+          <View>
+            <Text style={{ fontSize: 25 }}>Our</Text>
+            <Text style={{ fontSize: 25, fontWeight: "900" }}> Products</Text>
+          </View>
 
-      {/* products */}
-    </View>
+          {/* searchbar */}
+          <View>
+            <TouchableOpacity onPress={() => setActiveSearch((prev) => !prev)}>
+              <Avatar.Icon
+                icon={"magnify"}
+                color="gray"
+                size={50}
+                style={{ backgroundColor: colors.color2, elevation: 12 }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        {/* categories */}
+        <View
+          style={{
+            flexDirection: "row",
+            height: 80,
+          }}
+        >
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              alignItems: "center",
+            }}
+          >
+            {categories.map((item) => {
+              const { category, id } = item;
+              return (
+                <TouchableOpacity
+                  key={id}
+                  style={[
+                    styles.button,
+                    {
+                      backgroundColor:
+                        selectedCategory === id ? colors.color1 : colors.color5,
+                    },
+                  ]}
+                  onPress={() => handleCategory(id)}
+                >
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      {
+                        color: selectedCategory === id ? colors.color2 : "gray",
+                      },
+                    ]}
+                  >
+                    {category}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
+        </View>
+
+        {/* products */}
+      </View>
+    </>
   );
 };
 

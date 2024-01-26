@@ -1,0 +1,70 @@
+import {
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { colors } from "../styles/common";
+import { Searchbar } from "react-native-paper";
+
+const SearchModal = ({
+  searchQuery,
+  setSearchQuery,
+  activeSearch,
+  products = [],
+}) => {
+  const navigate = useNavigation();
+
+  return (
+    <View
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        top: 0,
+        zIndex: 100,
+        backgroundColor: colors.color2,
+        padding: 35,
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      }}
+    >
+      <SafeAreaView>
+        <Searchbar
+          placeholder="Search"
+          onChangeText={(query) => setSearchQuery(query)}
+          value={searchQuery}
+          //   autoFocus={true}
+          style={{
+            marginTop: 20,
+          }}
+        />
+        <ScrollView>
+          <View style={{ paddingVertical: 40, paddingHorizontal: 10 }}>
+            {products?.map((item) => {
+              const { category, _id, name, price } = item;
+              return (
+                <SearchItem
+                  key={_id}
+                  imgSrc={item?.images[0]?.url}
+                  name={name}
+                  price={price}
+                  handler={() =>
+                    navigate.navigate("productdetails", { id: _id })
+                  }
+                />
+              );
+            })}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    </View>
+  );
+};
+
+export default SearchModal;
+
+const styles = StyleSheet.create({});
