@@ -13,6 +13,7 @@ import Home from "./Home";
 import ProductDetails from "./ProductDetails";
 import Toast from "react-native-toast-message";
 import { colors } from "../styles/common";
+import Cart from "./Cart";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,11 @@ const Index = () => {
             <Stack.Screen
               name="productdetails"
               component={ProductDetails}
+              // options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="cart"
+              component={Cart}
               // options={{ headerShown: false }}
             />
           </Stack.Group>

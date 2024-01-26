@@ -40,7 +40,7 @@ const Header = ({ back, emtpyCart = false }) => {
           top: 40,
           zIndex: 10,
         }}
-        onPress={emtpyCart ? handeEmptyCart : navigate.navigate("cart")}
+        onPress={emtpyCart ? handeEmptyCart : () => navigate.navigate("cart")}
       >
         <Avatar.Icon
           style={{ backgroundColor: colors.color4 }}
