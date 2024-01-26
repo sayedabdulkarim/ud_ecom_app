@@ -22,7 +22,7 @@ const Header = ({ back, emtpyCart = false }) => {
             top: 40,
             zIndex: 10,
           }}
-          onPress={navigate.goBack()}
+          onPress={() => navigate.goBack()}
         >
           <Avatar.Icon
             style={{ backgroundColor: colors.color4 }}

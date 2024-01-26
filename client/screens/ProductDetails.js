@@ -1,9 +1,20 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { colors, defaultStyle } from "../styles/common";
+import Header from "../component/Header";
 
-const ProductDetails = () => {
+const ProductDetails = ({ route: { params } }) => {
+  console.log({ params }, " pppppp");
+
   return (
-    <View>
+    <View
+      style={{
+        ...defaultStyle,
+        padding: 0,
+        backgroundColor: colors.color1,
+      }}
+    >
+      <Header back={true} />
       <Text>ProductDetails</Text>
     </View>
   );
