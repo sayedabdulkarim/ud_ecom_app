@@ -10,6 +10,7 @@ import {
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./Home";
+import ProductDetails from "./ProductDetails";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,11 @@ const Index = () => {
           <Stack.Screen
             name="home"
             component={Home}
+            // options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="productdetails"
+            component={ProductDetails}
             // options={{ headerShown: false }}
           />
         </Stack.Group>
