@@ -11,7 +11,8 @@ import React, { useRef, useState } from "react";
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
 import Carousel from "react-native-snap-carousel";
-import { Avatar } from "react-native-paper";
+import { Avatar, Button } from "react-native-paper";
+import Toast from "react-native-toast-message";
 
 //
 const SLIDER_WIDTH = Dimensions.get("window").width;
@@ -22,7 +23,7 @@ const ProductDetails = ({ route: { params } }) => {
   //misc
   const name = "Macbook Pro";
   const price = 100;
-  const stock = 5;
+  const stock = 1;
   const description =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut hendrerit, nisi quis sodales tristique, lorem tortor rhoncus magna, eget faucibus libero felis eget dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed sit amet congue quam. Maecenas maximus, mi ac blandit luctus, metus diam pellentesque urna, sed ultricies leo magna vitae purus. Fusce sit amet odio consectetur, malesuada erat vel, commodo neque. Vivamus sed lacus nunc. Curabitur tempus, massa at aliquam consequat, velit nisi auctor augue, a facilisis velit tortor quis lorem.";
   const isCarousel = useRef(null);
@@ -60,6 +61,21 @@ const ProductDetails = ({ route: { params } }) => {
   const handleIncrement = () => {
     if (stock <= quantity) return;
     setQuantity((prev) => prev + 1);
+  };
+
+  const handleAddToCart = () => {
+    if (stock === 0)
+      Toast.show({
+        type: "error",
+        text1: "Out Of Stock.",
+        // text2: "This is text 2",
+      });
+    else
+      Toast.show({
+        type: "success",
+        text1: "Added To Cart.",
+      });
+    console.log({ quantity }, "added to carttt.");
   };
 
   return (
@@ -124,6 +140,8 @@ const ProductDetails = ({ route: { params } }) => {
             justifyContent: "space-between",
             alignItems: "center",
             paddingHorizontal: 5,
+            // borderWidth: 1,
+            // borderColor: "red",
           }}
         >
           <Text
@@ -183,6 +201,11 @@ const ProductDetails = ({ route: { params } }) => {
             </TouchableOpacity>
           </View>
         </View>
+        <TouchableOpacity activeOpacity={0.8} onPress={() => handleAddToCart()}>
+          <Button style={styles.btn} textColor={colors.color2} icon={"cart"}>
+            Add To Cart
+          </Button>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -203,12 +226,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.color1,
     width: ITEM_WIDTH,
     paddingVertical: 40,
-    height: 380,
+    // height: 380,
     marginTop: 50,
   },
   image: {
     width: ITEM_WIDTH,
     resizeMode: "contain",
-    height: 250,
+    height: 200,
+  },
+  btn: {
+    backgroundColor: colors.color3,
+    borderRadius: 100,
+    padding: 5,
+    marginVertical: 35,
+    // borderWidth: 1,
+    // borderColor: "red",
+    // marginTop: 1,
   },
 });
