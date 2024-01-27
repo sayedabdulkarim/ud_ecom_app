@@ -16,6 +16,7 @@ import { useState } from "react";
 import SearchModal from "../component/SearchModal";
 import ProductCard from "../component/ProductCard";
 import Footer from "../component/Footer";
+import Heading from "../component/Heading";
 const Home = () => {
   //misc
   const navigate = useNavigation();
@@ -170,10 +171,7 @@ const Home = () => {
             alignItems: "center",
           }}
         >
-          <View>
-            <Text style={{ fontSize: 25 }}>Our</Text>
-            <Text style={{ fontSize: 25, fontWeight: "900" }}> Products</Text>
-          </View>
+          <Heading />
 
           {/* searchbar */}
           <View>
