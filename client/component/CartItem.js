@@ -24,6 +24,7 @@ const CartItem = ({
         marginVertical: 20,
         // borderWidth: 1,
         // borderColor: "red",
+        marginRight: 10,
       }}
     >
       <View
@@ -121,9 +122,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: colors.color5,
+    borderColor: "transparent",
   },
   qtyContainer: {
+    flexDirection: "row",
+    marginRight: 10,
+    // borderWidth: 1,
+    // borderColor: "red",
+
     alignItems: "center",
     width: "20%",
     height: 80,

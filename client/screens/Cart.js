@@ -5,12 +5,12 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
 import Heading from "../component/Heading";
 import { Button } from "react-native-paper";
 import CartItem from "../component/CartItem";
-
 const cartItems = [
   {
     name: "whVVIKolzD",
@@ -62,13 +62,13 @@ const cartItems = [
 
 const Cart = () => {
   //misc
-
+  const navigation = useNavigation();
   //func
-  const handleIncrement = () => {
-    console.log("incremented");
+  const handleIncrement = (id, qty, stock) => {
+    console.log({ id, qty, stock }, "incremented");
   };
-  const handleDecrement = () => {
-    console.log("Decremented");
+  const handleDecrement = (id, qty) => {
+    console.log({ id, qty }, "Decremented");
   };
 
   return (
@@ -112,10 +112,11 @@ const Cart = () => {
                 index={idx}
                 imgSrc={image}
                 id={id}
-                decrementHandler={() => handleDecrement()}
-                incrementhandler={() => handleIncrement()}
+                decrementHandler={handleDecrement}
+                incrementhandler={handleIncrement}
                 key={id}
                 product={product}
+                navigate={navigation}
               />
             );
           })}
@@ -124,8 +125,8 @@ const Cart = () => {
 
       <View
         style={{
-          borderWidth: 1,
-          borderColor: "green",
+          //   borderWidth: 1,
+          //   borderColor: "green",
           //   position: "absolute",
           //   bottom: 0,
           //   left: 0,
