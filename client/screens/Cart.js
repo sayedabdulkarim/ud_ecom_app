@@ -144,7 +144,13 @@ const Cart = () => {
           <Text>₹ 5 </Text>
         </View>
 
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={
+            cartItems?.length > 0
+              ? () => navigation.navigate("confirmmodal")
+              : null
+          }
+        >
           <Button
             style={{
               backgroundColor: colors.color3,
