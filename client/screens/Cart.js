@@ -31,33 +31,33 @@ const cartItems = [
     price: 2553,
     quantity: 1,
   },
-  //   {
-  //     name: "ctzhUcaAvM",
-  //     image: "https://example.com/XoGxVW.jpg",
-  //     id: "3",
-  //     product: "dSppczdDkqjc",
-  //     stock: 8,
-  //     price: 2400,
-  //     quantity: 1,
-  //   },
-  //   {
-  //     name: "vvsqPqkiFW",
-  //     image: "https://example.com/JehNpg.jpg",
-  //     id: "4",
-  //     product: "kjvxQlosJcdP",
-  //     stock: 5,
-  //     price: 4443,
-  //     quantity: 1,
-  //   },
-  //   {
-  //     name: "smxRfCoZcL",
-  //     image: "https://example.com/woBzFP.jpg",
-  //     id: "5",
-  //     product: "WaUGOQSiowfd",
-  //     stock: 8,
-  //     price: 2070,
-  //     quantity: 2,
-  //   },
+  {
+    name: "ctzhUcaAvM",
+    image: "https://example.com/XoGxVW.jpg",
+    id: "3",
+    product: "dSppczdDkqjc",
+    stock: 8,
+    price: 2400,
+    quantity: 1,
+  },
+  {
+    name: "vvsqPqkiFW",
+    image: "https://example.com/JehNpg.jpg",
+    id: "4",
+    product: "kjvxQlosJcdP",
+    stock: 5,
+    price: 4443,
+    quantity: 1,
+  },
+  {
+    name: "smxRfCoZcL",
+    image: "https://example.com/woBzFP.jpg",
+    id: "5",
+    product: "WaUGOQSiowfd",
+    stock: 8,
+    price: 2070,
+    quantity: 2,
+  },
 ];
 
 const Cart = () => {
@@ -93,10 +93,10 @@ const Cart = () => {
 
       <View
         style={{
-          //   paddingVertical: 20,
-          //   flex: 1,
+          paddingVertical: 20,
+          flex: 1,
           //   borderWidth: 1,
-          borderColor: "red",
+          //   borderColor: "red",
         }}
       >
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -123,29 +123,40 @@ const Cart = () => {
 
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingHorizontal: 35,
+          //   borderWidth: 1,
+          //   borderColor: "green",
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          width: "100%",
         }}
       >
-        <Text>5 Items</Text>
-        <Text>₹ 5 </Text>
-      </View>
-
-      <TouchableOpacity>
-        <Button
+        <View
           style={{
-            backgroundColor: colors.color3,
-            borderRadius: 100,
-            padding: 5,
-            margin: 30,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingHorizontal: 35,
           }}
-          icon={"cart"}
-          textColor={colors.color2}
         >
-          Checkout
-        </Button>
-      </TouchableOpacity>
+          <Text>5 Items</Text>
+          <Text>₹ 5 </Text>
+        </View>
+
+        <TouchableOpacity>
+          <Button
+            style={{
+              backgroundColor: colors.color3,
+              borderRadius: 100,
+              padding: 5,
+              margin: 30,
+            }}
+            icon={"cart"}
+            textColor={colors.color2}
+          >
+            Checkout
+          </Button>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

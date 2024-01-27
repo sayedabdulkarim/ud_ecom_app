@@ -22,8 +22,8 @@ const CartItem = ({
         flexDirection: "row",
         height: 100,
         marginVertical: 20,
-        borderWidth: 1,
-        borderColor: "red",
+        // borderWidth: 1,
+        // borderColor: "red",
       }}
     >
       <View
@@ -72,7 +72,16 @@ const CartItem = ({
         <TouchableOpacity
           onPress={() => decrementHandler(id, name, amount, imgSrc, stock, qty)}
         >
-          <Avatar.Icon icon={"minus"} {...iconOptions} />
+          <Avatar.Icon
+            icon={"minus"}
+            size={20}
+            style={{
+              borderRadius: 5,
+              backgroundColor: colors.color5,
+              height: 25,
+              width: 25,
+            }}
+          />
         </TouchableOpacity>
 
         <Text style={styles.qtyText}>{qty}</Text>
@@ -80,7 +89,16 @@ const CartItem = ({
         <TouchableOpacity
           onPress={() => incrementhandler(id, name, amount, imgSrc, stock, qty)}
         >
-          <Avatar.Icon icon={"plus"} {...iconOptions} />
+          <Avatar.Icon
+            icon={"plus"}
+            size={20}
+            style={{
+              borderRadius: 5,
+              backgroundColor: colors.color5,
+              height: 25,
+              width: 25,
+            }}
+          />
         </TouchableOpacity>
       </View>
     </View>
