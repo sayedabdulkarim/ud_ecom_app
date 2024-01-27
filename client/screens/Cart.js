@@ -11,7 +11,7 @@ import Header from "../component/Header";
 import Heading from "../component/Heading";
 import { Button } from "react-native-paper";
 import CartItem from "../component/CartItem";
-const cartItems = [
+export const cartItems = [
   {
     name: "whVVIKolzD",
     image: "https://static.thenounproject.com/png/524455-200.png",
