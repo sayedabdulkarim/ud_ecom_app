@@ -95,6 +95,7 @@ const Cart = () => {
         style={{
           paddingVertical: 20,
           flex: 1,
+          marginBottom: 20,
           //   borderWidth: 1,
           //   borderColor: "red",
         }}
@@ -123,11 +124,11 @@ const Cart = () => {
 
       <View
         style={{
-          //   borderWidth: 1,
-          //   borderColor: "green",
-          position: "absolute",
-          bottom: 0,
-          left: 0,
+          borderWidth: 1,
+          borderColor: "green",
+          //   position: "absolute",
+          //   bottom: 0,
+          //   left: 0,
           width: "100%",
         }}
       >
