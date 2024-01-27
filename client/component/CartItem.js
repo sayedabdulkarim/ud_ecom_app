@@ -20,7 +20,7 @@ const CartItem = ({
     <View
       style={{
         flexDirection: "row",
-        height: 100,
+        height: 80,
         marginVertical: 20,
         // borderWidth: 1,
         // borderColor: "red",
