@@ -15,6 +15,7 @@ import Toast from "react-native-toast-message";
 import { colors } from "../styles/common";
 import Cart from "./Cart";
 import ConfirmModal from "./ConfirmModal";
+import Payment from "./Payment";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,11 @@ const Index = () => {
             <Stack.Screen
               name="confirmmodal"
               component={ConfirmModal}
+              // options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="payment"
+              component={Payment}
               // options={{ headerShown: false }}
             />
           </Stack.Group>
