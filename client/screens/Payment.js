@@ -6,8 +6,16 @@ import Heading from "../component/Heading";
 import { Button, RadioButton } from "react-native-paper";
 
 const Payment = ({ navigation, route }) => {
+  //misc
+  const isAuthenticated = false;
   //state
   const [paymentMethod, setPaymentMethod] = useState("COD");
+  //func
+  const redirectToLogin = () => {
+    navigation.navigate("login");
+  };
+  const handleCODPayment = () => {};
+  const handleOnlinePayment = () => {};
 
   return (
     <View style={defaultStyle}>
@@ -36,7 +44,15 @@ const Payment = ({ navigation, route }) => {
       </View>
 
       {/*  */}
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={
+          !isAuthenticated
+            ? redirectToLogin
+            : paymentMethod === "COD"
+            ? handleCODPayment
+            : handleOnlinePayment
+        }
+      >
         <Button
           style={styles.btn}
           textColor={colors.color2}
