@@ -16,6 +16,8 @@ import { colors } from "../styles/common";
 import Cart from "./Cart";
 import ConfirmModal from "./ConfirmModal";
 import Payment from "./Payment";
+import Login from "./Login";
+import Forgotpassword from "./Forgotpassword";
 
 const Stack = createNativeStackNavigator();
 
@@ -54,6 +56,16 @@ const Index = () => {
             <Stack.Screen
               name="payment"
               component={Payment}
+              // options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="login"
+              component={Login}
+              // options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="forgotpassword"
+              component={Forgotpassword}
               // options={{ headerShown: false }}
             />
           </Stack.Group>
