@@ -1,18 +1,19 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-import { colors, defaultStyle, inputStyling } from "../styles/common";
+import {
+  colors,
+  defaultStyle,
+  formHeading,
+  inputOptions,
+  inputStyling,
+  formStyles as styles,
+} from "../styles/common";
 import { Button, TextInput } from "react-native-paper";
 import Footer from "../component/Footer";
 
 const Login = ({ navigation }) => {
   //misc
   const loading = false;
-  const inputStyle = {
-    style: inputStyling,
-    mode: "outlined",
-    activeOutlineColor: colors.color1,
-  };
-
   //state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -35,19 +36,19 @@ const Login = ({ navigation }) => {
             marginBottom: 20,
           }}
         >
-          <Text style={styles.heading}>Login</Text>
+          <Text style={formHeading}>Login</Text>
         </View>
 
         <View style={styles.container}>
           <TextInput
-            {...inputStyle}
+            {...inputOptions}
             placeholder="Email"
             value={email}
             keyboardType="email-address"
             onChangeText={setEmail}
           />
           <TextInput
-            {...inputStyle}
+            {...inputOptions}
             placeholder="Password"
             value={password}
             secureTextEntry
@@ -87,50 +88,3 @@ const Login = ({ navigation }) => {
 };
 
 export default Login;
-
-const styles = StyleSheet.create({
-  heading: {
-    fontSize: 25,
-    fontWeight: "500",
-    textAlign: "center",
-    backgroundColor: colors.color3,
-    color: colors.color2,
-    padding: 5,
-    borderRadius: 5,
-  },
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: colors.color3,
-    borderRadius: 10,
-    justifyContent: "center",
-    elevation: 10,
-  },
-  forget: {
-    color: colors.color2,
-    marginHorizontal: 20,
-    marginVertical: 10,
-    alignSelf: "flex-end",
-    fontWeight: "100",
-  },
-  btn: {
-    backgroundColor: colors.color1,
-    margin: 20,
-    padding: 6,
-  },
-  or: {
-    alignSelf: "center",
-    fontSize: 20,
-    fontWeight: "100",
-    color: colors.color2,
-  },
-  link: {
-    alignSelf: "center",
-    fontSize: 18,
-    color: colors.color2,
-    textTransform: "uppercase",
-    marginVertical: 10,
-    marginVertical: 20,
-    // fontWeight: "100",
-  },
-});

@@ -18,6 +18,7 @@ import ConfirmModal from "./ConfirmModal";
 import Payment from "./Payment";
 import Login from "./Login";
 import Forgotpassword from "./Forgotpassword";
+import Verify from "./Verify";
 
 const Stack = createNativeStackNavigator();
 
@@ -63,9 +64,15 @@ const Index = () => {
               component={Login}
               // options={{ headerShown: false }}
             />
+            {/* password resetting route */}
             <Stack.Screen
               name="forgotpassword"
               component={Forgotpassword}
+              // options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="verify"
+              component={Verify}
               // options={{ headerShown: false }}
             />
           </Stack.Group>
