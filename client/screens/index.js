@@ -19,6 +19,7 @@ import Payment from "./Payment";
 import Login from "./Login";
 import Forgotpassword from "./Forgotpassword";
 import Verify from "./Verify";
+import Signup from "./Signup";
 
 const Stack = createNativeStackNavigator();
 
@@ -64,6 +65,12 @@ const Index = () => {
               component={Login}
               // options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name="signup"
+              component={Signup}
+              // options={{ headerShown: false }}
+            />
+
             {/* password resetting route */}
             <Stack.Screen
               name="forgotpassword"
