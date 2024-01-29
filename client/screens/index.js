@@ -20,6 +20,7 @@ import Login from "./Login";
 import Forgotpassword from "./Forgotpassword";
 import Verify from "./Verify";
 import Signup from "./Signup";
+import Profile from "./Profile";
 
 const Stack = createNativeStackNavigator();
 
@@ -68,6 +69,11 @@ const Index = () => {
             <Stack.Screen
               name="signup"
               component={Signup}
+              // options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="profile"
+              component={Profile}
               // options={{ headerShown: false }}
             />
 
