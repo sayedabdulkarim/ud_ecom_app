@@ -21,6 +21,7 @@ import Forgotpassword from "./Forgotpassword";
 import Verify from "./Verify";
 import Signup from "./Signup";
 import Profile from "./Profile";
+import UpdateProfile from "./UpdateProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,11 @@ const Index = () => {
             <Stack.Screen
               name="profile"
               component={Profile}
+              // options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="updateprofile"
+              component={UpdateProfile}
               // options={{ headerShown: false }}
             />
 

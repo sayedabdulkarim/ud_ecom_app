@@ -1,6 +1,6 @@
 import React from "react";
 import { ActivityIndicator } from "react-native-paper";
-import { colors } from "../styles/styles";
+import { colors } from "../styles/common";
 
 const Loader = () => {
   return (
