@@ -6,9 +6,9 @@ import {
   formHeading,
   inputOptions,
   formStyles as styles,
-} from "../styles/styles";
+} from "../styles/common";
 import { Button, TextInput } from "react-native-paper";
-import Header from "../components/Header";
+import Header from "../component/Header";
 // import { useDispatch } from "react-redux";
 // import { updatePassword } from "../redux/actions/otherAction";
 // import { useMessageAndErrorOther } from "../utils/hooks";
