@@ -16,8 +16,8 @@ import Chart from "../../component/Chart";
 const AdminPanel = ({ navigation }) => {
   const loading = false;
   const loadingDelete = false;
-  const inStock = true;
-  const outOfStock = false;
+  const inStock = 90;
+  const outOfStock = 10;
   const products = [
     {
       price: 56,
