@@ -29,6 +29,7 @@ import Categories from "./Admin/Categories";
 import AdminOrders from "./Admin/AdminOrders";
 import UpdateProduct from "./Admin/UpdateProduct";
 import NewProduct from "./Admin/NewProduct";
+import ProductImages from "./Admin/ProductImages";
 
 const Stack = createNativeStackNavigator();
 
@@ -136,6 +137,11 @@ const Index = () => {
             <Stack.Screen
               name="newproduct"
               component={NewProduct}
+              // options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="productimages"
+              component={ProductImages}
               // options={{ headerShown: false }}
             />
           </Stack.Group>
