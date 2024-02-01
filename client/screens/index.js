@@ -28,6 +28,7 @@ import AdminPanel from "./Admin/AdminPanel";
 import Categories from "./Admin/Categories";
 import AdminOrders from "./Admin/AdminOrders";
 import UpdateProduct from "./Admin/UpdateProduct";
+import NewProduct from "./Admin/NewProduct";
 
 const Stack = createNativeStackNavigator();
 
@@ -130,6 +131,11 @@ const Index = () => {
             <Stack.Screen
               name="updateproduct"
               component={UpdateProduct}
+              // options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="newproduct"
+              component={NewProduct}
               // options={{ headerShown: false }}
             />
           </Stack.Group>
