@@ -26,6 +26,7 @@ import ChangePassword from "./ChangePassword";
 import Orders from "./Orders";
 import AdminPanel from "./Admin/AdminPanel";
 import Categories from "./Admin/Categories";
+import AdminOrders from "./Admin/AdminOrders";
 
 const Stack = createNativeStackNavigator();
 
@@ -118,6 +119,11 @@ const Index = () => {
             <Stack.Screen
               name="categories"
               component={Categories}
+              // options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="adminorders"
+              component={AdminOrders}
               // options={{ headerShown: false }}
             />
           </Stack.Group>
