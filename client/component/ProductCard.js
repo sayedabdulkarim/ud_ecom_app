@@ -40,7 +40,7 @@ const ProductCard = ({
             uri: image,
           }}
           style={{
-            width: "100%",
+            width: "80%",
             height: 200,
             resizeMode: "cover",
             position: "absolute",
@@ -61,8 +61,9 @@ const ProductCard = ({
             numberOfLines={2}
             style={{
               color: idx % 2 === 0 ? colors.color2 : colors.color3,
-              fontSize: 25,
+              fontSize: 18,
               fontWeight: 300,
+              maxWidth: 100,
             }}
           >
             {name}
@@ -71,7 +72,7 @@ const ProductCard = ({
             numberOfLines={2}
             style={{
               color: idx % 2 === 0 ? colors.color2 : colors.color3,
-              fontSize: 20,
+              fontSize: 14,
               fontWeight: 700,
             }}
           >
