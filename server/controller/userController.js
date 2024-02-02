@@ -1,9 +1,10 @@
+import bcrypt from "bcryptjs"; // Make sure to import bcryptjs
 import asyncHandler from "express-async-handler";
 //modals
 import UserModal from "../modals/userModal.js";
 import PropertyModal from "../modals/propertyModal.js";
 
-import { generateToken } from "../utils/generateToken.js";
+import { generateToken, hashPassword } from "../utils/generateToken.js";
 //helpers
 
 // @desc register a new user
@@ -11,8 +12,36 @@ import { generateToken } from "../utils/generateToken.js";
 // @access PUBLIC
 
 const userLogin = asyncHandler(async (req, res) => {
-  res.send("Hello World POSR");
+  const { email, password } = req.body; // Get the password from the request body
+
+  // Find the user by email
+  const user = await UserModal.findOne({ email }).select("+password");
+
+  if (user) {
+    // Check if the password is correct
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    // Generate a token for the user session
+    const token = generateToken(user._id);
+
+    // Exclude the password when sending back the user data
+    const userResponse = { ...user._doc };
+    delete userResponse.password;
+
+    // Send the response including the user info (without password), token, and their properties
+    res.status(200).json({
+      token,
+      data: userResponse,
+      message: `Welcome back, ${userResponse?.name}`,
+    });
+  } else {
+    res.status(404).json({ message: "User not found" });
+  }
 });
+
 // const userLogin = asyncHandler(async (req, res) => {
 //   const { phone } = req.body;
 
@@ -62,8 +91,51 @@ const userLogin = asyncHandler(async (req, res) => {
 // @access PUBLIC
 
 const userSignUp = asyncHandler(async (req, res) => {
-  res.send("Sign UPPP");
+  const { name, email, password, address, city, pinCode, country } = req.body;
+
+  console.log({
+    name,
+    email,
+    password,
+    address,
+    city,
+    pinCode,
+    country,
+  });
+  // Check if the user already exists based on email
+  const existingUserByEmail = await UserModal.findOne({ email });
+  if (existingUserByEmail) {
+    res
+      .status(400)
+      .json({ message: "User with this email already exists. Please Login." });
+    return;
+  }
+
+  // Encrypt the password
+  const hashedPassword = await hashPassword(password);
+
+  // Create a new user with the hashed password
+  const newUser = new UserModal({
+    name,
+    email,
+    password: hashedPassword, // Store the hashed password
+    address,
+    city,
+    pinCode,
+    country,
+  });
+  await newUser.save();
+
+  // Generate JWT token
+  const token = generateToken(newUser._id);
+
+  res.status(201).json({
+    message: "User registered successfully.",
+    user: { name, email }, // Adjust according to what you want to return
+    token, // Include the token in the response
+  });
 });
+
 // const userSignUp = asyncHandler(async (req, res) => {
 //   const { name, email, phone } = req.body;
 
