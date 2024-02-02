@@ -1,27 +1,57 @@
 import mongoose from "mongoose";
+import validator from "validator";
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Please enter name."],
     },
     email: {
       type: String,
-      required: true,
+      required: [true, "Please enter email."],
       unique: true,
+      validate: [validator.isEmail, "Please enter a valid email."], // Note the change here from 'validator' to 'validate' and usage of an array
     },
-    phone: {
+    password: {
+      type: String,
+      required: [true, "Please enter password."],
+      minLength: [6, "Password must be at least 6 characters."], // Corrected spelling
+      select: false, // This ensures that the password is not returned in query results unless explicitly requested
+    },
+    address: {
       type: String,
       required: true,
-      unique: true, // Ensure phone numbers are unique
     },
+    city: {
+      type: String,
+      required: true,
+    },
+    country: {
+      type: String,
+      required: true,
+    },
+    pinCode: {
+      type: Number,
+      required: true,
+    },
+    role: {
+      type: Number,
+      enum: ["admin", "user"],
+      default: "user",
+    },
+    avatar: {
+      public_id: String,
+      url: String,
+    },
+    otp: Number,
+    otp_expire: Date,
   },
   {
     timestamps: true,
   }
 );
 
-const UserModal = mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
 
-export default UserModal;
+export default User;
