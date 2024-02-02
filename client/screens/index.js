@@ -30,6 +30,7 @@ import AdminOrders from "./Admin/AdminOrders";
 import UpdateProduct from "./Admin/UpdateProduct";
 import NewProduct from "./Admin/NewProduct";
 import ProductImages from "./Admin/ProductImages";
+import CameraComponent from "./Camera";
 
 const Stack = createNativeStackNavigator();
 
@@ -98,6 +99,11 @@ const Index = () => {
             <Stack.Screen
               name="orders"
               component={Orders}
+              // options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="camera"
+              component={CameraComponent}
               // options={{ headerShown: false }}
             />
 

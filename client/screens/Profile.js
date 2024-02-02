@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { colors, defaultStyle, formHeading } from "../styles/common";
 import { Avatar, Button } from "react-native-paper";
 import ButtonBox from "../component/ButtonBox";
@@ -11,7 +11,7 @@ const user = {
   email: "hello@gmail.com",
 };
 
-const Profile = ({ navigation }) => {
+const Profile = ({ navigation, route }) => {
   //misc
   const loading = false;
   //state
@@ -43,6 +43,11 @@ const Profile = ({ navigation }) => {
         break;
     }
   };
+
+  useEffect(() => {
+    if (route.params?.image) setAvater(route.params.image);
+  }, [route.params]);
+
   return (
     <>
       <View style={defaultStyle}>
