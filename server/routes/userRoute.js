@@ -6,10 +6,12 @@ import {
   userLogin,
   userSignUp,
   logoutUser,
+  getMyProfile,
 } from "../controller/userController.js";
 
 router.post("/login", userLogin);
 router.post("/signup", userSignUp);
-router.post("/logout", logoutUser);
+router.get("/profile", protectedRoutesWithParser, getMyProfile);
+router.post("/logout", protectedRoutesWithParser, logoutUser);
 
 export default router;
