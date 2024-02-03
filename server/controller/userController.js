@@ -116,6 +116,95 @@ const getMyProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Update profile for a registered user
+// @route PUT /api/users/profile
+// @access PRIVATE
+const updateProfile = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const { name, email, address, city, country, pinCode } = req.body;
+
+  try {
+    // Find the user by ID
+    const user = await UserModal.findById(userId);
+
+    // Check if the user exists
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    // Update user fields
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.address = address || user.address;
+    user.city = city || user.city;
+    user.country = country || user.country;
+    user.pinCode = pinCode || user.pinCode;
+
+    // Save the updated user information
+    const updatedUser = await user.save();
+
+    // Send back the updated user information, excluding the password
+    res.status(200).json({
+      data: {
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        address: updatedUser.address,
+        city: updatedUser.city,
+        country: updatedUser.country,
+        pinCode: updatedUser.pinCode,
+      },
+      message: "Profile updated successfully",
+    });
+  } catch (error) {
+    // Log the error or handle it as needed
+    console.error("Error updating user profile:", error);
+    res.status(500).json({ message: "Error updating user profile" });
+  }
+});
+
+// @desc Change password for a registered user
+// @route PATCH /api/users/changepassword
+// @access PRIVATE
+const changePassword = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const { oldPassword, newPassword } = req.body;
+
+  // Validation: Check if the new password is provided and not empty
+  if (!newPassword || newPassword.trim() === "") {
+    return res.status(400).json({ message: "New password is required" });
+  }
+
+  try {
+    const user = await UserModal.findById(userId).select("+password");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Verify the old password is correct
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Old password is incorrect" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Set the new password
+    user.password = hashedPassword;
+
+    // Save the updated user
+    await user.save();
+
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Error changing password:", error);
+    res.status(500).json({ message: "Error changing password" });
+  }
+});
+
 // @desc logout for a registered user
 // route POST /api/users/logout
 // @access PRIVATE
@@ -141,4 +230,11 @@ const logoutUser = asyncHandler(async (req, res) => {
   });
 });
 
-export { userLogin, userSignUp, getMyProfile, logoutUser };
+export {
+  userLogin,
+  userSignUp,
+  getMyProfile,
+  updateProfile,
+  changePassword,
+  logoutUser,
+};
