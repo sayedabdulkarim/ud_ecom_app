@@ -42,21 +42,22 @@ const userLogin = asyncHandler(async (req, res) => {
   }
 });
 
+//   console.log({
+//     name,
+//     email,
+//     password,
+//     address,
+//     city,
+//     pinCode,
+//     country,
+//   });
 // @desc register a new user
 // route POST /api/users/signup
 // @access PUBLIC
 const userSignUp = asyncHandler(async (req, res) => {
-  const { name, email, password, address, city, pinCode, country } = req.body;
+  const { name, email, password, address, city, pinCode, country, file } =
+    req.body;
 
-  console.log({
-    name,
-    email,
-    password,
-    address,
-    city,
-    pinCode,
-    country,
-  });
   // Check if the user already exists based on email
   const existingUserByEmail = await UserModal.findOne({ email });
   if (existingUserByEmail) {
@@ -69,8 +70,8 @@ const userSignUp = asyncHandler(async (req, res) => {
   // Encrypt the password
   const hashedPassword = await hashPassword(password);
 
-  // Create a new user with the hashed password
-  const newUser = new UserModal({
+  // Prepare the user data for creation
+  const userData = {
     name,
     email,
     password: hashedPassword, // Store the hashed password
@@ -78,15 +79,40 @@ const userSignUp = asyncHandler(async (req, res) => {
     city,
     pinCode,
     country,
-  });
+  };
+
+  // If file (avatar) is provided, add it to the user data
+  if (file) {
+    // Assuming `file` is a Base64-encoded string of the avatar image
+    userData.avatar = {
+      // You might want to generate a public_id or use a unique identifier for the user
+      public_id: "user_avatar_" + new Date().getTime(), // Example public_id generation
+      url: file, // Directly storing the Base64 string
+    };
+  }
+
+  // Create a new user with the provided data
+  const newUser = new UserModal(userData);
   await newUser.save();
 
   // Generate JWT token
   const token = generateToken(newUser._id);
 
+  // Prepare the user data to return, excluding the password and avatar image data for security and size considerations
+  const userToReturn = {
+    name: newUser.name,
+    email: newUser.email,
+    address: newUser.address,
+    city: newUser.city,
+    pinCode: newUser.pinCode,
+    country: newUser.country,
+    // Optionally include avatar data if needed
+    avatar: newUser.avatar ? newUser.avatar.url : null,
+  };
+
   res.status(201).json({
     message: "User registered successfully.",
-    user: { name, email }, // Adjust according to what you want to return
+    user: userToReturn,
     token, // Include the token in the response
   });
 });
