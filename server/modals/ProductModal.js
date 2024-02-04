@@ -4,18 +4,22 @@ const productSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: true,
+      required: [true, "Please enter name."],
     },
-    email: {
+    description: {
       type: String,
-      required: true,
-      unique: true,
+      required: [true, "Please enter description."],
     },
-    phone: {
-      type: String,
-      required: true,
-      unique: true, // Ensure phone numbers are unique
+    stock: {
+      type: Number,
+      required: [true, "Please enter stock"],
     },
+    imgaes: [
+      {
+        public_id: String,
+        url: String,
+      },
+    ],
   },
   {
     timestamps: true,
