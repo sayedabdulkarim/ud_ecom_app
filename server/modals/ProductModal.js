@@ -14,12 +14,16 @@ const productSchema = mongoose.Schema(
       type: Number,
       required: [true, "Please enter stock"],
     },
-    imgaes: [
+    images: [
       {
         public_id: String,
         url: String,
       },
     ],
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
   },
   {
     timestamps: true,
