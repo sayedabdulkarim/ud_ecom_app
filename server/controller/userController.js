@@ -318,6 +318,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
   const emailText = `Your OTP for password reset is: ${otp}. This OTP is valid for 15 minutes.`;
 
   try {
+    // await sendEmail(emailSubject, "sayedtest4747@gmail.com", emailText); // for testing
     await sendEmail(emailSubject, email, emailText); // Update parameters as needed
     console.log("OTP sent to email:", email);
   } catch (error) {
