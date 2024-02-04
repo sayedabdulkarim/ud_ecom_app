@@ -9,12 +9,14 @@ import {
   getMyProfile,
   updateProfile,
   changePassword,
+  updateProfilePic,
 } from "../controller/userController.js";
 
 router.post("/login", userLogin);
 router.post("/signup", userSignUp);
 router.get("/profile", protectedRoutesWithParser, getMyProfile);
 router.put("/profile", protectedRoutesWithParser, updateProfile);
+router.put("/updateprofilepic", protectedRoutesWithParser, updateProfilePic);
 router.put("/changepassword", protectedRoutesWithParser, changePassword);
 router.post("/logout", protectedRoutesWithParser, logoutUser);
 

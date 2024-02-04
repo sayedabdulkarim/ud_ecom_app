@@ -42,15 +42,6 @@ const userLogin = asyncHandler(async (req, res) => {
   }
 });
 
-//   console.log({
-//     name,
-//     email,
-//     password,
-//     address,
-//     city,
-//     pinCode,
-//     country,
-//   });
 // @desc register a new user
 // route POST /api/users/signup
 // @access PUBLIC
@@ -190,6 +181,52 @@ const updateProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Update profile pic for a registered user
+// @route PUT /api/users/updateprofilepic
+// @access PRIVATE
+const updateProfilePic = asyncHandler(async (req, res) => {
+  const userId = req.user._id; // Assuming `req.user` is populated by your authentication middleware
+  const file = req.body.file; // Or however you're receiving the new avatar image (e.g., as a Base64 string)
+
+  if (!file) {
+    res.status(400).json({ message: "No image provided." });
+    return;
+  }
+
+  // Find the user by ID
+  const user = await UserModal.findById(userId);
+
+  if (!user) {
+    res.status(404).json({ message: "User not found." });
+    return;
+  }
+
+  // Update the user's avatar
+  // Assuming `file` is a Base64-encoded string of the avatar image
+  user.avatar = {
+    public_id: "user_avatar_" + new Date().getTime(), // Example for public_id generation
+    url: file, // Storing the Base64 string directly, or you could upload the image to a service like Cloudinary and store the URL
+  };
+
+  await user.save();
+
+  // Prepare and return the updated user data, excluding sensitive information
+  const updatedUser = {
+    name: user.name,
+    email: user.email,
+    address: user.address,
+    city: user.city,
+    pinCode: user.pinCode,
+    country: user.country,
+    avatar: user.avatar ? user.avatar.url : null,
+  };
+
+  res.json({
+    message: "Profile picture updated successfully.",
+    user: updatedUser,
+  });
+});
+
 // @desc Change password for a registered user
 // @route PATCH /api/users/changepassword
 // @access PRIVATE
@@ -261,6 +298,7 @@ export {
   userSignUp,
   getMyProfile,
   updateProfile,
+  updateProfilePic,
   changePassword,
   logoutUser,
 };
