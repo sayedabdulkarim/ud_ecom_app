@@ -5,6 +5,7 @@ import UserModal from "../modals/userModal.js";
 import PropertyModal from "../modals/propertyModal.js";
 
 import { generateToken, hashPassword } from "../utils/generateToken.js";
+import { sendEmail } from "../utils/emailHelper.js";
 //helpers
 
 // @desc login an user
@@ -293,6 +294,81 @@ const logoutUser = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc forgotPassword for a registered user
+// route POST /api/users/forgotPassword
+// @access PUBLIC
+const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  const user = await UserModal.findOne({ email });
+
+  if (!user) {
+    return res.status(400).json({ message: "User not found with this email." });
+  }
+
+  const randomNumber = Math.random() * (999999 - 100000) + 100000; // Corrected to call Math.random()
+  const otp = Math.floor(randomNumber);
+  const otpExpire = 15 * 60 * 1000; // 15 minutes in milliseconds
+
+  user.otp = otp;
+  user.otp_expire = new Date(Date.now() + otpExpire);
+
+  await user.save();
+
+  const emailSubject = "Password Reset OTP";
+  const emailText = `Your OTP for password reset is: ${otp}. This OTP is valid for 15 minutes.`;
+
+  try {
+    await sendEmail(emailSubject, email, emailText); // Update parameters as needed
+    console.log("OTP sent to email:", email);
+  } catch (error) {
+    console.error("Failed to send email", error);
+    user.otp = null; // Reset OTP in case of email failure
+    user.otp_expire = null; // Reset OTP expiration
+    await user.save(); // Save the user model after resetting otp and otp_expire
+    return res
+      .status(500)
+      .json({ message: "Failed to send OTP email. Please try again." });
+  }
+
+  res.status(200).json({
+    message: `OTP sent successfully to ${user.email}. Please check your email.`,
+  });
+});
+
+// @desc Reset Password for a registered user
+// route PUT /api/users/resetPassword
+// @access PUBLIC
+const resetPassword = asyncHandler(async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  // Find the user by email
+  const user = await UserModal.findOne({ email });
+  if (!user) {
+    return res.status(400).json({ message: "User not found." });
+  }
+
+  // Check if OTP is valid and not expired
+  const isOtpValid = user.otp === otp;
+  const isOtpExpired = user.otp_expire < new Date();
+  if (!isOtpValid || isOtpExpired) {
+    return res.status(400).json({ message: "Invalid or expired OTP." });
+  }
+
+  // Hash the new password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+  // Update the user's password and reset the OTP fields
+  user.password = hashedPassword;
+  user.otp = null;
+  user.otp_expire = null;
+
+  // Save the updated user
+  await user.save();
+
+  res.status(200).json({ message: "Password has been reset successfully." });
+});
+
 export {
   userLogin,
   userSignUp,
@@ -300,5 +376,7 @@ export {
   updateProfile,
   updateProfilePic,
   changePassword,
+  forgotPassword,
+  resetPassword,
   logoutUser,
 };

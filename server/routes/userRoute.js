@@ -10,14 +10,21 @@ import {
   updateProfile,
   changePassword,
   updateProfilePic,
+  forgotPassword,
+  resetPassword,
 } from "../controller/userController.js";
 
 router.post("/login", userLogin);
 router.post("/signup", userSignUp);
-router.get("/profile", protectedRoutesWithParser, getMyProfile);
-router.put("/profile", protectedRoutesWithParser, updateProfile);
+router
+  .route("/profile")
+  .get(protectedRoutesWithParser, getMyProfile)
+  .put(protectedRoutesWithParser, updateProfile);
+
 router.put("/updateprofilepic", protectedRoutesWithParser, updateProfilePic);
 router.put("/changepassword", protectedRoutesWithParser, changePassword);
 router.post("/logout", protectedRoutesWithParser, logoutUser);
+
+router.route("/forgotpassword").post(forgotPassword).put(resetPassword);
 
 export default router;
