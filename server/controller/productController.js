@@ -18,7 +18,9 @@ const allProduct = asyncHandler(async (req, res) => {
     if (products.length === 0) {
       res.status(404).json({ message: "No products found" });
     } else {
-      res.status(200).json(products);
+      res
+        .status(200)
+        .json({ message: "All products fetched succesfully", products });
     }
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error" });
@@ -35,7 +37,9 @@ const getProductDetails = asyncHandler(async (req, res) => {
     const product = await ProductModal.findById(req.params.id);
 
     if (product) {
-      res.status(200).json(product);
+      res
+        .status(200)
+        .json({ message: "Product details fetched succesfully.", product });
     } else {
       res.status(404).json({ message: "Product not found" });
     }
@@ -69,7 +73,9 @@ const createProduct = asyncHandler(async (req, res) => {
 
   const createdProduct = await product.save(); // Save the new product to the database
 
-  res.status(201).json(createdProduct); // Respond with the created product
+  res
+    .status(201)
+    .json({ message: "Product created Succesfully.", createdProduct }); // Respond with the created product
 });
 
 // @desc Update a single product
@@ -110,4 +116,29 @@ const updateProduct = asyncHandler(async (req, res) => {
 
 //update image (no need i think)
 
-export { allProduct, getProductDetails, createProduct, updateProduct };
+// @desc Delete a single product
+// @route DELETE /api/product/deleteproduct/:id
+// @access PRIVATE
+
+const deleteProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // Attempt to find the product by ID and delete it
+  const product = await ProductModal.findByIdAndDelete(id);
+
+  if (!product) {
+    // If the product is not found, return a message indicating it does not exist
+    return res.status(404).json({ message: "Product not found." });
+  }
+
+  // If the product exists and has been deleted, return a success message
+  res.status(200).json({ message: "Product deleted successfully." });
+});
+
+export {
+  allProduct,
+  getProductDetails,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+};
