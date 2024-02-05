@@ -43,4 +43,33 @@ const getProductDetails = asyncHandler(async (req, res) => {
     res.status(500).json({ message: "Error fetching product details" });
   }
 });
-export { allProduct, getProductDetails };
+
+// @desc create a single product
+// @route post /api/product/createproduct
+// @access PRIVATE
+
+const createProduct = asyncHandler(async (req, res) => {
+  const { name, description, stock, images, category, price } = req.body;
+
+  // Validation (basic) to ensure required fields are provided
+  if (!name || !price || !description || stock === undefined) {
+    res.status(400); // Bad request
+    throw new Error("Please include all required fields.");
+  }
+
+  // Create the product
+  const product = new ProductModal({
+    name,
+    price,
+    description,
+    stock,
+    images, // Assuming images come as an array of objects with public_id and url
+    category, // Assuming category ID is passed directly
+  });
+
+  const createdProduct = await product.save(); // Save the new product to the database
+
+  res.status(201).json(createdProduct); // Respond with the created product
+});
+
+export { allProduct, getProductDetails, createProduct };
