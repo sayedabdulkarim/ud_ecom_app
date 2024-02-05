@@ -72,4 +72,74 @@ const createProduct = asyncHandler(async (req, res) => {
   res.status(201).json(createdProduct); // Respond with the created product
 });
 
-export { allProduct, getProductDetails, createProduct };
+// @desc Update a single product
+// @route PUT /api/product/updateproduct/:id
+// @access PRIVATE
+
+// const updateProduct = asyncHandler(async (req, res) => {
+//   const { id } = req.params;
+//   console.log({ id });
+//   const { name, description, stock, images, category, price } = req.body;
+
+//   // Construct an update object based on provided fields
+//   let updateObj = {};
+//   if (name !== undefined) updateObj.name = name;
+//   if (price !== undefined) updateObj.price = price;
+//   if (description !== undefined) updateObj.description = description;
+//   if (stock !== undefined) updateObj.stock = stock;
+//   if (images !== undefined) updateObj.images = images; // If images isn't provided, it won't update the images field
+//   if (category !== undefined) updateObj.category = category;
+
+//   // Find the product by ID and update it
+//   const updatedProduct = await ProductModal.findByIdAndUpdate(id, updateObj, {
+//     new: true,
+//   });
+
+//   // Check if the product exists
+//   if (!updatedProduct) {
+//     res.status(404); // Not Found
+//     throw new Error("Product not found.");
+//   }
+
+//   // Respond with the updated product details and a success message
+//   res.status(200).json({
+//     message: "Product updated successfully",
+//     product: updatedProduct,
+//   });
+// });
+
+const updateProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { name, description, stock, images, category, price } = req.body;
+
+  // First check if the product exists
+  const product = await ProductModal.findById(id);
+
+  if (!product) {
+    return res.status(404).json({ message: "Product not found." });
+  }
+
+  // If the product exists, proceed with updating it
+  // Construct an update object based on provided fields
+  let updateObj = {};
+  if (name) updateObj.name = name;
+  if (price) updateObj.price = price;
+  if (description) updateObj.description = description;
+  if (stock) updateObj.stock = stock;
+  if (images) updateObj.images = images;
+  if (category) updateObj.category = category;
+
+  // Perform the update using the existing product document
+  product.set(updateObj);
+  const updatedProduct = await product.save();
+
+  // Respond with the updated product details and a success message
+  res.status(200).json({
+    message: "Product updated successfully",
+    product: updatedProduct,
+  });
+});
+
+//update image (no need i think)
+
+export { allProduct, getProductDetails, createProduct, updateProduct };
