@@ -76,38 +76,6 @@ const createProduct = asyncHandler(async (req, res) => {
 // @route PUT /api/product/updateproduct/:id
 // @access PRIVATE
 
-// const updateProduct = asyncHandler(async (req, res) => {
-//   const { id } = req.params;
-//   console.log({ id });
-//   const { name, description, stock, images, category, price } = req.body;
-
-//   // Construct an update object based on provided fields
-//   let updateObj = {};
-//   if (name !== undefined) updateObj.name = name;
-//   if (price !== undefined) updateObj.price = price;
-//   if (description !== undefined) updateObj.description = description;
-//   if (stock !== undefined) updateObj.stock = stock;
-//   if (images !== undefined) updateObj.images = images; // If images isn't provided, it won't update the images field
-//   if (category !== undefined) updateObj.category = category;
-
-//   // Find the product by ID and update it
-//   const updatedProduct = await ProductModal.findByIdAndUpdate(id, updateObj, {
-//     new: true,
-//   });
-
-//   // Check if the product exists
-//   if (!updatedProduct) {
-//     res.status(404); // Not Found
-//     throw new Error("Product not found.");
-//   }
-
-//   // Respond with the updated product details and a success message
-//   res.status(200).json({
-//     message: "Product updated successfully",
-//     product: updatedProduct,
-//   });
-// });
-
 const updateProduct = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { name, description, stock, images, category, price } = req.body;
