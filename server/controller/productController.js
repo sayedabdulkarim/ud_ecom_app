@@ -9,10 +9,10 @@ import { generateToken, hashPassword } from "../utils/generateToken.js";
 import { sendEmail } from "../utils/emailHelper.js";
 
 // @desc get all products
-// route GET /api/product/allproduct
+// route GET /api/product/getAllproducts
 // @access PUBLIC
 
-const allProduct = asyncHandler(async (req, res) => {
+const getAllProducts = asyncHandler(async (req, res) => {
   try {
     //search n category query
     const products = await ProductModal.find({});
@@ -202,7 +202,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
 });
 
 export {
-  allProduct,
+  getAllProducts,
   getProductDetails,
   createProduct,
   updateProduct,

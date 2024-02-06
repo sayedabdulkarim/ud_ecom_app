@@ -7,7 +7,7 @@ const router = express.Router();
 
 import {
   addCategory,
-  allProduct,
+  getAllProducts,
   createProduct,
   deleteCategory,
   deleteProduct,
@@ -16,7 +16,7 @@ import {
   updateProduct,
 } from "../controller/productController.js";
 
-router.get("/allproduct", allProduct);
+router.get("/getAllProducts", getAllProducts);
 router.route("/getProduct/:id").get(getProductDetails);
 router.post(
   "/createproduct",
