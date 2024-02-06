@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 //modals
 import UserModal from "../modals/userModal.js";
 import ProductModal from "../modals/ProductModal.js";
+import CategoryModal from "../modals/categoryModa.js";
 
 import { generateToken, hashPassword } from "../utils/generateToken.js";
 import { sendEmail } from "../utils/emailHelper.js";
@@ -135,10 +136,95 @@ const deleteProduct = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Product deleted successfully." });
 });
 
+//category
+
+// @desc add a category
+// @route POST /api/product/addcategory
+// @access PRIVATE
+const addCategory = asyncHandler(async (req, res) => {
+  const { category } = req.body;
+
+  // Basic validation
+  if (!category) {
+    res.status(400);
+    throw new Error("Please enter a category.");
+  }
+
+  // Check for duplicate categories
+  const categoryExists = await CategoryModal.findOne({ category });
+  if (categoryExists) {
+    res.status(400);
+    throw new Error("Category already exists.");
+  }
+
+  const newCategory = await CategoryModal.create({ category });
+
+  if (newCategory) {
+    res
+      .status(201)
+      .json({ message: "Category created succesfully.", newCategory });
+  } else {
+    res.status(400);
+    throw new Error("Invalid category data");
+  }
+});
+
+// @desc get all categories
+// @route GET /api/product/getallcategories
+// @access PRIVATE
+const getAllCategories = asyncHandler(async (req, res) => {
+  const categories = await CategoryModal.find({});
+  res
+    .status(200)
+    .json({ message: "All Categories fetched succesfully.", categories });
+});
+
+// @desc delete a category
+// @route DELETE /api/product/deletecategory/:id
+// @access PRIVATE
+// const deleteCategory = asyncHandler(async (req, res) => {
+//   const { id } = req.params;
+
+//   // Attempt to delete the category by its ID
+//   const deletedCategory = await CategoryModal.findByIdAndDelete(id);
+
+//   if (!deletedCategory) {
+//     res.status(404);
+//     throw new Error("Category not found.");
+//   }
+
+//   res.status(200).json({ message: "Category deleted successfully." });
+// });
+
+const deleteCategory = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // Attempt to find and delete the category by its ID
+  const deletedCategory = await CategoryModal.findByIdAndDelete(id);
+
+  if (!deletedCategory) {
+    res.status(404);
+    throw new Error("Category not found.");
+  }
+
+  // Update all products associated with this category, setting the category to undefined
+  await ProductModal.updateMany({ category: id }, { $unset: { category: "" } });
+
+  res
+    .status(200)
+    .json({
+      message: "Category deleted successfully and related products updated.",
+    });
+});
+
 export {
   allProduct,
   getProductDetails,
   createProduct,
   updateProduct,
   deleteProduct,
+  //
+  addCategory,
+  getAllCategories,
+  deleteCategory,
 };
