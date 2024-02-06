@@ -1,5 +1,8 @@
 import express from "express";
-import { protectedRoutesWithParser } from "../middleware/authMiddleware.js";
+import {
+  adminMiddleware,
+  protectedRoutesWithParser,
+} from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 import {
@@ -15,13 +18,38 @@ import {
 
 router.get("/allproduct", allProduct);
 router.route("/getProduct/:id").get(getProductDetails);
-router.post("/createproduct", protectedRoutesWithParser, createProduct);
-router.put("/updateproduct/:id", protectedRoutesWithParser, updateProduct);
-router.delete("/deleteproduct/:id", protectedRoutesWithParser, deleteProduct);
+router.post(
+  "/createproduct",
+  protectedRoutesWithParser,
+  adminMiddleware,
+  createProduct
+);
+router.put(
+  "/updateproduct/:id",
+  protectedRoutesWithParser,
+  adminMiddleware,
+  updateProduct
+);
+router.delete(
+  "/deleteproduct/:id",
+  protectedRoutesWithParser,
+  adminMiddleware,
+  deleteProduct
+);
 
 //categories
-router.post("/addcategory", protectedRoutesWithParser, addCategory);
+router.post(
+  "/addcategory",
+  protectedRoutesWithParser,
+  adminMiddleware,
+  addCategory
+);
 router.get("/getallcategories", protectedRoutesWithParser, getAllCategories);
-router.delete("/deleteCategory/:id", protectedRoutesWithParser, deleteCategory);
+router.delete(
+  "/deleteCategory/:id",
+  protectedRoutesWithParser,
+  adminMiddleware,
+  deleteCategory
+);
 
 export default router;

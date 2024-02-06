@@ -182,20 +182,6 @@ const getAllCategories = asyncHandler(async (req, res) => {
 // @desc delete a category
 // @route DELETE /api/product/deletecategory/:id
 // @access PRIVATE
-// const deleteCategory = asyncHandler(async (req, res) => {
-//   const { id } = req.params;
-
-//   // Attempt to delete the category by its ID
-//   const deletedCategory = await CategoryModal.findByIdAndDelete(id);
-
-//   if (!deletedCategory) {
-//     res.status(404);
-//     throw new Error("Category not found.");
-//   }
-
-//   res.status(200).json({ message: "Category deleted successfully." });
-// });
-
 const deleteCategory = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
@@ -210,11 +196,9 @@ const deleteCategory = asyncHandler(async (req, res) => {
   // Update all products associated with this category, setting the category to undefined
   await ProductModal.updateMany({ category: id }, { $unset: { category: "" } });
 
-  res
-    .status(200)
-    .json({
-      message: "Category deleted successfully and related products updated.",
-    });
+  res.status(200).json({
+    message: "Category deleted successfully and related products updated.",
+  });
 });
 
 export {

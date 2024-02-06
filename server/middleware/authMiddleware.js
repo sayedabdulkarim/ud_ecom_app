@@ -36,3 +36,13 @@ export const protectedRoutesWithParser = asyncHandler(
     }
   }
 );
+
+export const adminMiddleware = asyncHandler(async (req, res, next) => {
+  // Check if the authenticated user's role is "admin"
+  if (req.user && req.user.role === "admin") {
+    next(); // User is an admin, proceed to the next middleware
+  } else {
+    res.status(403); // Forbidden
+    throw new Error("Allowed only for admin");
+  }
+});
