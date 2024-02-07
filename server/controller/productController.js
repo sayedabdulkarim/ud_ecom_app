@@ -11,20 +11,45 @@ import { sendEmail } from "../utils/emailHelper.js";
 // @desc get all products
 // route GET /api/product/getAllproducts
 // @access PUBLIC
-
 const getAllProducts = asyncHandler(async (req, res) => {
+  // Build the query object based on search keyword and category
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: "i", // Case-insensitive
+        },
+      }
+    : {};
+
+  const categoryFilter = req.query.category
+    ? { category: req.query.category }
+    : {};
+
   try {
-    //search n category query
-    const products = await ProductModal.find({});
+    // If there's a category filter, we want to populate the category details
+    let query = ProductModal.find({ ...keyword, ...categoryFilter }).populate(
+      "category"
+    );
+
+    // Optionally, populate 'category' if it's present in the query
+    if (req.query.category) {
+      query = query.populate("category");
+    }
+
+    const products = await query;
+
     if (products.length === 0) {
       res.status(404).json({ message: "No products found" });
     } else {
       res
         .status(200)
-        .json({ message: "All products fetched succesfully", products });
+        .json({ message: "All products fetched successfully", products });
     }
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ message: "Internal Server Error", error: error.message });
   }
 });
 
@@ -35,7 +60,9 @@ const getAllProducts = asyncHandler(async (req, res) => {
 const getProductDetails = asyncHandler(async (req, res) => {
   console.log(req.params, " sdfgh");
   try {
-    const product = await ProductModal.findById(req.params.id);
+    const product = await ProductModal.findById(req.params.id).populate(
+      "category"
+    );
 
     if (product) {
       res
