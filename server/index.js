@@ -9,7 +9,8 @@ import connectDb from "./config/db.js";
 //routes
 import userRoutes from "./routes/userRoute.js";
 import productRoutes from "./routes/productRoute.js";
-// import userTenantsRoutes from "./routes/userTenants.js";
+import ordersRoutes from "./routes/orderRoutes.js";
+
 const port = process.env.PORT || 5000;
 
 connectDb();
@@ -40,6 +41,7 @@ app.get("/", (req, res) => {
 //routes
 app.use("/api/users", userRoutes);
 app.use("/api/product", productRoutes);
+app.use("/api/orders", ordersRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
