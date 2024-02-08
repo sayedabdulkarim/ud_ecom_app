@@ -115,4 +115,78 @@ const getAllOrders = asyncHandler(async (req, res) => {
   }
 });
 
-export { getAllOrders, createOrder };
+// @desc get order details
+// route GET /api/orders/getOrderDetails
+// @access PRIVATE
+
+const getOrderDetails = asyncHandler(async (req, res) => {
+  const orderId = req.params.id;
+
+  try {
+    const order = await OrderModal.findById(orderId)
+      .populate({
+        path: "orderItems.product", // Populate product details in order items
+        select: "name price image", // Adjust these fields based on your Product schema
+      })
+      .populate({
+        path: "userType", // Populate user details
+        select: "name email", // Adjust these fields based on your User schema
+      });
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.json({ message: "Order details fetched succesfully.", order });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// @desc update order status
+// route PUT /api/orders/updateOrderStatus
+// @access PRIVATE
+
+const updateOrderStatus = asyncHandler(async (req, res) => {
+  const { orderId } = req.params;
+
+  // console.log({ orderId, param: req.params });
+  try {
+    const order = await OrderModal.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Check if the logged-in user has the right to update the order
+    if (
+      req.user.role !== "admin" &&
+      order.userType.toString() !== req.user._id.toString()
+    ) {
+      return res
+        .status(403)
+        .json({ message: "Not authorized to update this order" });
+    }
+
+    // Automatically progress the order status
+    switch (order.orderStatus) {
+      case "Preparing":
+        order.orderStatus = "Shipped";
+        break;
+      case "Shipped":
+        order.orderStatus = "Delivered";
+        order.deliveredAt = Date.now(); // Set the deliveredAt date when order is marked as Delivered
+        break;
+      default:
+        return res.status(400).json({ message: "Order already delivered." });
+    }
+
+    await order.save();
+
+    res.json({ message: "Order status updated successfully", order });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+export { getAllOrders, createOrder, getOrderDetails, updateOrderStatus };
