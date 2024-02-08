@@ -10,43 +10,6 @@ import OrderModal from "../modals/orderModal.js";
 // @route POST /api/orders
 // @access Private
 
-// const createOrder = asyncHandler(async (req, res) => {
-//   const {
-//     shippingInfo,
-//     orderItems,
-//     userType,
-//     paymentMethod,
-//     paymentInfo,
-//     itemPrice,
-//     taxPrice,
-//     shippingCharges,
-//     totalAmount,
-//   } = req.body;
-
-//   if (orderItems && orderItems.length === 0) {
-//     res.status(400);
-//     throw new Error("No order items");
-//     return;
-//   } else {
-//     const order = new OrderModal({
-//       userType: req.user._id, // Assuming userType is the ID of the user making the request
-//       shippingInfo,
-//       orderItems,
-//       paymentMethod,
-//       itemPrice,
-//       taxPrice,
-//       shippingCharges,
-//       totalAmount,
-//       paymentInfo,
-//       orderStatus: "Preparing", // Default status
-//     });
-
-//     const createdOrder = await order.save();
-
-//     res.status(201).json({ message: "Order placed succesfully", createdOrder });
-//   }
-// });
-
 const createOrder = asyncHandler(async (req, res) => {
   const {
     shippingInfo,
@@ -130,6 +93,26 @@ const createOrder = asyncHandler(async (req, res) => {
 // @desc get all orders
 // route GET /api/orders/getAllOrders
 // @access PRIVATE
-const getAllOrders = asyncHandler(async (req, res) => {});
+
+const getAllOrders = asyncHandler(async (req, res) => {
+  try {
+    const orders = await OrderModal.find()
+      .populate({
+        path: "orderItems.product", // Path to the product ID in the orderItems array
+        select: "name description price", // Fields you want to include from the Product documents
+      })
+      .populate({
+        path: "userType", // Path to the user ID
+        select: "name email", // Fields you want to include from the User documents
+      });
+
+    if (!orders.length) {
+      return res.status(404).json({ message: "No orders found" });
+    }
+    res.json({ message: "All Orders fetched successfully.", orders });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 export { getAllOrders, createOrder };

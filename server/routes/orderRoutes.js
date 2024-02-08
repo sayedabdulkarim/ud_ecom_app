@@ -8,6 +8,6 @@ const router = express.Router();
 import { createOrder, getAllOrders } from "../controller/orderController.js";
 
 router.post("/createOrder", protectedRoutesWithParser, createOrder);
-router.get("/getAllOrders", getAllOrders);
+router.get("/getAllOrders", protectedRoutesWithParser, getAllOrders);
 
 export default router;
