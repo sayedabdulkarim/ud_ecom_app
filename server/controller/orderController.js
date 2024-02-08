@@ -148,9 +148,8 @@ const getOrderDetails = asyncHandler(async (req, res) => {
 // @access PRIVATE
 
 const updateOrderStatus = asyncHandler(async (req, res) => {
-  const { orderId } = req.params;
+  const { orderId } = req.params; // Assuming the request body only contains the order ID
 
-  // console.log({ orderId, param: req.params });
   try {
     const order = await OrderModal.findById(orderId);
 
@@ -168,14 +167,18 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
         .json({ message: "Not authorized to update this order" });
     }
 
+    let responseMessage = ""; // Initialize an empty response message
+
     // Automatically progress the order status
     switch (order.orderStatus) {
       case "Preparing":
         order.orderStatus = "Shipped";
+        responseMessage = "Order shipped successfully";
         break;
       case "Shipped":
         order.orderStatus = "Delivered";
         order.deliveredAt = Date.now(); // Set the deliveredAt date when order is marked as Delivered
+        responseMessage = "Order delivered successfully";
         break;
       default:
         return res.status(400).json({ message: "Order already delivered." });
@@ -183,7 +186,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
 
     await order.save();
 
-    res.json({ message: "Order status updated successfully", order });
+    res.json({ message: responseMessage, order });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
