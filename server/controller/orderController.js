@@ -1,6 +1,9 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 import asyncHandler from "express-async-handler";
-//modals
+import { stripe } from "../index.js";
+// modals
 import UserModal from "../modals/userModal.js";
 import ProductModal from "../modals/ProductModal.js";
 import CategoryModal from "../modals/categoryModa.js";
@@ -90,6 +93,32 @@ const createOrder = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Process online payment
+// @route POST /api/orders/processPayment
+// @access PRIVATE
+const processPayment = asyncHandler(async (req, res) => {
+  const { totalAmount } = req.body;
+  try {
+    // Create a PaymentIntent with the order amount and currency
+    const { client_secret } = await stripe.paymentIntents.create({
+      amount: Number(totalAmount * 100), // Amount is expected in the smallest currency unit (e.g., cents for USD)
+      currency: "inr",
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Payment processed successfully",
+      clientSecret: client_secret, // Used for client-side to confirm the payment
+    });
+  } catch (error) {
+    console.error("Payment processing error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Payment processing failed",
+      error: error.message,
+    });
+  }
+});
 // @desc get all orders
 // route GET /api/orders/getAllOrders
 // @access PRIVATE
@@ -192,4 +221,12 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   }
 });
 
-export { getAllOrders, createOrder, getOrderDetails, updateOrderStatus };
+//
+
+export {
+  getAllOrders,
+  createOrder,
+  processPayment,
+  getOrderDetails,
+  updateOrderStatus,
+};

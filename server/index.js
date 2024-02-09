@@ -6,6 +6,7 @@ import cors from "cors";
 dotenv.config();
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import connectDb from "./config/db.js";
+import Stripe from "stripe";
 //routes
 import userRoutes from "./routes/userRoute.js";
 import productRoutes from "./routes/productRoute.js";
@@ -14,6 +15,9 @@ import ordersRoutes from "./routes/orderRoutes.js";
 const port = process.env.PORT || 5000;
 
 connectDb();
+
+//stripe
+export const stripe = new Stripe(process.env.STRIPE_API_SECRET);
 
 const app = express();
 
