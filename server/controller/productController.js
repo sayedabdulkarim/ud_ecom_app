@@ -53,6 +53,31 @@ const getAllProducts = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc get all admin products
+// route GET /api/product/getAdminproducts
+// @access PUBLIC
+const getAdminProducts = asyncHandler(async (req, res) => {
+  try {
+    const products = await ProductModal.find({}).populate("category");
+    const outOfStock = products.filter((product) => product.stock === 0);
+
+    res.status(200).json({
+      success: true,
+      message: "Admin products fetched successfully.",
+      productsCount: products.length,
+      products,
+      outOfStockCount: outOfStock.length,
+      outOfStock,
+      inStockCount: products.length - outOfStock.length,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch admin products.",
+      error: error.message, // Providing the error message can be helpful for debugging.
+    });
+  }
+});
 // @desc Get a single product by ID
 // @route GET /api/product/getProduct/:id
 // @access PUBLIC
@@ -230,6 +255,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
 
 export {
   getAllProducts,
+  getAdminProducts,
   getProductDetails,
   createProduct,
   updateProduct,
