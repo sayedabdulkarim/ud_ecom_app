@@ -27,7 +27,8 @@ app.use(express.json({ limit: "50mb" })); // Adjust '50mb' as needed
 app.use(express.urlencoded({ limit: "50mb", extended: true })); // Adjust '50mb' as needed
 
 const corsOptions = {
-  origin: ["http://localhost:3000"], // Client's URL, not the server's
+  // origin: ["http://localhost:3000"], // Client's URL, not the server's
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   credentials: true, // <-- REQUIRED backend setting
 };
@@ -50,6 +51,6 @@ app.use("/api/orders", ordersRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(port, () => {
+app.listen(port, "0.0.0.0", () => {
   console.log(`App listen to ${port}`);
 });

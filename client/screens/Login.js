@@ -1,5 +1,11 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useLoginMutation } from "../apiSlices/userApiSlice";
+import { setCredentials } from "..//slices/authSlice";
+// import { handleShowAlert } from "../../utils/commonHelper";
+// import { setPropertiesList } from "../../slices/propertySlice";
+
 import {
   colors,
   defaultStyle,
@@ -13,17 +19,28 @@ import Footer from "../component/Footer";
 
 const Login = ({ navigation }) => {
   //misc
+  const [login, { isLoading }] = useLoginMutation();
+  const dispatch = useDispatch();
   const loading = false;
   //state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   //func
-  const handleSubmit = () => {
-    alert({
-      email,
-      password,
-    });
+  // const handleSubmit = () => {
+  //   alert({
+  //     email,
+  //     password,
+  //   });
+  // };
+
+  const handleSubmit = async () => {
+    try {
+      const user = await login({ email, password }).unwrap();
+      dispatch(setCredentials(user));
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
 
   return (

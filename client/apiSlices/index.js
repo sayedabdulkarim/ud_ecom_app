@@ -1,17 +1,16 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { logOutUser } from "../slices/authSlice";
 const getJwtToken = () => {
-  return localStorage.getItem("jwtToken");
+  return "";
 };
 
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   const baseQuery = fetchBaseQuery({
-    baseUrl: "http://localhost:5000/",
+    baseUrl: "http://192.168.225.131:5000/",
     credentials: "include", // Necessary for cookies to be included
     prepareHeaders: (headers) => {
       const token = getJwtToken();
       if (token) {
-        // Set the Authorization header with the JWT
         headers.set("authorization", `Bearer ${token}`);
       }
       return headers;
@@ -24,7 +23,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   if (result.error && result.error.status === 401) {
     // Perform logout operations
     api.dispatch(logOutUser());
-    localStorage.clear();
     window.location.href = "/auth";
   }
 
