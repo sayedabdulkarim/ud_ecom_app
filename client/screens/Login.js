@@ -1,8 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../apiSlices/userApiSlice";
-import { setCredentials } from "..//slices/authSlice";
+import { setAuthenticated, setCredentials } from "..//slices/authSlice";
 // import { handleShowAlert } from "../../utils/commonHelper";
 // import { setPropertiesList } from "../../slices/propertySlice";
 
@@ -21,24 +21,25 @@ const Login = ({ navigation }) => {
   //misc
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
+  const { userInfo, isAuthenticated } = useSelector(
+    (state) => state.authReducer
+  );
+
   const loading = false;
   //state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   //func
-  // const handleSubmit = () => {
-  //   alert({
-  //     email,
-  //     password,
-  //   });
-  // };
-
   const handleSubmit = async () => {
     try {
       const user = await login({ email, password }).unwrap();
+      console.log({ user });
       dispatch(setCredentials(user));
+      dispatch(setAuthenticated(true));
     } catch (error) {
+      dispatch(setCredentials(null));
+      dispatch(setAuthenticated(false));
       console.error("Login failed:", error);
     }
   };
@@ -47,6 +48,9 @@ const Login = ({ navigation }) => {
     <>
       <View style={{ ...defaultStyle, backgroundColor: colors.color2 }}>
         {/* heading  */}
+        <Text onPress={() => console.log({ userInfo, isAuthenticated })}>
+          Hello
+        </Text>
 
         <View
           style={{
@@ -80,7 +84,7 @@ const Login = ({ navigation }) => {
           </TouchableOpacity>
 
           <Button
-            loading={loading}
+            loading={isLoading}
             style={styles.btn}
             textColor={colors.color2}
             disabled={email === "" || password === ""}
