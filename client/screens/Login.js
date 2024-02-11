@@ -1,5 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../apiSlices/userApiSlice";
 import { setAuthenticated, setCredentials } from "..//slices/authSlice";
@@ -16,6 +17,7 @@ import {
 } from "../styles/common";
 import { Button, TextInput } from "react-native-paper";
 import Footer from "../component/Footer";
+import { showToast } from "../utils/commonHelper";
 
 const Login = ({ navigation }) => {
   //misc
@@ -25,24 +27,62 @@ const Login = ({ navigation }) => {
     (state) => state.authReducer
   );
 
-  const loading = false;
   //state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   //func
+
   const handleSubmit = async () => {
     try {
       const user = await login({ email, password }).unwrap();
-      console.log({ user });
+      // console.log({ user });
+      navigation.navigate("profile");
       dispatch(setCredentials(user));
       dispatch(setAuthenticated(true));
+      showToast({
+        type: "success",
+        text1: user.message,
+        text2: "Login Successful!",
+        duration: 5000,
+      });
     } catch (error) {
       dispatch(setCredentials(null));
       dispatch(setAuthenticated(false));
-      console.error("Login failed:", error);
+      showToast({
+        type: "error",
+        text1: "Login Failed",
+        text2: error.message || "Please check your credentials and try again.",
+        duration: 5000,
+      });
     }
   };
+
+  // useEffect(() => {
+  //   if (isAuthenticated) {
+  //     navigation.navigate("profile");
+  //   }
+  // }, [isAuthenticated, navigation]);
+
+  // useFocusEffect(() => {
+  //   if (isAuthenticated) {
+  //     // If the user becomes authenticated, reset the stack to the 'Profile' screen
+  //     navigation.dispatch(
+  //       CommonActions.reset({
+  //         index: 0,
+  //         routes: [{ name: "Profile" }],
+  //       })
+  //     );
+  //   } else {
+  //     // If the user is not authenticated, reset the stack to the 'Login' screen
+  //     navigation.dispatch(
+  //       CommonActions.reset({
+  //         index: 0,
+  //         routes: [{ name: "Login" }],
+  //       })
+  //     );
+  //   }
+  // }, [isAuthenticated, navigation, dispatch]);
 
   return (
     <>

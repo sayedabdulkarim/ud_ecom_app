@@ -31,8 +31,11 @@ import UpdateProduct from "./Admin/UpdateProduct";
 import NewProduct from "./Admin/NewProduct";
 import ProductImages from "./Admin/ProductImages";
 import CameraComponent from "./Camera";
+import withProtectedRoute from "../utils/withProtectedRoutes";
 
 const Stack = createNativeStackNavigator();
+
+// const ProtectedProfile = withProtectedRoute(Profile);
 
 const Index = () => {
   return (
@@ -46,110 +49,30 @@ const Index = () => {
           })}
         >
           <Stack.Group>
-            <Stack.Screen
-              name="home"
-              component={Home}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="productdetails"
-              component={ProductDetails}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="cart"
-              component={Cart}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="confirmmodal"
-              component={ConfirmModal}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="payment"
-              component={Payment}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="login"
-              component={Login}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="signup"
-              component={Signup}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="profile"
-              component={Profile}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="updateprofile"
-              component={UpdateProfile}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="changepassword"
-              component={ChangePassword}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="orders"
-              component={Orders}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="camera"
-              component={CameraComponent}
-              // options={{ headerShown: false }}
-            />
+            <Stack.Screen name="login" component={Login} />
+            <Stack.Screen name="signup" component={Signup} />
+            <Stack.Screen name="profile" component={Profile} />
+            <Stack.Screen name="home" component={Home} />
+            <Stack.Screen name="productdetails" component={ProductDetails} />
+            <Stack.Screen name="cart" component={Cart} />
+            <Stack.Screen name="confirmmodal" component={ConfirmModal} />
+            <Stack.Screen name="payment" component={Payment} />
+            <Stack.Screen name="updateprofile" component={UpdateProfile} />
+            <Stack.Screen name="changepassword" component={ChangePassword} />
+            <Stack.Screen name="orders" component={Orders} />
+            <Stack.Screen name="camera" component={CameraComponent} />
 
             {/* password resetting route */}
-            <Stack.Screen
-              name="forgotpassword"
-              component={Forgotpassword}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="verify"
-              component={Verify}
-              // options={{ headerShown: false }}
-            />
+            <Stack.Screen name="forgotpassword" component={Forgotpassword} />
+            <Stack.Screen name="verify" component={Verify} />
 
             {/* admin routes */}
-            <Stack.Screen
-              name="adminpanel"
-              component={AdminPanel}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="categories"
-              component={Categories}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="adminorders"
-              component={AdminOrders}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="updateproduct"
-              component={UpdateProduct}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="newproduct"
-              component={NewProduct}
-              // options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="productimages"
-              component={ProductImages}
-              // options={{ headerShown: false }}
-            />
+            <Stack.Screen name="adminpanel" component={AdminPanel} />
+            <Stack.Screen name="categories" component={Categories} />
+            <Stack.Screen name="adminorders" component={AdminOrders} />
+            <Stack.Screen name="updateproduct" component={UpdateProduct} />
+            <Stack.Screen name="newproduct" component={NewProduct} />
+            <Stack.Screen name="productimages" component={ProductImages} />
           </Stack.Group>
         </Stack.Navigator>
         <Toast position="top" bottomOffset={30} />
@@ -161,14 +84,3 @@ const Index = () => {
 export default Index;
 
 const styles = StyleSheet.create({});
-
-// <View
-//   style={{
-//     paddingVertical:
-//       Platform.OS === "android" ? StatusBar.currentHeight : 0,
-//   }}
-// >
-//   <SafeAreaView>
-//     <Text>Index</Text>
-//   </SafeAreaView>
-// </View>

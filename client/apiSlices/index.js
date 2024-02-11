@@ -23,7 +23,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
   if (result.error && result.error.status === 401) {
     // Perform logout operations
     api.dispatch(logOutUser());
-    window.location.href = "/auth";
+    // window.location.href = "/auth";
   }
 
   return result;
