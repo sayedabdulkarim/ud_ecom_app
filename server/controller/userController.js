@@ -26,7 +26,8 @@ const userLogin = asyncHandler(async (req, res) => {
     }
 
     // Generate a token for the user session
-    const token = generateToken(res, user._id);
+    // const token = generateToken(res, user._id);
+    const token = generateToken(user._id);
 
     // Exclude the password when sending back the user data
     const userResponse = { ...user._doc };

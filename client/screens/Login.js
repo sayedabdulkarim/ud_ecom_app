@@ -36,7 +36,7 @@ const Login = ({ navigation }) => {
   const handleSubmit = async () => {
     try {
       const user = await login({ email, password }).unwrap();
-      // console.log({ user });
+      console.log({ user });
       navigation.navigate("profile");
       dispatch(setCredentials(user));
       dispatch(setAuthenticated(true));

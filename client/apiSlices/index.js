@@ -7,9 +7,10 @@ const getJwtToken = () => {
 const baseQueryWithReauth = async (args, api, extraOptions) => {
   const baseQuery = fetchBaseQuery({
     baseUrl: "http://192.168.225.131:5000/",
-    credentials: "include", // Necessary for cookies to be included
-    prepareHeaders: (headers) => {
-      const token = getJwtToken();
+    credentials: "include",
+    prepareHeaders: (headers, { getState }) => {
+      // Get the token from the current state
+      const token = getState().authReducer?.userInfo?.token || ""; // Adjust this path based on your actual state structure
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }
