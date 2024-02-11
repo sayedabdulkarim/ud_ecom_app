@@ -1,5 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
 import { colors } from "../styles/common";
 import { Avatar } from "react-native-paper";
 
@@ -7,7 +8,10 @@ const Footer = ({ activeRoute = "home" }) => {
   //misc
   const navigation = useNavigation();
   const loading = false;
-  const isAuthenticated = false;
+  const { userInfo, isAuthenticated } = useSelector(
+    (state) => state.authReducer
+  );
+  // const isAuthenticated = false;
   //func
   const navigationHandler = (key) => {
     switch (key) {
