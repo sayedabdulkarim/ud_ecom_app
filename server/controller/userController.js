@@ -51,6 +51,9 @@ const userSignUp = asyncHandler(async (req, res) => {
   const { name, email, password, address, city, pinCode, country, file } =
     req.body;
 
+  // console.log({
+  //   body: req.body,
+  // });
   // Check if the user already exists based on email
   const existingUserByEmail = await UserModal.findOne({ email });
   if (existingUserByEmail) {
