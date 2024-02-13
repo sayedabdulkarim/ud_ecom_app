@@ -37,7 +37,7 @@ const Profile = ({ navigation, route }) => {
       // text2: "Login Successful!",
       duration: 3000,
     });
-    navigation.navigate("home");
+    navigation.navigate("login");
     console.log({ userInfo, userProfile, isAuthenticated }, "signiing out.");
   };
   const navigateHandler = (text) => {
