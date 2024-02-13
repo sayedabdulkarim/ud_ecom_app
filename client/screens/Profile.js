@@ -1,12 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { colors, defaultStyle, formHeading } from "../styles/common";
 import { Avatar, Button } from "react-native-paper";
 import ButtonBox from "../component/ButtonBox";
 import Footer from "../component/Footer";
 import Loader from "../component/Loader";
 import { useGetUserProfileQuery } from "../apiSlices/userApiSlice";
+import { logOutUser } from "../slices/authSlice";
 
 const user = {
   name: "Abdul",
@@ -15,6 +16,7 @@ const user = {
 
 const Profile = ({ navigation, route }) => {
   //misc
+  const dispatch = useDispatch();
   const loading = false;
   const { userInfo, isAuthenticated } = useSelector(
     (state) => state.authReducer
@@ -27,6 +29,7 @@ const Profile = ({ navigation, route }) => {
 
   //fnc
   const handleLogout = () => {
+    dispatch(logOutUser());
     console.log({ userInfo, userProfile, isAuthenticated }, "signiing out.");
   };
   const navigateHandler = (text) => {
