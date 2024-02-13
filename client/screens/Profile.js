@@ -8,6 +8,7 @@ import Footer from "../component/Footer";
 import Loader from "../component/Loader";
 import { useGetUserProfileQuery } from "../apiSlices/userApiSlice";
 import { logOutUser } from "../slices/authSlice";
+import { showToast } from "../utils/commonHelper";
 
 const user = {
   name: "Abdul",
@@ -30,6 +31,13 @@ const Profile = ({ navigation, route }) => {
   //fnc
   const handleLogout = () => {
     dispatch(logOutUser());
+    showToast({
+      type: "success",
+      text1: "Logged out successflly.",
+      // text2: "Login Successful!",
+      duration: 3000,
+    });
+    navigation.navigate("home");
     console.log({ userInfo, userProfile, isAuthenticated }, "signiing out.");
   };
   const navigateHandler = (text) => {
