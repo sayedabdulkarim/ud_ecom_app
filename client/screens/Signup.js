@@ -20,7 +20,7 @@ import { Button, TextInput, Avatar } from "react-native-paper";
 import Footer from "../component/Footer";
 import { useRegisterUserMutation } from "../apiSlices/userApiSlice";
 import { setAuthenticated, setCredentials } from "..//slices/authSlice";
-import { showToast } from "../utils/commonHelper";
+import { convertImageToBase64, showToast } from "../utils/commonHelper";
 
 const Signup = ({ route, navigation }) => {
   //misc
@@ -66,18 +66,77 @@ const Signup = ({ route, navigation }) => {
   //   console.log({ myForm });
   // };
 
+  // const submitHandler = async () => {
+  //   try {
+  //     const myForm = new FormData();
+
+  //     myForm.append("name", name);
+  //     myForm.append("email", email);
+  //     myForm.append("password", password);
+  //     myForm.append("address", address);
+  //     myForm.append("city", city);
+  //     myForm.append("country", country);
+  //     myForm.append("pinCode", pinCode);
+
+  //     const formData = {
+  //       name,
+  //       email,
+  //       password,
+  //       address,
+  //       city,
+  //       country,
+  //       pinCode,
+  //       avatar, // Make sure your API can handle the avatar format you're sending
+  //     };
+
+  //     console.log({ formData });
+  //     const user = await signup(formData).unwrap();
+
+  //     dispatch(setCredentials(user));
+  //     dispatch(setAuthenticated(true));
+
+  //     showToast({
+  //       type: "success",
+  //       text1: "Signup Successful!",
+  //       text2: "Welcome to the app!",
+  //       duration: 5000,
+  //     });
+
+  //     // // Reset the navigation stack and navigate to the profile screen
+  //     navigation.reset({
+  //       index: 0, // Resets the stack to have only one route
+  //       routes: [{ name: "profile" }], // Sets the first (and only) route to be 'profile'
+  //     });
+  //   } catch (error) {
+  //     // Handle signup failure
+  //     console.error(error);
+  //     dispatch(setCredentials(null));
+  //     dispatch(setAuthenticated(false));
+  //     showToast({
+  //       type: "error",
+  //       text1: "Signup Failed",
+  //       text2: error.data
+  //         ? error.data.message
+  //         : "An error occurred. Please try again.",
+  //       duration: 5000,
+  //     });
+  //   }
+  // };
+
   const submitHandler = async () => {
+    console.log("Called");
     try {
-      const myForm = new FormData();
+      let base64Avatar = avatar;
 
-      myForm.append("name", name);
-      myForm.append("email", email);
-      myForm.append("password", password);
-      myForm.append("address", address);
-      myForm.append("city", city);
-      myForm.append("country", country);
-      myForm.append("pinCode", pinCode);
+      if (avatar && !avatar.startsWith("data:")) {
+        base64Avatar = await convertImageToBase64(avatar);
+      }
 
+      const avatarData = {
+        public_id: `avatar_${Date.now()}`, // Creates a string like "avatar_1615321356259"
+        url: base64Avatar,
+      };
+      // Assuming you are sending JSON to your API
       const formData = {
         name,
         email,
@@ -86,15 +145,15 @@ const Signup = ({ route, navigation }) => {
         city,
         country,
         pinCode,
-        avatar, // Make sure your API can handle the avatar format you're sending
+        avatar: avatarData, // Now sending the avatar as a base64 string
       };
 
+      console.log({ formData });
       const user = await signup(formData).unwrap();
 
       dispatch(setCredentials(user));
       dispatch(setAuthenticated(true));
 
-      console.log({ user, formData });
       showToast({
         type: "success",
         text1: "Signup Successful!",
@@ -103,10 +162,10 @@ const Signup = ({ route, navigation }) => {
       });
 
       // // Reset the navigation stack and navigate to the profile screen
-      // navigation.reset({
-      //   index: 0, // Resets the stack to have only one route
-      //   routes: [{ name: "profile" }], // Sets the first (and only) route to be 'profile'
-      // });
+      navigation.reset({
+        index: 0, // Resets the stack to have only one route
+        routes: [{ name: "profile" }], // Sets the first (and only) route to be 'profile'
+      });
     } catch (error) {
       // Handle signup failure
       console.error(error);
