@@ -1,4 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
@@ -21,6 +22,7 @@ import { showToast } from "../utils/commonHelper";
 
 const Login = ({ navigation }) => {
   //misc
+  const [localStore, setLocalStore] = useState(null); // Default to 'Login'
   const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
   const { userInfo, isAuthenticated } = useSelector(
@@ -36,7 +38,7 @@ const Login = ({ navigation }) => {
   const handleSubmit = async () => {
     try {
       const user = await login({ email, password }).unwrap();
-      console.log({ user });
+      // console.log({ user });
       navigation.navigate("profile");
       dispatch(setCredentials(user));
       dispatch(setAuthenticated(true));
@@ -58,37 +60,25 @@ const Login = ({ navigation }) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (isAuthenticated) {
-  //     navigation.navigate("profile");
-  //   }
-  // }, [isAuthenticated, navigation]);
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem("@auth_token");
+      if (token) {
+        // If a token is found, assume the user is logged in and set the initial route to 'Profile' or 'Home'
+        setLocalStore(token); // Adjust this as needed
+      }
+    };
 
-  // useFocusEffect(() => {
-  //   if (isAuthenticated) {
-  //     // If the user becomes authenticated, reset the stack to the 'Profile' screen
-  //     navigation.dispatch(
-  //       CommonActions.reset({
-  //         index: 0,
-  //         routes: [{ name: "Profile" }],
-  //       })
-  //     );
-  //   } else {
-  //     // If the user is not authenticated, reset the stack to the 'Login' screen
-  //     navigation.dispatch(
-  //       CommonActions.reset({
-  //         index: 0,
-  //         routes: [{ name: "Login" }],
-  //       })
-  //     );
-  //   }
-  // }, [isAuthenticated, navigation, dispatch]);
+    checkToken();
+  }, []);
 
   return (
     <>
       <View style={{ ...defaultStyle, backgroundColor: colors.color2 }}>
         {/* heading  */}
-        <Text onPress={() => console.log({ userInfo, isAuthenticated })}>
+        <Text
+          onPress={() => console.log({ userInfo, isAuthenticated, localStore })}
+        >
           Hello
         </Text>
 

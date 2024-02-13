@@ -6,7 +6,8 @@ import {
   Platform,
   SafeAreaView,
 } from "react-native";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDispatch, useSelector } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./Home";
@@ -32,18 +33,42 @@ import NewProduct from "./Admin/NewProduct";
 import ProductImages from "./Admin/ProductImages";
 import CameraComponent from "./Camera";
 import withProtectedRoute from "../utils/withProtectedRoutes";
+import { useEffect, useState } from "react";
+import { setAuthenticated } from "../slices/authSlice";
 
 const Stack = createNativeStackNavigator();
 
 // const ProtectedProfile = withProtectedRoute(Profile);
 
 const Index = () => {
+  //misc
+  const dispatch = useDispatch();
+  const { userInfo } = useSelector((state) => state.authReducer);
+  console.log({ userInfo }, " userInfoooo");
+
+  const [initialRoute, setInitialRoute] = useState("Login"); // Default to 'Login'
+
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem("@auth_token");
+      if (token) {
+        // If a token is found, assume the user is logged in and set the initial route to 'Profile' or 'Home'
+        setInitialRoute("home"); // Adjust this as needed
+        dispatch(setAuthenticated(true));
+        // setAuthenticated(true);
+        console.log(token, " tokennn");
+      }
+    };
+
+    checkToken();
+  }, []);
   return (
     <>
       <StatusBar backgroundColor={colors.color1} barStyle="light-content" />
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="home"
+          // initialRouteName={initialRoute}
+          initialRouteName={"home"}
           screenOptions={({}) => ({
             headerShown: false,
           })}

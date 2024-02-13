@@ -16,7 +16,9 @@ const user = {
 const Profile = ({ navigation, route }) => {
   //misc
   const loading = false;
-  const { userInfo } = useSelector((state) => state.authReducer);
+  const { userInfo, isAuthenticated } = useSelector(
+    (state) => state.authReducer
+  );
 
   //state
   const [avatar, setAvater] = useState(null);
@@ -25,7 +27,7 @@ const Profile = ({ navigation, route }) => {
 
   //fnc
   const handleLogout = () => {
-    console.log({ userInfo: userInfo, userProfile }, "signiing out.");
+    console.log({ userInfo, userProfile, isAuthenticated }, "signiing out.");
   };
   const navigateHandler = (text) => {
     switch (text) {
