@@ -22,24 +22,26 @@ const Profile = ({ navigation, route }) => {
   const { userInfo, isAuthenticated } = useSelector(
     (state) => state.authReducer
   );
-
   //state
   const [avatar, setAvater] = useState(null);
   //query n mutation
   const { data: userProfile, isLoading, isError } = useGetUserProfileQuery();
-
   //fnc
   const handleLogout = () => {
     dispatch(logOutUser());
     showToast({
       type: "success",
-      text1: "Logged out successflly.",
-      // text2: "Login Successful!",
+      text1: "Logged out successfully.",
       duration: 3000,
     });
-    navigation.navigate("login");
-    console.log({ userInfo, userProfile, isAuthenticated }, "signiing out.");
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "login" }],
+    });
+
+    // console.log({ userInfo, userProfile, isAuthenticated }, "signing out.");
   };
+
   const navigateHandler = (text) => {
     switch (text) {
       case "Admin":

@@ -38,8 +38,6 @@ const Login = ({ navigation }) => {
   const handleSubmit = async () => {
     try {
       const user = await login({ email, password }).unwrap();
-      // console.log({ user });
-      navigation.navigate("profile");
       dispatch(setCredentials(user));
       dispatch(setAuthenticated(true));
       showToast({
@@ -47,6 +45,12 @@ const Login = ({ navigation }) => {
         text1: user.message,
         text2: "Login Successful!",
         duration: 5000,
+      });
+
+      // Reset the navigation stack and navigate to the profile screen
+      navigation.reset({
+        index: 0, // Resets the stack to have only one route
+        routes: [{ name: "profile" }], // Sets the first (and only) route to be 'profile'
       });
     } catch (error) {
       dispatch(setCredentials(null));
