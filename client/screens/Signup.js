@@ -6,6 +6,7 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   colors,
   defaultStyle,
@@ -17,8 +18,16 @@ import {
 } from "../styles/common";
 import { Button, TextInput, Avatar } from "react-native-paper";
 import Footer from "../component/Footer";
+import { useRegisterUserMutation } from "../apiSlices/userApiSlice";
+import { setAuthenticated, setCredentials } from "..//slices/authSlice";
 
 const Signup = ({ route, navigation }) => {
+  //misc
+  const [signup, { isLoading }] = useRegisterUserMutation();
+  const dispatch = useDispatch();
+  const { userInfo, isAuthenticated } = useSelector(
+    (state) => state.authReducer
+  );
   //state
   const [avatar, setAvatar] = useState("");
   const [name, setName] = useState("");

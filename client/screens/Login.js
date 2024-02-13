@@ -5,8 +5,6 @@ import { CommonActions, useFocusEffect } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../apiSlices/userApiSlice";
 import { setAuthenticated, setCredentials } from "..//slices/authSlice";
-// import { handleShowAlert } from "../../utils/commonHelper";
-// import { setPropertiesList } from "../../slices/propertySlice";
 
 import {
   colors,
