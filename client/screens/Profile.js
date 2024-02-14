@@ -18,12 +18,13 @@ const user = {
 const Profile = ({ navigation, route }) => {
   //misc
   const dispatch = useDispatch();
-  const loading = false;
   const { userInfo, isAuthenticated } = useSelector(
     (state) => state.authReducer
   );
   //state
-  const [avatar, setAvater] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   //query n mutation
   const { data: userProfile, isLoading, isError } = useGetUserProfileQuery();
   //fnc
@@ -66,9 +67,22 @@ const Profile = ({ navigation, route }) => {
     }
   };
 
+  //async
   useEffect(() => {
-    if (route.params?.image) setAvater(route.params.image);
+    if (route.params?.image) setAvatar(route.params.image);
   }, [route.params]);
+
+  useEffect(() => {
+    // When the user profile data is loaded and not an error
+    if (userProfile && !isError) {
+      const { name, email, avatar } = userProfile?.data;
+      console.log({ userProfile: userProfile?.data });
+
+      setName(name || "");
+      setEmail(email || "");
+      setAvatar(avatar?.url || "");
+    }
+  }, [userProfile, isError]);
 
   return (
     <>
@@ -78,7 +92,7 @@ const Profile = ({ navigation, route }) => {
           <Text style={formHeading}>Profile</Text>
         </View>
         {/* loading */}
-        {loading ? (
+        {isLoading ? (
           <Loader />
         ) : (
           <>
@@ -99,14 +113,14 @@ const Profile = ({ navigation, route }) => {
                 <Button textColor={colors.color1}>Change Photo</Button>
               </TouchableOpacity>
 
-              <Text style={styles.name}>{user?.name}</Text>
+              <Text style={styles.name}>{name}</Text>
               <Text
                 style={{
                   fontWeight: "300",
                   color: colors.color2,
                 }}
               >
-                {user?.email}
+                {email}
               </Text>
             </View>
             <View>
