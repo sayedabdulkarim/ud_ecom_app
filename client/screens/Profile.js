@@ -10,11 +10,6 @@ import { useGetUserProfileQuery } from "../apiSlices/userApiSlice";
 import { logOutUser } from "../slices/authSlice";
 import { showToast } from "../utils/commonHelper";
 
-const user = {
-  name: "Abdul",
-  email: "hello@gmail.com",
-};
-
 const Profile = ({ navigation, route }) => {
   //misc
   const dispatch = useDispatch();
@@ -76,7 +71,7 @@ const Profile = ({ navigation, route }) => {
     // When the user profile data is loaded and not an error
     if (userProfile && !isError) {
       const { name, email, avatar } = userProfile?.data;
-      console.log({ userProfile: userProfile?.data });
+      // console.log({ userProfile: userProfile?.data });
 
       setName(name || "");
       setEmail(email || "");
