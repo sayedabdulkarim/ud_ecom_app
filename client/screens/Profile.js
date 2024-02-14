@@ -1,4 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -67,6 +68,18 @@ const Profile = ({ navigation, route }) => {
     }
   };
 
+  const getJwtToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem("@auth_token");
+      const userDetails = await AsyncStorage.getItem("@user_details");
+      console.log({ token, userDetails }, " fro, api slice");
+      // return token || "";
+    } catch (e) {
+      console.error("Failed to fetch token:", e);
+      // return "";
+    }
+  };
+
   //async
   useEffect(() => {
     if (route.params?.image) setAvatar(route.params.image);
@@ -91,6 +104,9 @@ const Profile = ({ navigation, route }) => {
         <View style={{ marginBottom: 20 }}>
           <Text style={formHeading} onPress={() => console.log({ userInfo })}>
             Profile
+          </Text>
+          <Text style={formHeading} onPress={() => getJwtToken()}>
+            TEST
           </Text>
         </View>
         {/* loading */}

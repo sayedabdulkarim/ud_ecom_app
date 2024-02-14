@@ -31,7 +31,6 @@ const authSlice = createSlice({
     setAuthenticated: (state, action) => {
       state.isAuthenticated = action.payload;
     },
-
     logOutUser: (state, action) => {
       console.log("logout called");
       AsyncStorage.removeItem("@auth_token").catch(console.error);
@@ -39,10 +38,21 @@ const authSlice = createSlice({
       state.userInfo = null;
       state.isAuthenticated = false;
     },
+    rehydrateAuthState: (state, action) => {
+      const { token, userDetails } = action.payload;
+      if (token && userDetails) {
+        state.userInfo = { token, data: { ...JSON.parse(userDetails) } };
+        state.isAuthenticated = !!token;
+      }
+    },
   },
 });
 
-export const { setCredentials, setAuthenticated, logOutUser } =
-  authSlice.actions;
+export const {
+  setCredentials,
+  setAuthenticated,
+  logOutUser,
+  rehydrateAuthState,
+} = authSlice.actions;
 
 export default authSlice.reducer;

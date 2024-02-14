@@ -34,7 +34,7 @@ import ProductImages from "./Admin/ProductImages";
 import CameraComponent from "./Camera";
 import withProtectedRoute from "../utils/withProtectedRoutes";
 import { useEffect, useState } from "react";
-import { setAuthenticated } from "../slices/authSlice";
+import { rehydrateAuthState, setAuthenticated } from "../slices/authSlice";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,20 +48,34 @@ const Index = () => {
 
   const [initialRoute, setInitialRoute] = useState("Login"); // Default to 'Login'
 
+  // useEffect(() => {
+  //   const checkToken = async () => {
+  //     const token = await AsyncStorage.getItem("@auth_token");
+  //     if (token) {
+  //       // If a token is found, assume the user is logged in and set the initial route to 'Profile' or 'Home'
+  //       setInitialRoute("home"); // Adjust this as needed
+  //       dispatch(setAuthenticated(true));
+  //       // setAuthenticated(true);
+  //       console.log(token, " tokennn");
+  //     }
+  //   };
+
+  //   checkToken();
+  // }, []);
+
   useEffect(() => {
-    const checkToken = async () => {
+    const rehydrateAuth = async () => {
       const token = await AsyncStorage.getItem("@auth_token");
-      if (token) {
-        // If a token is found, assume the user is logged in and set the initial route to 'Profile' or 'Home'
+      const userDetails = await AsyncStorage.getItem("@user_details");
+      if (token && userDetails) {
         setInitialRoute("home"); // Adjust this as needed
-        dispatch(setAuthenticated(true));
-        // setAuthenticated(true);
-        console.log(token, " tokennn");
+        dispatch(rehydrateAuthState({ token, userDetails }));
       }
     };
 
-    checkToken();
-  }, []);
+    rehydrateAuth();
+  }, [dispatch]);
+
   return (
     <>
       <StatusBar backgroundColor={colors.color1} barStyle="light-content" />
