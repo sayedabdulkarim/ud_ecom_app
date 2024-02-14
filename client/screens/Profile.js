@@ -1,7 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { colors, defaultStyle, formHeading } from "../styles/common";
+import {
+  colors,
+  defaultImg,
+  defaultStyle,
+  formHeading,
+} from "../styles/common";
 import { Avatar, Button } from "react-native-paper";
 import ButtonBox from "../component/ButtonBox";
 import Footer from "../component/Footer";
@@ -75,7 +80,7 @@ const Profile = ({ navigation, route }) => {
 
       setName(name || "");
       setEmail(email || "");
-      setAvatar(avatar?.url || "");
+      setAvatar(avatar?.url || defaultImg);
     }
   }, [userProfile, isError]);
 
@@ -84,7 +89,9 @@ const Profile = ({ navigation, route }) => {
       <View style={defaultStyle}>
         {/* heading  */}
         <View style={{ marginBottom: 20 }}>
-          <Text style={formHeading}>Profile</Text>
+          <Text style={formHeading} onPress={() => console.log({ userInfo })}>
+            Profile
+          </Text>
         </View>
         {/* loading */}
         {isLoading ? (

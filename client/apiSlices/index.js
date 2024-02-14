@@ -5,7 +5,8 @@ import { logOutUser } from "../slices/authSlice";
 const getJwtToken = async () => {
   try {
     const token = await AsyncStorage.getItem("@auth_token");
-    console.log({ token }, " fro, api slice");
+    const userDetails = await AsyncStorage.getItem("@user_details");
+    console.log({ token, userDetails }, " fro, api slice");
     return token || "";
   } catch (e) {
     console.error("Failed to fetch token:", e);

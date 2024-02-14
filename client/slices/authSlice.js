@@ -13,7 +13,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action) => {
-      const { token } = action.payload;
+      const { token, data } = action.payload;
       console.log(
         {
           payload: action.payload,
@@ -23,6 +23,9 @@ const authSlice = createSlice({
 
       state.userInfo = action.payload;
       AsyncStorage.setItem("@auth_token", token).catch(console.error);
+      AsyncStorage.setItem("@user_details", JSON.stringify(data)).catch(
+        console.error
+      );
       state.isAuthenticated = !!token;
     },
     setAuthenticated: (state, action) => {
@@ -32,6 +35,7 @@ const authSlice = createSlice({
     logOutUser: (state, action) => {
       console.log("logout called");
       AsyncStorage.removeItem("@auth_token").catch(console.error);
+      AsyncStorage.removeItem("@user_details").catch(console.error);
       state.userInfo = null;
       state.isAuthenticated = false;
     },
