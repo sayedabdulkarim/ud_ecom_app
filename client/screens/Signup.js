@@ -55,10 +55,6 @@ const Signup = ({ route, navigation }) => {
         base64Avatar = await convertImageToBase64(avatar);
       }
 
-      const avatarData = {
-        public_id: `avatar_${Date.now()}`, // Creates a string like "avatar_1615321356259"
-        url: base64Avatar,
-      };
       // Assuming you are sending JSON to your API
       const formData = {
         name,
