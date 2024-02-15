@@ -58,12 +58,7 @@ const ChangePassword = ({ navigation }) => {
         });
         setOldPassword("");
         setNewPassword("");
-        // Reset the navigation stack and navigate to the profile screen
         navigation.navigate("profile");
-        // navigation.reset({
-        //   index: 0, // Resets the stack to have only one route
-        //   routes: [{ name: "profile" }], // Sets the first (and only) route to be 'profile'
-        // });
       } catch (err) {
         console.log({ err }, " err from change passwoed");
         showToast({
