@@ -1,4 +1,5 @@
-import { View, Text, Alert } from "react-native"; // Import Alert for feedback
+import { View, Text } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState } from "react";
 import {
   colors,
@@ -9,40 +10,68 @@ import {
 } from "../styles/common";
 import { Button, TextInput } from "react-native-paper";
 import Header from "../component/Header";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useChangepasswordMutation } from "../apiSlices/userApiSlice";
+import { showToast } from "../utils/commonHelper";
 
-const ChangePassword = () => {
+const ChangePassword = ({ navigation }) => {
+  //misc
+  const dispatch = useDispatch();
+  const { userInfo, isAuthenticated } = useSelector(
+    (state) => state.authReducer
+  );
+  //state
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  // Removed dispatch if not used elsewhere, ensure to remove unused imports to keep your code clean.
-  // const dispatch = useDispatch();
 
-  // Destructure the mutate function from useChangepasswordMutation hook
+  //query n mutation
   const [changepassword, { isLoading, isSuccess, isError, error }] =
     useChangepasswordMutation();
+
+  const getJwtToken = async () => {
+    try {
+      const token = await AsyncStorage.getItem("@auth_token");
+      const userDetails = await AsyncStorage.getItem("@user_details");
+      console.log({ token, userDetails }, " fro, api slice");
+      // return token || "";
+    } catch (e) {
+      console.error("Failed to fetch token:", e);
+      // return "";
+    }
+  };
 
   const submitHandler = async () => {
     if (oldPassword && newPassword) {
       try {
-        // Call the changepassword mutation with the old and new password
         const response = await changepassword({
           oldPassword,
           newPassword,
         }).unwrap();
         console.log({ response }, " res from change passwoed");
-        // Display the success message from the server
-        Alert.alert(
-          "Success",
-          response.message || "Password changed successfully"
-        );
-        // Optionally reset password fields
+        showToast({
+          type: "success",
+          text1: "Updated succesfully.",
+          text2: response.message
+            ? response.message
+            : "Password changed successfully",
+          duration: 5000,
+        });
         setOldPassword("");
         setNewPassword("");
+        // Reset the navigation stack and navigate to the profile screen
+        navigation.navigate("profile");
+        // navigation.reset({
+        //   index: 0, // Resets the stack to have only one route
+        //   routes: [{ name: "profile" }], // Sets the first (and only) route to be 'profile'
+        // });
       } catch (err) {
         console.log({ err }, " err from change passwoed");
-        // Display the error message from the server
-        Alert.alert("Error", err.data ? err.data.message : "An error occurred");
+        showToast({
+          type: "error",
+          text1: err.data ? error?.data?.message : "An error occurred",
+          text2: "Password changing failed.",
+          duration: 5000,
+        });
       }
     }
   };
@@ -51,7 +80,17 @@ const ChangePassword = () => {
     <View style={defaultStyle}>
       <Header back={true} />
       <View style={{ marginBottom: 20, paddingTop: 70 }}>
-        <Text style={formHeading}>Change Password</Text>
+        <Text
+          style={formHeading}
+          onPress={() => {
+            console.log({ userInfo }, " console");
+          }}
+        >
+          Change Password
+        </Text>
+        <Text style={formHeading} onPress={() => getJwtToken()}>
+          localStore
+        </Text>
       </View>
 
       <View style={styles.container}>

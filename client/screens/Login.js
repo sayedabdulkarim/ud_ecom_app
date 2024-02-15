@@ -56,7 +56,9 @@ const Login = ({ navigation }) => {
       showToast({
         type: "error",
         text1: "Login Failed",
-        text2: error.message || "Please check your credentials and try again.",
+        text2:
+          error?.data?.message ||
+          "Please check your credentials and try again.",
         duration: 5000,
       });
     }

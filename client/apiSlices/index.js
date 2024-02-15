@@ -6,7 +6,8 @@ const getJwtToken = async () => {
   try {
     const token = await AsyncStorage.getItem("@auth_token");
     const userDetails = await AsyncStorage.getItem("@user_details");
-    console.log({ token, userDetails }, " fro, api slice");
+    console.log({ token }, " fro, api slice");
+    // console.log({ token, userDetails }, " fro, api slice");
     return token || "";
   } catch (e) {
     console.error("Failed to fetch token:", e);
@@ -31,7 +32,7 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 
   if (result.error && result.error.status === 401) {
     // Perform logout operations
-    api.dispatch(logOutUser());
+    // api.dispatch(logOutUser());
     // Note: Redirect to login should be handled in your components, not here
   }
 
