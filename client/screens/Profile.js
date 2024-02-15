@@ -102,12 +102,15 @@ const Profile = ({ navigation, route }) => {
       <View style={defaultStyle}>
         {/* heading  */}
         <View style={{ marginBottom: 20 }}>
-          <Text style={formHeading} onPress={() => console.log({ userInfo })}>
+          <Text
+            style={formHeading}
+            onPress={() => console.log({ userInfo }, " userInfo")}
+          >
             Profile
           </Text>
-          <Text style={formHeading} onPress={() => getJwtToken()}>
+          {/* <Text style={formHeading} onPress={() => getJwtToken()}>
             TEST
-          </Text>
+          </Text> */}
         </View>
         {/* loading */}
         {isLoading ? (
@@ -154,12 +157,14 @@ const Profile = ({ navigation, route }) => {
                   text={"Orders"}
                   icon={"format-list-bulleted-square"}
                 />
-                <ButtonBox
-                  handler={() => navigateHandler("Admin")}
-                  reverse
-                  icon={"view-dashboard"}
-                  text={"Admin"}
-                />
+                {userInfo?.data?.role === "admin" && (
+                  <ButtonBox
+                    handler={() => navigateHandler("Admin")}
+                    reverse
+                    icon={"view-dashboard"}
+                    text={"Admin"}
+                  />
+                )}
                 <ButtonBox
                   handler={() => navigateHandler("Profile")}
                   text={"Profile"}
