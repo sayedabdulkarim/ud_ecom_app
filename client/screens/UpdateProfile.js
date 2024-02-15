@@ -9,21 +9,20 @@ import {
 } from "../styles/common";
 import { Button, TextInput } from "react-native-paper";
 import Header from "../component/Header";
-
-// import { useDispatch, useSelector } from "react-redux";
-// import { updateProfile } from "../redux/actions/otherAction";
-// import { useMessageAndErrorOther } from "../utils/hooks";
+import { useDispatch, useSelector } from "react-redux";
 
 const UpdateProfile = ({ navigation }) => {
-  //   const { user } = useSelector((state) => state.user);
+  const { userInfo, isAuthenticated } = useSelector(
+    (state) => state.authReducer
+  );
   const user = {};
 
-  const [name, setName] = useState(user?.name);
-  const [email, setEmail] = useState(user?.email);
-  const [address, setAddress] = useState(user?.address);
-  const [city, setCity] = useState(user?.city);
-  const [country, setCountry] = useState(user?.country);
-  const [pinCode, setPinCode] = useState(user?.pinCode?.toString());
+  const [name, setName] = useState(userInfo?.data?.name);
+  const [email, setEmail] = useState(userInfo?.data?.email);
+  const [address, setAddress] = useState(userInfo?.data?.address);
+  const [city, setCity] = useState(userInfo?.data?.city);
+  const [country, setCountry] = useState(userInfo?.data?.country);
+  const [pinCode, setPinCode] = useState(userInfo?.data?.pinCode?.toString());
 
   //   const dispatch = useDispatch();
 
