@@ -51,14 +51,16 @@ const Login = ({ navigation }) => {
         routes: [{ name: "profile" }], // Sets the first (and only) route to be 'profile'
       });
     } catch (error) {
-      dispatch(setCredentials(null));
-      dispatch(setAuthenticated(false));
+      console.log({ error }, " err from login");
+      // dispatch(setCredentials(null));
+      // dispatch(setAuthenticated(false));
+      const errorMessage =
+        error?.data?.message ??
+        "An error occurred. Please check your credentials and try again.";
       showToast({
         type: "error",
         text1: "Login Failed",
-        text2:
-          error?.data?.message ||
-          "Please check your credentials and try again.",
+        text2: errorMessage,
         duration: 5000,
       });
     }
@@ -75,6 +77,8 @@ const Login = ({ navigation }) => {
 
     checkToken();
   }, []);
+
+  console.log(isLoading, " isLoadinggg");
 
   return (
     <>

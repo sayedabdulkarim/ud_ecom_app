@@ -88,8 +88,8 @@ const Signup = ({ route, navigation }) => {
     } catch (error) {
       // Handle signup failure
       console.error(error);
-      dispatch(setCredentials(null));
-      dispatch(setAuthenticated(false));
+      // dispatch(setCredentials(null));
+      // dispatch(setAuthenticated(false));
       showToast({
         type: "error",
         text1: "Signup Failed",
