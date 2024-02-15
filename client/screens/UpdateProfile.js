@@ -10,13 +10,19 @@ import {
 import { Button, TextInput } from "react-native-paper";
 import Header from "../component/Header";
 import { useDispatch, useSelector } from "react-redux";
+import { useUpdateUserProfileMutation } from "../apiSlices/userApiSlice";
+import { showToast } from "../utils/commonHelper";
+import { setCredentials, setIsReload } from "../slices/authSlice";
 
 const UpdateProfile = ({ navigation }) => {
+  //misc
+  const dispatch = useDispatch();
   const { userInfo, isAuthenticated } = useSelector(
     (state) => state.authReducer
   );
   const user = {};
 
+  //state
   const [name, setName] = useState(userInfo?.data?.name);
   const [email, setEmail] = useState(userInfo?.data?.email);
   const [address, setAddress] = useState(userInfo?.data?.address);
@@ -24,26 +30,98 @@ const UpdateProfile = ({ navigation }) => {
   const [country, setCountry] = useState(userInfo?.data?.country);
   const [pinCode, setPinCode] = useState(userInfo?.data?.pinCode?.toString());
 
-  //   const dispatch = useDispatch();
+  //query n mutation
+  const [updateUserProfile, { isLoading, isSuccess, isError, error }] =
+    useUpdateUserProfileMutation();
 
-  //   const loading = useMessageAndErrorOther(dispatch, navigation, "profile");
-  const loading = false;
+  //func
+  // const submitHandler = () => {
+  //   console.log({
+  //     name,
+  //     email,
+  //     address,
+  //   });
+  // };
 
-  const submitHandler = () => {
-    console.log({
-      name,
-      email,
-      address,
-    });
-    // dispatch(updateProfile(name, email, address, city, country, pinCode));
+  // const handleSubmit = async () => {
+  //   try {
+  //     // Call the updateUserProfile mutation with the new user information
+  //     await updateUserProfile({
+  //       name,
+  //       email,
+  //       address,
+  //       city,
+  //       country,
+  //       pinCode,
+  //     }).unwrap();
+  //     // Show success feedback
+  //     Alert.alert("Success", "Profile updated successfully");
+  //     // You may navigate the user away from the profile update screen or perform other actions
+  //   } catch (apiError) {
+  //     // Handle the API error
+  //     Alert.alert(
+  //       "Update Failed",
+  //       apiError.data?.message || "Could not update profile. Please try again."
+  //     );
+  //   }
+  // };
+
+  const handleSubmit = async () => {
+    try {
+      // Call the updateUserProfile mutation and pass in the payload
+      const updatedUser = await updateUserProfile({
+        name,
+        email,
+        address,
+        city,
+        country,
+        pinCode,
+      }).unwrap();
+      console.log({ updatedUser }, " updated User");
+      // Handle the successful update, for example, by showing a toast message
+      showToast({
+        type: "success",
+        text1: updatedUser?.message,
+        text2: "Your profile has been updated successfully!",
+        duration: 5000,
+      });
+      const obj = {
+        token: userInfo?.token,
+        data: { ...userInfo?.data, ...updatedUser?.data },
+      };
+      dispatch(setCredentials(obj));
+      dispatch(setIsReload(true));
+      navigation.navigate("profile");
+      // Optionally, navigate the user away from the update profile screen
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: "profile" }], // Assuming 'profile' is the route you want to navigate to
+      // });
+    } catch (error) {
+      console.log({ error }, " err from update profile");
+
+      // Handle the error, for example, by showing a toast message
+      const errorMessage =
+        error?.data?.message ??
+        "An error occurred. Please check the details and try again.";
+      showToast({
+        type: "error",
+        text1: "Update Failed",
+        text2: errorMessage,
+        duration: 5000,
+      });
+    }
   };
+
   return (
     <View style={defaultStyle}>
       <Header back={true} />
 
       {/* Heading */}
       <View style={{ marginBottom: 20, paddingTop: 70 }}>
-        <Text style={formHeading}>Edit Profile</Text>
+        <Text style={formHeading} onPress={() => console.log({ userInfo })}>
+          Edit Profile
+        </Text>
       </View>
 
       <ScrollView
@@ -98,10 +176,10 @@ const UpdateProfile = ({ navigation }) => {
           />
 
           <Button
-            loading={loading}
+            loading={isLoading}
             textColor={colors.color2}
             style={styles.btn}
-            onPress={submitHandler}
+            onPress={handleSubmit}
           >
             Update
           </Button>

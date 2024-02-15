@@ -13,13 +13,13 @@ import ButtonBox from "../component/ButtonBox";
 import Footer from "../component/Footer";
 import Loader from "../component/Loader";
 import { useGetUserProfileQuery } from "../apiSlices/userApiSlice";
-import { logOutUser } from "../slices/authSlice";
+import { logOutUser, setIsReload } from "../slices/authSlice";
 import { showToast } from "../utils/commonHelper";
 
 const Profile = ({ navigation, route }) => {
   //misc
   const dispatch = useDispatch();
-  const { userInfo, isAuthenticated } = useSelector(
+  const { userInfo, isAuthenticated, isReload } = useSelector(
     (state) => state.authReducer
   );
   //state
@@ -27,7 +27,12 @@ const Profile = ({ navigation, route }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   //query n mutation
-  const { data: userProfile, isLoading, isError } = useGetUserProfileQuery();
+  const {
+    data: userProfile,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetUserProfileQuery();
   //fnc
   const handleLogout = () => {
     dispatch(logOutUser());
@@ -96,6 +101,13 @@ const Profile = ({ navigation, route }) => {
       setAvatar(avatar?.url || defaultImg);
     }
   }, [userProfile, isError]);
+
+  useEffect(() => {
+    if (isReload) {
+      refetch();
+      dispatch(setIsReload(false));
+    }
+  }, [isReload, refetch]);
 
   return (
     <>

@@ -6,6 +6,7 @@ const initialState = {
   isAuthenticated: false,
   name: "Hello Auth Slice",
   posts: [],
+  isReload: false,
 };
 
 const authSlice = createSlice({
@@ -45,6 +46,9 @@ const authSlice = createSlice({
         state.isAuthenticated = !!token;
       }
     },
+    setIsReload: (state, action) => {
+      state.isReload = action.payload;
+    },
   },
 });
 
@@ -53,6 +57,7 @@ export const {
   setAuthenticated,
   logOutUser,
   rehydrateAuthState,
+  setIsReload,
 } = authSlice.actions;
 
 export default authSlice.reducer;
