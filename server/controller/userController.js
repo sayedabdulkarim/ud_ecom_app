@@ -232,8 +232,33 @@ const updateProfilePic = asyncHandler(async (req, res) => {
   });
 });
 
+// @desc logout for a registered user
+// route POST /api/users/logout
+// @access PRIVATE
+const logoutUser = asyncHandler(async (req, res) => {
+  // Clear the JWT Token cookie
+  res.cookie("jwt", "", {
+    httpOnly: true,
+    expires: new Date(0),
+    secure: process.env.NODE_ENV !== "development",
+    sameSite: "strict",
+  });
+
+  // Clear the CSRF Token cookie
+  res.cookie("XSRF-TOKEN", "", {
+    expires: new Date(0),
+    secure: process.env.NODE_ENV !== "development",
+    sameSite: "strict",
+  });
+
+  // Inform the client that the user has been successfully logged out
+  res.status(200).json({
+    message: "Successfully logged out.",
+  });
+});
+
 // @desc Change password for a registered user
-// @route PATCH /api/users/changepassword
+// @route PUT /api/users/changepassword
 // @access PRIVATE
 const changePassword = asyncHandler(async (req, res) => {
   const userId = req.user._id;
@@ -271,31 +296,6 @@ const changePassword = asyncHandler(async (req, res) => {
     console.error("Error changing password:", error);
     res.status(500).json({ message: "Error changing password" });
   }
-});
-
-// @desc logout for a registered user
-// route POST /api/users/logout
-// @access PRIVATE
-const logoutUser = asyncHandler(async (req, res) => {
-  // Clear the JWT Token cookie
-  res.cookie("jwt", "", {
-    httpOnly: true,
-    expires: new Date(0),
-    secure: process.env.NODE_ENV !== "development",
-    sameSite: "strict",
-  });
-
-  // Clear the CSRF Token cookie
-  res.cookie("XSRF-TOKEN", "", {
-    expires: new Date(0),
-    secure: process.env.NODE_ENV !== "development",
-    sameSite: "strict",
-  });
-
-  // Inform the client that the user has been successfully logged out
-  res.status(200).json({
-    message: "Successfully logged out.",
-  });
 });
 
 // @desc forgotPassword for a registered user
