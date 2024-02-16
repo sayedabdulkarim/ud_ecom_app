@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   colors,
@@ -12,9 +12,12 @@ import { Avatar, Button } from "react-native-paper";
 import ButtonBox from "../component/ButtonBox";
 import Footer from "../component/Footer";
 import Loader from "../component/Loader";
-import { useGetUserProfileQuery } from "../apiSlices/userApiSlice";
+import {
+  useGetUserProfileQuery,
+  useUpdateprofilepicMutation,
+} from "../apiSlices/userApiSlice";
 import { logOutUser, setIsReload } from "../slices/authSlice";
-import { showToast } from "../utils/commonHelper";
+import { convertImageToBase64, showToast } from "../utils/commonHelper";
 
 const Profile = ({ navigation, route }) => {
   //misc
@@ -26,6 +29,7 @@ const Profile = ({ navigation, route }) => {
   const [avatar, setAvatar] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [selectedImage, setSelectedImage] = useState("");
   //query n mutation
   const {
     data: userProfile,
@@ -33,6 +37,8 @@ const Profile = ({ navigation, route }) => {
     isError,
     refetch,
   } = useGetUserProfileQuery();
+  const [updateProfilePic, { isLoading: isUpdatingPic }] =
+    useUpdateprofilepicMutation();
   //fnc
   const handleLogout = () => {
     dispatch(logOutUser());
@@ -85,16 +91,50 @@ const Profile = ({ navigation, route }) => {
     }
   };
 
+  const handleUpdateProfilePic = useCallback(async (imageUri) => {
+    try {
+      if (!imageUri) {
+        showToast({
+          type: "error",
+          text1: "No image selected",
+        });
+        return;
+      }
+
+      let base64Avatar = imageUri;
+
+      if (!imageUri.startsWith("data:")) {
+        base64Avatar = await convertImageToBase64(imageUri);
+      }
+
+      // Call the mutation with the base64 encoded image
+      await updateProfilePic({ file: base64Avatar }).unwrap();
+
+      // If successful, refetch the user profile data to update the UI
+      refetch();
+
+      showToast({
+        type: "success",
+        text1: "Profile picture updated successfully",
+      });
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+      showToast({
+        type: "error",
+        text1: "Failed to update profile picture",
+        text2: error.data?.message || "Please try again later.",
+      });
+    }
+  }, []);
+
   //async
   useEffect(() => {
     if (route.params?.image) setAvatar(route.params.image);
   }, [route.params]);
 
   useEffect(() => {
-    // When the user profile data is loaded and not an error
     if (userProfile && !isError) {
       const { name, email, avatar } = userProfile?.data;
-      // console.log({ userProfile: userProfile?.data });
 
       setName(name || "");
       setEmail(email || "");
@@ -109,6 +149,20 @@ const Profile = ({ navigation, route }) => {
     }
   }, [isReload, refetch]);
 
+  useEffect(() => {
+    const updateAndRefetchProfile = async () => {
+      if (route.params?.image) {
+        try {
+          await handleUpdateProfilePic(route.params.image);
+        } catch (error) {
+          console.error("Failed to update profile picture:", error);
+        }
+      }
+    };
+
+    updateAndRefetchProfile();
+  }, [route.params?.image, handleUpdateProfilePic]);
+
   return (
     <>
       <View style={defaultStyle}>
@@ -116,16 +170,21 @@ const Profile = ({ navigation, route }) => {
         <View style={{ marginBottom: 20 }}>
           <Text
             style={formHeading}
-            onPress={() => console.log({ userInfo }, " userInfo")}
+            onPress={() =>
+              console.log({ userInfo, params: route.params }, " userInfo")
+            }
           >
             Profile
+          </Text>
+          <Text style={formHeading} onPress={() => handleUpdateProfilePic()}>
+            TEST
           </Text>
           {/* <Text style={formHeading} onPress={() => getJwtToken()}>
             TEST
           </Text> */}
         </View>
         {/* loading */}
-        {isLoading ? (
+        {isLoading || isUpdatingPic ? (
           <Loader />
         ) : (
           <>
