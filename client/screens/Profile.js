@@ -1,6 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+
 import { useSelector, useDispatch } from "react-redux";
 import {
   colors,
@@ -22,6 +24,7 @@ import { convertImageToBase64, showToast } from "../utils/commonHelper";
 const Profile = ({ navigation, route }) => {
   //misc
   const dispatch = useDispatch();
+  const isInitialMount = useRef(true);
   const { userInfo, isAuthenticated, isReload } = useSelector(
     (state) => state.authReducer
   );
@@ -149,19 +152,27 @@ const Profile = ({ navigation, route }) => {
     }
   }, [isReload, refetch]);
 
-  useEffect(() => {
-    const updateAndRefetchProfile = async () => {
-      if (route.params?.image) {
-        try {
-          await handleUpdateProfilePic(route.params.image);
-        } catch (error) {
-          console.error("Failed to update profile picture:", error);
+  useFocusEffect(
+    useCallback(() => {
+      console.log(
+        {
+          params: route.params,
+        },
+        " checkkkk"
+      );
+      const updateAndRefetchProfile = async () => {
+        if (route.params?.image) {
+          try {
+            await handleUpdateProfilePic(route.params.image);
+          } catch (error) {
+            console.error("Failed to update profile picture:", error);
+          }
         }
-      }
-    };
+      };
 
-    updateAndRefetchProfile();
-  }, [route.params?.image, handleUpdateProfilePic]);
+      updateAndRefetchProfile();
+    }, [route.params])
+  );
 
   return (
     <>
@@ -171,14 +182,21 @@ const Profile = ({ navigation, route }) => {
           <Text
             style={formHeading}
             onPress={() =>
-              console.log({ userInfo, params: route.params }, " userInfo")
+              console.log(
+                {
+                  userInfo,
+                  params: route.params,
+                  state: navigation.getState(),
+                },
+                " userInfo"
+              )
             }
           >
             Profile
           </Text>
-          <Text style={formHeading} onPress={() => handleUpdateProfilePic()}>
+          {/* <Text style={formHeading} onPress={() => handleUpdateProfilePic()}>
             TEST
-          </Text>
+          </Text> */}
           {/* <Text style={formHeading} onPress={() => getJwtToken()}>
             TEST
           </Text> */}
