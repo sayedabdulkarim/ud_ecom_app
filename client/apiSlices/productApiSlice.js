@@ -2,7 +2,7 @@ import { apiSlice } from "./";
 
 const USERS_URL = "api/product";
 
-export const userApiSlice = apiSlice.injectEndpoints({
+export const productApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createproduct: builder.mutation({
       query: (data) => ({
@@ -15,29 +15,26 @@ export const userApiSlice = apiSlice.injectEndpoints({
       query: (queryArg) => {
         const params = new URLSearchParams(queryArg).toString();
         return {
-          url: `/getAllProducts?${params}`,
+          url: `${USERS_URL}/getAllProducts?${params}`,
           method: "GET",
         };
       },
-      transformResponse: (response) => response.products,
     }),
     getAdminProducts: builder.query({
       query: () => {
         return {
-          url: `/getAdminproducts`,
+          url: `${USERS_URL}/getAdminproducts`,
           method: "GET",
         };
       },
-      transformResponse: (response) => response.products,
     }),
     getallcategories: builder.query({
       query: () => {
         return {
-          url: `/getallcategories`,
+          url: `${USERS_URL}/getallcategories`,
           method: "GET",
         };
       },
-      transformResponse: (response) => response.products,
     }),
     addcategory: builder.mutation({
       query: (data) => ({
@@ -56,4 +53,4 @@ export const {
   //category
   useGetallcategoriesQuery,
   useAddcategoryMutation,
-} = userApiSlice;
+} = productApiSlice;
