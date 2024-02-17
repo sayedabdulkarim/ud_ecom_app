@@ -30,6 +30,22 @@ export const userApiSlice = apiSlice.injectEndpoints({
       },
       transformResponse: (response) => response.products,
     }),
+    getallcategories: builder.query({
+      query: () => {
+        return {
+          url: `/getallcategories`,
+          method: "GET",
+        };
+      },
+      transformResponse: (response) => response.products,
+    }),
+    addcategory: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/addcategory`,
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -37,4 +53,7 @@ export const {
   useCreateproductMutation,
   useGetAllProductsQuery,
   useGetAdminProductsQuery,
+  //category
+  useGetallcategoriesQuery,
+  useAddcategoryMutation,
 } = userApiSlice;
