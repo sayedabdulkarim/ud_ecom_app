@@ -17,7 +17,10 @@ import SearchModal from "../component/SearchModal";
 import ProductCard from "../component/ProductCard";
 import Footer from "../component/Footer";
 import Heading from "../component/Heading";
-import { useGetallcategoriesQuery } from "../apiSlices/productApiSlice";
+import {
+  useGetAllProductsQuery,
+  useGetallcategoriesQuery,
+} from "../apiSlices/productApiSlice";
 import Loader from "../component/Loader";
 
 const Home = () => {
@@ -27,6 +30,7 @@ const Home = () => {
 
   //state
   const [categories, setCategories] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [activeSearch, setActiveSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -37,6 +41,12 @@ const Home = () => {
     error: categoriesError,
     isLoading: categoriesLoading,
   } = useGetallcategoriesQuery();
+
+  const {
+    data: getAllProducts,
+    error: getAllProductsError,
+    isLoading: getAllProductsLoading,
+  } = useGetAllProductsQuery();
 
   //func
   const handleCategory = (val) => {
@@ -59,6 +69,18 @@ const Home = () => {
     }
   }, [categoriesData, categoriesError, categoriesLoading]);
 
+  useEffect(() => {
+    if (getAllProducts) {
+      console.log(
+        {
+          allProducts,
+        },
+        " allProduct"
+      );
+      setAllProducts(getAllProducts?.products);
+    }
+  }, [getAllProducts, getAllProductsError, getAllProductsLoading]);
+
   return (
     <>
       {activeSearch && (
@@ -72,9 +94,9 @@ const Home = () => {
       )}
 
       <View style={defaultStyle}>
-        <Text onPress={() => console.log({ categories: categoriesData })}>
+        {/* <Text onPress={() => console.log({ categories: categoriesData })}>
           TEST
-        </Text>
+        </Text> */}
         <Header back={false} />
 
         {/* heading row */}
@@ -101,7 +123,7 @@ const Home = () => {
           </View>
         </View>
 
-        {categoriesLoading ? (
+        {categoriesLoading || getAllProductsLoading ? (
           <Loader />
         ) : (
           <>
@@ -155,14 +177,17 @@ const Home = () => {
             {/* products */}
             <View style={{ flex: 1 }}>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {products?.map((item, idx) => {
+                {allProducts?.map((item, idx) => {
                   const { price, _id, name, images } = item;
                   [0].url;
                   return (
                     <ProductCard
                       key={_id}
                       id={_id}
-                      image={images[0].url}
+                      image={
+                        images[0]?.url ??
+                        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM_yg0XL4wIxYUOBwpNjp_dWR53-RmRvLJDDgzDzqp6w&s"
+                      }
                       stock={5}
                       name={name}
                       price={price}
