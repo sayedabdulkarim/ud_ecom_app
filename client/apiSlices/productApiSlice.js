@@ -11,14 +11,25 @@ export const productApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    // getAllProducts: builder.query({
+    //   query: (queryArg) => {
+    //     const params = new URLSearchParams(queryArg).toString();
+    //     return {
+    //       url: `${USERS_URL}/getAllProducts/?${params}`,
+    //       method: "GET",
+    //     };
+    //   },
+    // }),
     getAllProducts: builder.query({
       query: (queryArg) => {
         const params = new URLSearchParams(queryArg).toString();
         return {
-          url: `${USERS_URL}/getAllProducts?${params}`,
+          url: `${USERS_URL}/getAllProducts/?${params}`,
           method: "GET",
         };
       },
+      keepUnusedDataFor: 0, // Data is considered stale immediately
+      refetchOnMountOrArgChange: true, // Refetch on every mount or argument change
     }),
     getAdminProducts: builder.query({
       query: () => {

@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
@@ -25,6 +25,7 @@ import Loader from "../component/Loader";
 
 const Home = () => {
   //misc
+  const isFocused = useIsFocused();
   const navigate = useNavigation();
   const products = [];
 
@@ -42,11 +43,16 @@ const Home = () => {
     isLoading: categoriesLoading,
   } = useGetallcategoriesQuery();
 
+  // Prepare query parameters for getAllProducts
+  const queryParams = {};
+  if (selectedCategory) queryParams.category = selectedCategory;
+  if (searchQuery) queryParams.keyword = searchQuery;
+
   const {
     data: getAllProducts,
     error: getAllProductsError,
     isLoading: getAllProductsLoading,
-  } = useGetAllProductsQuery();
+  } = useGetAllProductsQuery(queryParams);
 
   //func
   const handleCategory = (val) => {
@@ -69,18 +75,33 @@ const Home = () => {
     }
   }, [categoriesData, categoriesError, categoriesLoading]);
 
+  // useEffect(() => {
+  //   if (getAllProducts) {
+  //     // console.log(
+  //     //   {
+  //     //     allProducts,
+  //     //     selectedCategory,
+  //     //     searchQuery,
+  //     //   },
+  //     //   " allProduct"
+  //     // );
+  //     // setAllProducts(getAllProducts?.products);
+  //     setAllProducts(getAllProducts?.products || []);
+  //   }
+  // }, [getAllProducts, selectedCategory]);
+
   useEffect(() => {
     if (getAllProducts) {
-      console.log(
-        {
-          allProducts,
-        },
-        " allProduct"
-      );
-      setAllProducts(getAllProducts?.products);
+      console.log(getAllProducts.products, "calledddd from scusse");
+      setAllProducts(getAllProducts.products);
     }
-  }, [getAllProducts, getAllProductsError, getAllProductsLoading]);
+    if (getAllProductsError) {
+      console.log("called from error");
+      setAllProducts([]);
+    }
+  }, [getAllProducts, searchQuery, selectedCategory, getAllProductsError]);
 
+  // console.log({ getAllProducts }, " querypppp");
   return (
     <>
       {activeSearch && (
@@ -89,14 +110,16 @@ const Home = () => {
           setSearchQuery={setSearchQuery}
           activeSearch={searchQuery}
           setActiveSearch={setActiveSearch}
-          products={products}
+          products={allProducts}
+          selectedCategory={selectedCategory}
         />
       )}
 
       <View style={defaultStyle}>
-        {/* <Text onPress={() => console.log({ categories: categoriesData })}>
+        <Text onPress={() => console.log({ getAllProducts, allProducts })}>
           TEST
-        </Text> */}
+        </Text>
+        <Text onPress={() => setSelectedCategory(null)}>CLEAR Category</Text>
         <Header back={false} />
 
         {/* heading row */}

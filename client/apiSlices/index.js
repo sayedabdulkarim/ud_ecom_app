@@ -6,11 +6,11 @@ const getJwtToken = async () => {
   try {
     const token = await AsyncStorage.getItem("@auth_token");
     const userDetails = await AsyncStorage.getItem("@user_details");
-    console.log({ token }, " fro, api slice");
+    // console.log({ token }, " fro, api slice");
     // console.log({ token, userDetails }, " fro, api slice");
     return token || "";
   } catch (e) {
-    console.error("Failed to fetch token:", e);
+    // console.error("Failed to fetch token:", e);
     return "";
   }
 };

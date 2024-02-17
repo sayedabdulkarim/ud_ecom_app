@@ -40,7 +40,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
     const products = await query;
 
     if (products.length === 0) {
-      res.status(404).json({ message: "No products found" });
+      res.status(404).json({ message: "No products found", products: [] });
     } else {
       res
         .status(200)

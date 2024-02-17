@@ -20,6 +20,7 @@ const SearchModal = ({
   activeSearch,
   setActiveSearch,
   products = [],
+  selectedCategory,
 }) => {
   //misc
   const navigate = useNavigation();
@@ -52,6 +53,13 @@ const SearchModal = ({
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
       }}
     >
+      <Text
+        onPress={() =>
+          console.log({ searchQuery, selectedCategory }, " searchhh")
+        }
+      >
+        Hello
+      </Text>
       <SafeAreaView>
         <Searchbar
           placeholder="Search"
