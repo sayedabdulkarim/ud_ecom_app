@@ -77,31 +77,33 @@ const Home = () => {
 
   // useEffect(() => {
   //   if (getAllProducts) {
-  //     // console.log(
-  //     //   {
-  //     //     allProducts,
-  //     //     selectedCategory,
-  //     //     searchQuery,
-  //     //   },
-  //     //   " allProduct"
-  //     // );
-  //     // setAllProducts(getAllProducts?.products);
-  //     setAllProducts(getAllProducts?.products || []);
+  //     console.log(getAllProducts.products, "calledddd from scusse");
+  //     setAllProducts(getAllProducts.products);
   //   }
-  // }, [getAllProducts, selectedCategory]);
+  //   if (getAllProductsError) {
+  //     console.log("called from error");
+  //     setAllProducts([]);
+  //   }
+  // }, [getAllProducts, searchQuery, selectedCategory, getAllProductsError]);
+
+  useEffect(() => {
+    setAllProducts([]);
+  }, [selectedCategory, searchQuery]);
 
   useEffect(() => {
     if (getAllProducts) {
-      console.log(getAllProducts.products, "calledddd from scusse");
-      setAllProducts(getAllProducts.products);
+      setAllProducts(getAllProducts?.products || []);
     }
+  }, [getAllProducts]);
+
+  // Use yet another useEffect for error handling
+  useEffect(() => {
     if (getAllProductsError) {
-      console.log("called from error");
       setAllProducts([]);
     }
-  }, [getAllProducts, searchQuery, selectedCategory, getAllProductsError]);
+  }, [getAllProductsError]);
 
-  // console.log({ getAllProducts }, " querypppp");
+  // console.log(getAllProductsLoading, " querypppp");
   return (
     <>
       {activeSearch && (
