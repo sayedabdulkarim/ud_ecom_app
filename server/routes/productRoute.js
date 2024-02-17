@@ -14,8 +14,13 @@ import {
   getAllCategories,
   getProductDetails,
   updateProduct,
+  getAdminProducts,
 } from "../controller/productController.js";
 
+//
+router.get("/getAdminProducts", getAdminProducts);
+
+///
 router.get("/getAllProducts", getAllProducts);
 router.route("/getProduct/:id").get(getProductDetails);
 router.post(
