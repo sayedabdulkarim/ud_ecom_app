@@ -120,27 +120,27 @@ const Home = () => {
                 }}
               >
                 {categories.map((item) => {
-                  const { category, id } = item;
+                  const { category, _id } = item;
                   return (
                     <TouchableOpacity
-                      key={id}
+                      key={_id}
                       style={[
                         styles.button,
                         {
                           backgroundColor:
-                            selectedCategory === id
+                            selectedCategory === _id
                               ? colors.color1
                               : colors.color5,
                         },
                       ]}
-                      onPress={() => handleCategory(id)}
+                      onPress={() => handleCategory(_id)}
                     >
                       <Text
                         style={[
                           styles.buttonText,
                           {
                             color:
-                              selectedCategory === id ? colors.color2 : "gray",
+                              selectedCategory === _id ? colors.color2 : "gray",
                           },
                         ]}
                       >
