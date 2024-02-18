@@ -12,54 +12,54 @@ import Header from "../component/Header";
 import Heading from "../component/Heading";
 import { Button } from "react-native-paper";
 import CartItem from "../component/CartItem";
-export const cartItems = [
-  {
-    name: "whVVIKolzD",
-    image: "https://static.thenounproject.com/png/524455-200.png",
-    id: "1",
-    product: "uMkDyQnkzWDt",
-    stock: 8,
-    price: 2144,
-    quantity: 2,
-  },
-  {
-    name: "TPXzEREgYY",
-    image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkXAUltzl1IumAF8kCEgFOGJz5nCSrVEfb-ZiqUQya4Q&s",
-    id: "2",
-    product: "tgXylUElPoZp",
-    stock: 10,
-    price: 2553,
-    quantity: 1,
-  },
-  {
-    name: "ctzhUcaAvM",
-    image: "https://example.com/XoGxVW.jpg",
-    id: "3",
-    product: "dSppczdDkqjc",
-    stock: 8,
-    price: 2400,
-    quantity: 1,
-  },
-  {
-    name: "vvsqPqkiFW",
-    image: "https://example.com/JehNpg.jpg",
-    id: "4",
-    product: "kjvxQlosJcdP",
-    stock: 5,
-    price: 4443,
-    quantity: 1,
-  },
-  {
-    name: "smxRfCoZcL",
-    image: "https://example.com/woBzFP.jpg",
-    id: "5",
-    product: "WaUGOQSiowfd",
-    stock: 8,
-    price: 2070,
-    quantity: 2,
-  },
-];
+// export const cartItems = [
+//   {
+//     name: "whVVIKolzD",
+//     image: "https://static.thenounproject.com/png/524455-200.png",
+//     id: "1",
+//     product: "uMkDyQnkzWDt",
+//     stock: 8,
+//     price: 2144,
+//     quantity: 2,
+//   },
+//   {
+//     name: "TPXzEREgYY",
+//     image:
+//       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkXAUltzl1IumAF8kCEgFOGJz5nCSrVEfb-ZiqUQya4Q&s",
+//     id: "2",
+//     product: "tgXylUElPoZp",
+//     stock: 10,
+//     price: 2553,
+//     quantity: 1,
+//   },
+//   {
+//     name: "ctzhUcaAvM",
+//     image: "https://example.com/XoGxVW.jpg",
+//     id: "3",
+//     product: "dSppczdDkqjc",
+//     stock: 8,
+//     price: 2400,
+//     quantity: 1,
+//   },
+//   {
+//     name: "vvsqPqkiFW",
+//     image: "https://example.com/JehNpg.jpg",
+//     id: "4",
+//     product: "kjvxQlosJcdP",
+//     stock: 5,
+//     price: 4443,
+//     quantity: 1,
+//   },
+//   {
+//     name: "smxRfCoZcL",
+//     image: "https://example.com/woBzFP.jpg",
+//     id: "5",
+//     product: "WaUGOQSiowfd",
+//     stock: 8,
+//     price: 2070,
+//     quantity: 2,
+//   },
+// ];
 
 const Cart = () => {
   //misc
@@ -67,6 +67,7 @@ const Cart = () => {
   const { userInfo, isAuthenticated, isReload } = useSelector(
     (state) => state.authReducer
   );
+  const { cartItems } = useSelector((state) => state.orderReducer);
   //func
   const handleIncrement = (id, qty, stock) => {
     console.log({ id, qty, stock }, "incremented");
@@ -106,25 +107,29 @@ const Cart = () => {
       >
         <Text onPress={() => console.log({ userInfo }, " cartttt")}>USER</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
-          {cartItems?.map((item, idx) => {
-            const { id, name, image, product, stock, price, quantity } = item;
-            return (
-              <CartItem
-                name={name}
-                amount={price}
-                qty={quantity}
-                stock={stock}
-                index={idx}
-                imgSrc={image}
-                id={id}
-                decrementHandler={handleDecrement}
-                incrementhandler={handleIncrement}
-                key={id}
-                product={product}
-                navigate={navigation}
-              />
-            );
-          })}
+          {cartItems.length ? (
+            cartItems?.map((item, idx) => {
+              const { id, name, image, product, stock, price, quantity } = item;
+              return (
+                <CartItem
+                  name={name}
+                  amount={price}
+                  qty={quantity}
+                  stock={stock}
+                  index={idx}
+                  imgSrc={image}
+                  id={id}
+                  decrementHandler={handleDecrement}
+                  incrementhandler={handleIncrement}
+                  key={id}
+                  product={product}
+                  navigate={navigation}
+                />
+              );
+            })
+          ) : (
+            <Text style={{ textAlign: "center" }}>No Items yet.</Text>
+          )}
         </ScrollView>
       </View>
 
