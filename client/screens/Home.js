@@ -12,7 +12,7 @@ import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
 import { Avatar } from "react-native-paper";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import SearchModal from "../component/SearchModal";
 import ProductCard from "../component/ProductCard";
 import Footer from "../component/Footer";
@@ -22,6 +22,7 @@ import {
   useGetallcategoriesQuery,
 } from "../apiSlices/productApiSlice";
 import Loader from "../component/Loader";
+import { debounce } from "../utils/commonHelper";
 
 const Home = () => {
   //misc
@@ -36,6 +37,19 @@ const Home = () => {
   const [activeSearch, setActiveSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(searchQuery);
+
+  const debouncedSetSearch = useCallback(
+    debounce((query) => {
+      setDebouncedSearchQuery(query);
+    }, 500),
+    []
+  );
+
+  const handleSearchChange = (query) => {
+    setSearchQuery(query);
+    debouncedSetSearch(query);
+  };
   // RTK Query
   const {
     data: categoriesData,
@@ -46,7 +60,7 @@ const Home = () => {
   // Prepare query parameters for getAllProducts
   const queryParams = {};
   if (selectedCategory) queryParams.category = selectedCategory;
-  if (searchQuery) queryParams.keyword = searchQuery;
+  if (debouncedSearchQuery) queryParams.keyword = debouncedSearchQuery;
 
   const {
     data: getAllProducts,
@@ -67,24 +81,9 @@ const Home = () => {
   //async
   useEffect(() => {
     if (categoriesData) {
-      // console.log(
-      //   { categoriesData, categoriesError, categoriesLoading },
-      //   " get categoriesss"
-      // );
       setCategories(categoriesData?.categories);
     }
   }, [categoriesData, categoriesError, categoriesLoading]);
-
-  // useEffect(() => {
-  //   if (getAllProducts) {
-  //     console.log(getAllProducts.products, "calledddd from scusse");
-  //     setAllProducts(getAllProducts.products);
-  //   }
-  //   if (getAllProductsError) {
-  //     console.log("called from error");
-  //     setAllProducts([]);
-  //   }
-  // }, [getAllProducts, searchQuery, selectedCategory, getAllProductsError]);
 
   useEffect(() => {
     setAllProducts([]);
@@ -109,8 +108,8 @@ const Home = () => {
       {activeSearch && (
         <SearchModal
           searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          activeSearch={searchQuery}
+          setSearchQuery={handleSearchChange}
+          activeSearch={activeSearch}
           setActiveSearch={setActiveSearch}
           products={allProducts}
           selectedCategory={selectedCategory}
