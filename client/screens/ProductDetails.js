@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
   noimage: {
     textAlign: "center",
     width: ITEM_WIDTH,
-    resizeMode: "contain",
+    // resizeMode: "contain",
     height: 600,
     // borderWidth: 5,
     // borderColor: "green",
