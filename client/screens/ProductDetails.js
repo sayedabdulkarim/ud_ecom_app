@@ -30,7 +30,7 @@ const ProductDetails = ({ route: { params } }) => {
 
   const name = "Macbook Pro";
   const price = 100;
-  const stock = 1;
+  let stock = 0;
   const description =
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut hendrerit, nisi quis sodales tristique, lorem tortor rhoncus magna, eget faucibus libero felis eget dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Sed sit amet congue quam. Maecenas maximus, mi ac blandit luctus, metus diam pellentesque urna, sed ultricies leo magna vitae purus. Fusce sit amet odio consectetur, malesuada erat vel, commodo neque. Vivamus sed lacus nunc. Curabitur tempus, massa at aliquam consequat, velit nisi auctor augue, a facilisis velit tortor quis lorem.";
   const isCarousel = useRef(null);
@@ -58,7 +58,7 @@ const ProductDetails = ({ route: { params } }) => {
   ];
 
   //state
-  const [quantity, setQuantity] = useState(10);
+  const [quantity, setQuantity] = useState(0);
 
   //func
   const handleDecrement = () => {
@@ -71,17 +71,10 @@ const ProductDetails = ({ route: { params } }) => {
   };
 
   const handleAddToCart = () => {
-    if (stock === 0)
-      Toast.show({
-        type: "error",
-        text1: "Out Of Stock.",
-        // text2: "This is text 2",
-      });
-    else
-      Toast.show({
-        type: "success",
-        text1: "Added To Cart.",
-      });
+    Toast.show({
+      type: "success",
+      text1: "Added To Cart.",
+    });
     console.log({ quantity }, "added to carttt.");
   };
 
@@ -93,6 +86,7 @@ const ProductDetails = ({ route: { params } }) => {
       },
       " get product by id"
     );
+    stock = product?.product?.stock;
   }, [params, product]);
 
   return (
@@ -112,7 +106,7 @@ const ProductDetails = ({ route: { params } }) => {
       ) : (
         <>
           {product?.product?.images?.length === 0 ? (
-            <EmptyImage />
+            <EmptyImage product={product} />
           ) : (
             <Carousel
               layout="stack"
@@ -231,14 +225,31 @@ const ProductDetails = ({ route: { params } }) => {
             </View>
             <TouchableOpacity
               activeOpacity={0.8}
+              disabled={product?.product?.stock === 0}
               onPress={() => handleAddToCart()}
             >
-              <Button
+              {/* <Button
                 style={styles.btn}
                 textColor={colors.color2}
                 icon={"cart"}
+                disabled={product?.product?.stock === 0 ? true : false}
               >
                 Add To Cart
+              </Button> */}
+              <Button
+                style={[
+                  styles.btn,
+                  product?.product?.stock === 0 && styles.btnDisabled,
+                ]}
+                labelStyle={[
+                  styles.btnText,
+                  product?.product?.stock === 0 && styles.btnTextDisabled,
+                ]}
+                icon="cart"
+                // disabled={product?.product?.stock === 0}
+                // onPress={() => console.log("Pressed")}
+              >
+                {product?.product?.stock === 0 ? "Out Of Stock" : "Add To Cart"}
               </Button>
             </TouchableOpacity>
           </View>
@@ -256,10 +267,15 @@ const CarouselCardItem = ({ item, index }) => {
   );
 };
 
-const EmptyImage = () => {
+const EmptyImage = ({ product }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.noimage}>NO IMAGES FOUND.</Text>
+      <Text
+        style={styles.noimage}
+        onPress={() => console.log({ product }, " proddd")}
+      >
+        NO IMAGES FOUND.
+      </Text>
     </View>
   );
 };
@@ -296,5 +312,15 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // borderColor: "red",
     // marginTop: 1,
+  },
+  btnDisabled: {
+    // Styles for disabled button, if needed to adjust background etc.
+    opacity: 0.5, // Example to make button look disabled
+  },
+  btnText: {
+    color: "#FFFFFF", // Ensuring text is white
+  },
+  btnTextDisabled: {
+    color: "#FFFFFF", // Keeping text white even when disabled
   },
 });
