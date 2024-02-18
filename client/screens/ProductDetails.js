@@ -216,20 +216,22 @@ const ProductDetails = ({ route: { params } }) => {
                   alignItems: "center",
                 }}
               >
-                <TouchableOpacity
-                  onPress={() => handleDecrement(product?.product?._id)}
-                >
-                  <Avatar.Icon
-                    icon={"minus"}
-                    size={20}
-                    style={{
-                      borderRadius: 5,
-                      backgroundColor: colors.color5,
-                      height: 25,
-                      width: 25,
-                    }}
-                  />
-                </TouchableOpacity>
+                {isInCart(cartItems, product?.product?._id) && (
+                  <TouchableOpacity
+                    onPress={() => handleDecrement(product?.product?._id)}
+                  >
+                    <Avatar.Icon
+                      icon={"minus"}
+                      size={20}
+                      style={{
+                        borderRadius: 5,
+                        backgroundColor: colors.color5,
+                        height: 25,
+                        width: 25,
+                      }}
+                    />
+                  </TouchableOpacity>
+                )}
                 <Text
                   style={{
                     backgroundColor: colors.color4,
@@ -247,20 +249,22 @@ const ProductDetails = ({ route: { params } }) => {
                   {quantityInCart(cartItems, product.product._id)?.quantity ||
                     0}
                 </Text>
-                <TouchableOpacity
-                  onPress={() => handleIncrement(product?.product?._id)}
-                >
-                  <Avatar.Icon
-                    icon={"plus"}
-                    size={20}
-                    style={{
-                      borderRadius: 5,
-                      backgroundColor: colors.color5,
-                      height: 25,
-                      width: 25,
-                    }}
-                  />
-                </TouchableOpacity>
+                {isInCart(cartItems, product?.product?._id) && (
+                  <TouchableOpacity
+                    onPress={() => handleIncrement(product?.product?._id)}
+                  >
+                    <Avatar.Icon
+                      icon={"plus"}
+                      size={20}
+                      style={{
+                        borderRadius: 5,
+                        backgroundColor: colors.color5,
+                        height: 25,
+                        width: 25,
+                      }}
+                    />
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
             <TouchableOpacity
