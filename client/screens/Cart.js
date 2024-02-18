@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
@@ -63,6 +64,9 @@ export const cartItems = [
 const Cart = () => {
   //misc
   const navigation = useNavigation();
+  const { userInfo, isAuthenticated, isReload } = useSelector(
+    (state) => state.authReducer
+  );
   //func
   const handleIncrement = (id, qty, stock) => {
     console.log({ id, qty, stock }, "incremented");
@@ -100,6 +104,7 @@ const Cart = () => {
           //   borderColor: "red",
         }}
       >
+        <Text onPress={() => console.log({ userInfo }, " cartttt")}>USER</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
           {cartItems?.map((item, idx) => {
             const { id, name, image, product, stock, price, quantity } = item;
