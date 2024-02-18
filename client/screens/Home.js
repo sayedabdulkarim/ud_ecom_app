@@ -180,7 +180,11 @@ const Home = () => {
                               : colors.color5,
                         },
                       ]}
-                      onPress={() => handleCategory(_id)}
+                      onPress={() =>
+                        selectedCategory === _id
+                          ? setSelectedCategory(null)
+                          : handleCategory(_id)
+                      }
                     >
                       <Text
                         style={[
@@ -193,6 +197,17 @@ const Home = () => {
                       >
                         {category}
                       </Text>
+                      {selectedCategory === _id && (
+                        <View style={styles.crossIconContainer}>
+                          <Avatar.Icon
+                            icon="close"
+                            color="white"
+                            size={24}
+                            backgroundColor={"black"}
+                            style={styles.crossIcon}
+                          />
+                        </View>
+                      )}
                     </TouchableOpacity>
                   );
                 })}
@@ -240,10 +255,16 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     margin: 5,
     alignItems: "center",
-    padding: 10, // Adjust as needed
+    justifyContent: "center",
+    padding: 10,
   },
   buttonText: {
     fontSize: 12,
     color: "gray",
+  },
+  crossIconContainer: {
+    position: "absolute",
+    right: -9,
+    top: -10,
   },
 });
