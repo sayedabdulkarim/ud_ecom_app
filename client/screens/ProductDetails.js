@@ -16,8 +16,12 @@ import Toast from "react-native-toast-message";
 import { useGetProductDetailsByIdQuery } from "../apiSlices/productApiSlice";
 import Loader from "../component/Loader";
 import { useSelector, useDispatch } from "react-redux";
-import { addToCart } from "../slices/ordersSlice";
-import { isInCart } from "../utils/commonHelper";
+import {
+  addToCart,
+  decreaseQuantity,
+  increaseQuantity,
+} from "../slices/ordersSlice";
+import { isInCart, quantityInCart } from "../utils/commonHelper";
 //
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const ITEM_WIDTH = SLIDER_WIDTH;
@@ -71,19 +75,22 @@ const ProductDetails = ({ route: { params } }) => {
   const [quantity, setQuantity] = useState(0);
 
   //func
-  const handleDecrement = () => {
+  const handleDecrement = (_id) => {
     // if (quantity <= 1) return;
     setQuantity((prev) => prev - 1);
+    dispatch(decreaseQuantity(_id));
   };
-  const handleIncrement = () => {
+  const handleIncrement = (_id) => {
     // if (stock <= quantity) return;
     console.log(stock, " sss");
     // if (stock <= quantity) return;
     setQuantity((prev) => prev + 1);
+    dispatch(increaseQuantity(_id));
   };
 
   const handleAddToCart = (data) => {
     dispatch(addToCart(data));
+    setQuantity(1);
     Toast.show({
       type: "success",
       text1: "Added To Cart.",
@@ -100,6 +107,12 @@ const ProductDetails = ({ route: { params } }) => {
       " get product by id"
     );
   }, [params, product]);
+
+  // useEffect(() => {
+  //   if (cartItems?.length && isInCart(cartItems, product?.product?._id)) {
+  //     setQuantity(isInCart(cartItems, product?.product?._id)?.quantity);
+  //   }
+  // }, [cartItems]);
 
   return (
     <View
@@ -168,6 +181,7 @@ const ProductDetails = ({ route: { params } }) => {
                 console.log(
                   {
                     cartItems,
+                    quantity: quantityInCart(cartItems, product.product._id),
                   },
                   " storeee"
                 )
@@ -202,7 +216,9 @@ const ProductDetails = ({ route: { params } }) => {
                   alignItems: "center",
                 }}
               >
-                <TouchableOpacity onPress={() => handleDecrement()}>
+                <TouchableOpacity
+                  onPress={() => handleDecrement(product?.product?._id)}
+                >
                   <Avatar.Icon
                     icon={"minus"}
                     size={20}
@@ -227,9 +243,13 @@ const ProductDetails = ({ route: { params } }) => {
                     marginHorizontal: 10,
                   }}
                 >
-                  {quantity}
+                  {/* {quantity} */}
+                  {quantityInCart(cartItems, product.product._id)?.quantity ||
+                    0}
                 </Text>
-                <TouchableOpacity onPress={() => handleIncrement()}>
+                <TouchableOpacity
+                  onPress={() => handleIncrement(product?.product?._id)}
+                >
                   <Avatar.Icon
                     icon={"plus"}
                     size={20}

@@ -53,3 +53,9 @@ export const debounce = (func, wait) => {
 export const isInCart = (arr, _id) => {
   return arr.some((i) => i._id === _id);
 };
+
+export const quantityInCart = (arr, _id) => {
+  const item = arr.find((i) => i._id === _id);
+  console.log(item, " itemem quantity");
+  return item;
+};
