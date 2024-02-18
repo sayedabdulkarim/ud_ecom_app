@@ -49,3 +49,7 @@ export const debounce = (func, wait) => {
     timeout = setTimeout(later, wait);
   };
 };
+
+export const isInCart = (arr, _id) => {
+  return arr.some((i) => i._id === _id);
+};

@@ -17,6 +17,7 @@ import { useGetProductDetailsByIdQuery } from "../apiSlices/productApiSlice";
 import Loader from "../component/Loader";
 import { useSelector, useDispatch } from "react-redux";
 import { addToCart } from "../slices/ordersSlice";
+import { isInCart } from "../utils/commonHelper";
 //
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const ITEM_WIDTH = SLIDER_WIDTH;
@@ -244,13 +245,18 @@ const ProductDetails = ({ route: { params } }) => {
             </View>
             <TouchableOpacity
               activeOpacity={0.8}
-              disabled={product?.product?.stock === 0}
+              disabled={
+                product?.product?.stock === 0 ||
+                isInCart(cartItems, product?.product?._id)
+              }
               onPress={() => handleAddToCart(product.product)}
             >
               <Button
                 style={[
                   styles.btn,
-                  product?.product?.stock === 0 && styles.btnDisabled,
+                  product?.product?.stock === 0 ||
+                    (isInCart(cartItems, product?.product?._id) &&
+                      styles.btnDisabled),
                 ]}
                 labelStyle={[
                   styles.btnText,
@@ -258,7 +264,11 @@ const ProductDetails = ({ route: { params } }) => {
                 ]}
                 icon="cart"
               >
-                {product?.product?.stock === 0 ? "Out Of Stock" : "Add To Cart"}
+                {product?.product?.stock === 0
+                  ? "Out Of Stock"
+                  : isInCart(cartItems, product?.product?._id)
+                  ? "Added to Cart"
+                  : "Add To Cart"}
               </Button>
             </TouchableOpacity>
           </View>
