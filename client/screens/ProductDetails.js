@@ -280,12 +280,13 @@ const styles = StyleSheet.create({
     height: 200,
   },
   noimage: {
-    alignSelf: "center",
+    textAlign: "center",
     width: ITEM_WIDTH,
     resizeMode: "contain",
     height: 600,
-    borderWidth: 5,
-    borderColor: "green",
+    // borderWidth: 5,
+    // borderColor: "green",
+    color: "#fff",
   },
   btn: {
     backgroundColor: colors.color3,
