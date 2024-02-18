@@ -62,11 +62,13 @@ const ProductDetails = ({ route: { params } }) => {
 
   //func
   const handleDecrement = () => {
-    if (quantity <= 1) return;
+    // if (quantity <= 1) return;
     setQuantity((prev) => prev - 1);
   };
   const handleIncrement = () => {
-    if (stock <= quantity) return;
+    // if (stock <= quantity) return;
+    console.log(stock, " sss");
+    // if (stock <= quantity) return;
     setQuantity((prev) => prev + 1);
   };
 
@@ -86,7 +88,6 @@ const ProductDetails = ({ route: { params } }) => {
       },
       " get product by id"
     );
-    stock = product?.product?.stock;
   }, [params, product]);
 
   return (
@@ -228,14 +229,6 @@ const ProductDetails = ({ route: { params } }) => {
               disabled={product?.product?.stock === 0}
               onPress={() => handleAddToCart()}
             >
-              {/* <Button
-                style={styles.btn}
-                textColor={colors.color2}
-                icon={"cart"}
-                disabled={product?.product?.stock === 0 ? true : false}
-              >
-                Add To Cart
-              </Button> */}
               <Button
                 style={[
                   styles.btn,
@@ -246,8 +239,6 @@ const ProductDetails = ({ route: { params } }) => {
                   product?.product?.stock === 0 && styles.btnTextDisabled,
                 ]}
                 icon="cart"
-                // disabled={product?.product?.stock === 0}
-                // onPress={() => console.log("Pressed")}
               >
                 {product?.product?.stock === 0 ? "Out Of Stock" : "Add To Cart"}
               </Button>
