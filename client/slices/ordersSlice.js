@@ -20,7 +20,7 @@ const orderSlice = createSlice({
     // },
     addToCart: (state, action) => {
       const existingItemIndex = state.cartItems.findIndex(
-        (item) => item.id === action.payload.id
+        (item) => item._id === action.payload._id
       );
       if (existingItemIndex === -1) {
         // Item is not in cart, add it with quantity of 1
@@ -29,7 +29,7 @@ const orderSlice = createSlice({
     },
     removeFromCart: (state, action) => {
       state.cartItems = state.cartItems.filter(
-        (item) => item.id !== action.payload
+        (item) => item._id !== action.payload
       );
     },
     clearCart: (state) => {
@@ -37,7 +37,7 @@ const orderSlice = createSlice({
     },
     increaseQuantity: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
-        (item) => item.id === action.payload
+        (item) => item._id === action.payload
       );
       if (itemIndex !== -1) {
         state.cartItems[itemIndex].quantity += 1; // Increase quantity by 1
@@ -45,7 +45,7 @@ const orderSlice = createSlice({
     },
     decreaseQuantity: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
-        (item) => item.id === action.payload
+        (item) => item._id === action.payload
       );
       if (itemIndex !== -1 && state.cartItems[itemIndex].quantity > 1) {
         state.cartItems[itemIndex].quantity -= 1; // Decrease quantity by 1

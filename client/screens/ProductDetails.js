@@ -15,13 +15,22 @@ import { Avatar, Button } from "react-native-paper";
 import Toast from "react-native-toast-message";
 import { useGetProductDetailsByIdQuery } from "../apiSlices/productApiSlice";
 import Loader from "../component/Loader";
+import { useSelector, useDispatch } from "react-redux";
+import { addToCart } from "../slices/ordersSlice";
 //
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const ITEM_WIDTH = SLIDER_WIDTH;
 
 const ProductDetails = ({ route: { params } }) => {
-  console.log({ params }, " pppppp");
   //misc
+  const dispatch = useDispatch();
+  const { userInfo, isAuthenticated, isReload } = useSelector(
+    (state) => state.authReducer
+  );
+  const { cartItems } = useSelector((state) => state.orderReducer);
+  // console.log({ params }, " pppppp");
+
+  //query n mutation
   const {
     data: product,
     error,
@@ -72,7 +81,8 @@ const ProductDetails = ({ route: { params } }) => {
     setQuantity((prev) => prev + 1);
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (data) => {
+    dispatch(addToCart(data));
     Toast.show({
       type: "success",
       text1: "Added To Cart.",
@@ -153,6 +163,14 @@ const ProductDetails = ({ route: { params } }) => {
                 marginVertical: 15,
               }}
               numberOfLines={8}
+              onPress={() =>
+                console.log(
+                  {
+                    cartItems,
+                  },
+                  " storeee"
+                )
+              }
             >
               {product?.product?.description}
             </Text>
@@ -227,7 +245,7 @@ const ProductDetails = ({ route: { params } }) => {
             <TouchableOpacity
               activeOpacity={0.8}
               disabled={product?.product?.stock === 0}
-              onPress={() => handleAddToCart()}
+              onPress={() => handleAddToCart(product.product)}
             >
               <Button
                 style={[
