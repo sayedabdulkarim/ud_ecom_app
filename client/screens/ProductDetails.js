@@ -7,13 +7,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
 import Carousel from "react-native-snap-carousel";
 import { Avatar, Button } from "react-native-paper";
 import Toast from "react-native-toast-message";
-
+import { useGetProductDetailsByIdQuery } from "../apiSlices/productApiSlice";
+import Loader from "../component/Loader";
 //
 const SLIDER_WIDTH = Dimensions.get("window").width;
 const ITEM_WIDTH = SLIDER_WIDTH;
@@ -21,6 +22,12 @@ const ITEM_WIDTH = SLIDER_WIDTH;
 const ProductDetails = ({ route: { params } }) => {
   console.log({ params }, " pppppp");
   //misc
+  const {
+    data: product,
+    error,
+    isLoading,
+  } = useGetProductDetailsByIdQuery(params.id);
+
   const name = "Macbook Pro";
   const price = 100;
   const stock = 1;
@@ -78,6 +85,16 @@ const ProductDetails = ({ route: { params } }) => {
     console.log({ quantity }, "added to carttt.");
   };
 
+  //async
+  useEffect(() => {
+    console.log(
+      {
+        product,
+      },
+      " get product by id"
+    );
+  }, [params, product]);
+
   return (
     <View
       style={{
@@ -87,126 +104,146 @@ const ProductDetails = ({ route: { params } }) => {
       }}
     >
       <Header back={true} />
+      {/* <Text onPress={() => console.log(product, " proddd")}>NO DATA</Text> */}
+
       {/*  */}
-      <Carousel
-        layout="stack"
-        sliderWidth={SLIDER_WIDTH}
-        itemWidth={ITEM_WIDTH}
-        ref={isCarousel}
-        data={images}
-        renderItem={CarouselCardItem}
-      />
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          {product?.product?.images?.length === 0 ? (
+            <EmptyImage />
+          ) : (
+            <Carousel
+              layout="stack"
+              sliderWidth={SLIDER_WIDTH}
+              itemWidth={ITEM_WIDTH}
+              ref={isCarousel}
+              data={product?.product?.images}
+              // data={images}
+              renderItem={CarouselCardItem}
+            />
+          )}
 
-      <View
-        style={{
-          backgroundColor: colors.color2,
-          padding: 35,
-          flex: 1,
-          marginTop: -380,
-          borderTopLeftRadius: 55,
-          borderTopRightRadius: 55,
-        }}
-      >
-        <Text
-          numberOfLines={2}
-          style={{
-            fontSize: 25,
-          }}
-        >
-          {name}
-        </Text>
-        <Text
-          style={{
-            fontSize: 18,
-            fontWeight: "900",
-          }}
-        >
-          {price.toFixed(2)}
-        </Text>
-        <Text
-          style={{
-            letterSpacing: 1,
-            lineHeight: 20,
-            marginVertical: 15,
-          }}
-          numberOfLines={8}
-        >
-          {description}
-        </Text>
-
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            paddingHorizontal: 5,
-            // borderWidth: 1,
-            // borderColor: "red",
-          }}
-        >
-          <Text
-            style={{
-              color: colors.color3,
-              fontWeight: 300,
-            }}
-          >
-            Quantity
-          </Text>
           <View
             style={{
-              width: 80,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
+              backgroundColor: colors.color2,
+              padding: 35,
+              flex: 1,
+              marginTop: -380,
+              borderTopLeftRadius: 55,
+              borderTopRightRadius: 55,
             }}
           >
-            <TouchableOpacity onPress={() => handleDecrement()}>
-              <Avatar.Icon
-                icon={"minus"}
-                size={20}
-                style={{
-                  borderRadius: 5,
-                  backgroundColor: colors.color5,
-                  height: 25,
-                  width: 25,
-                }}
-              />
-            </TouchableOpacity>
             <Text
+              numberOfLines={2}
               style={{
-                backgroundColor: colors.color4,
-                height: 25,
-                width: 25,
-                textAlignVertical: "center",
-                textAlign: "center",
-                borderWidth: 1,
-                borderRadius: 5,
-                borderColor: colors.color5,
-                marginHorizontal: 10,
+                fontSize: 25,
               }}
             >
-              {quantity}
+              {product?.product?.name}
             </Text>
-            <TouchableOpacity onPress={() => handleIncrement()}>
-              <Avatar.Icon
-                icon={"plus"}
-                size={20}
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: "900",
+              }}
+            >
+              {product?.product?.price.toFixed(2)}
+            </Text>
+            <Text
+              style={{
+                letterSpacing: 1,
+                lineHeight: 20,
+                marginVertical: 15,
+              }}
+              numberOfLines={8}
+            >
+              {product?.product?.description}
+            </Text>
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                paddingHorizontal: 5,
+                // borderWidth: 1,
+                // borderColor: "red",
+              }}
+            >
+              <Text
                 style={{
-                  borderRadius: 5,
-                  backgroundColor: colors.color5,
-                  height: 25,
-                  width: 25,
+                  color: colors.color3,
+                  fontWeight: 300,
                 }}
-              />
+              >
+                Quantity
+              </Text>
+              <View
+                style={{
+                  width: 80,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <TouchableOpacity onPress={() => handleDecrement()}>
+                  <Avatar.Icon
+                    icon={"minus"}
+                    size={20}
+                    style={{
+                      borderRadius: 5,
+                      backgroundColor: colors.color5,
+                      height: 25,
+                      width: 25,
+                    }}
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    backgroundColor: colors.color4,
+                    height: 25,
+                    width: 25,
+                    textAlignVertical: "center",
+                    textAlign: "center",
+                    borderWidth: 1,
+                    borderRadius: 5,
+                    borderColor: colors.color5,
+                    marginHorizontal: 10,
+                  }}
+                >
+                  {quantity}
+                </Text>
+                <TouchableOpacity onPress={() => handleIncrement()}>
+                  <Avatar.Icon
+                    icon={"plus"}
+                    size={20}
+                    style={{
+                      borderRadius: 5,
+                      backgroundColor: colors.color5,
+                      height: 25,
+                      width: 25,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => handleAddToCart()}
+            >
+              <Button
+                style={styles.btn}
+                textColor={colors.color2}
+                icon={"cart"}
+              >
+                Add To Cart
+              </Button>
             </TouchableOpacity>
           </View>
-        </View>
-        <TouchableOpacity activeOpacity={0.8} onPress={() => handleAddToCart()}>
-          <Button style={styles.btn} textColor={colors.color2} icon={"cart"}>
-            Add To Cart
-          </Button>
-        </TouchableOpacity>
-      </View>
+        </>
+      )}
     </View>
   );
 };
@@ -215,6 +252,14 @@ const CarouselCardItem = ({ item, index }) => {
   return (
     <View style={styles.container} key={index}>
       <Image source={{ uri: item?.url }} style={styles.image} />
+    </View>
+  );
+};
+
+const EmptyImage = () => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.noimage}>NO IMAGES FOUND.</Text>
     </View>
   );
 };
@@ -233,6 +278,14 @@ const styles = StyleSheet.create({
     width: ITEM_WIDTH,
     resizeMode: "contain",
     height: 200,
+  },
+  noimage: {
+    alignSelf: "center",
+    width: ITEM_WIDTH,
+    resizeMode: "contain",
+    height: 600,
+    borderWidth: 5,
+    borderColor: "green",
   },
   btn: {
     backgroundColor: colors.color3,

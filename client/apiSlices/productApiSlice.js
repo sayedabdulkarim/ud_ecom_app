@@ -31,6 +31,14 @@ export const productApiSlice = apiSlice.injectEndpoints({
       keepUnusedDataFor: 0, // Data is considered stale immediately
       refetchOnMountOrArgChange: true, // Refetch on every mount or argument change
     }),
+    getProductDetailsById: builder.query({
+      query: (id) => {
+        return {
+          url: `${USERS_URL}/getProduct/${id}`,
+          method: "GET",
+        };
+      },
+    }),
     getAdminProducts: builder.query({
       query: () => {
         return {
@@ -61,6 +69,7 @@ export const {
   useCreateproductMutation,
   useGetAllProductsQuery,
   useGetAdminProductsQuery,
+  useGetProductDetailsByIdQuery,
   //category
   useGetallcategoriesQuery,
   useAddcategoryMutation,
