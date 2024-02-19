@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
 
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
@@ -28,7 +29,9 @@ const Home = () => {
   //misc
   const isFocused = useIsFocused();
   const navigate = useNavigation();
+  const dispatch = useDispatch();
   const products = [];
+  const { cartItems } = useSelector((state) => state.orderReducer);
 
   //state
   const [categories, setCategories] = useState([]);
@@ -233,6 +236,7 @@ const Home = () => {
                       addToCartHandler={addToCartHandler}
                       navigateHandler={navigate}
                       idx={idx}
+                      item={item}
                     />
                   );
                 })}

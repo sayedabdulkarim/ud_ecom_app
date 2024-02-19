@@ -17,6 +17,7 @@ const ProductCard = ({
   price,
   addToCartHandler,
   navigateHandler,
+  item,
 }) => {
   return (
     <TouchableOpacity
@@ -91,7 +92,8 @@ const ProductCard = ({
         >
           <Button
             textColor={idx % 2 === 0 ? colors.color1 : colors.color2}
-            onPress={() => addToCartHandler(id, stock)}
+            // onPress={() => addToCartHandler(id, stock)}
+            onPress={() => addToCartHandler(item)}
           >
             Add To Cart
           </Button>
