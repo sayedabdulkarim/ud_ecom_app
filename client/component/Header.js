@@ -2,14 +2,22 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Avatar } from "react-native-paper";
 import { colors } from "../styles/common";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { useSelector, useDispatch } from "react-redux";
+import { clearCart } from "../slices/ordersSlice";
 
 const Header = ({ back, emtpyCart = false }) => {
   //misc
   const route = useRoute();
   const navigate = useNavigation();
+  const dispatch = useDispatch();
+  const { userInfo, isAuthenticated, isReload } = useSelector(
+    (state) => state.authReducer
+  );
+  const { cartItems } = useSelector((state) => state.orderReducer);
   //func
   const handeEmptyCart = () => {
-    console.log("Ëmpty Cart");
+    dispatch(clearCart());
+    // console.log("Ëmpty Cart");
   };
 
   return (
