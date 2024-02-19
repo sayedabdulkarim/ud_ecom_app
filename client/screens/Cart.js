@@ -12,6 +12,7 @@ import Header from "../component/Header";
 import Heading from "../component/Heading";
 import { Button } from "react-native-paper";
 import CartItem from "../component/CartItem";
+import { decreaseQuantity, increaseQuantity } from "../slices/ordersSlice";
 // export const cartItems = [
 //   {
 //     name: "whVVIKolzD",
@@ -64,16 +65,17 @@ import CartItem from "../component/CartItem";
 const Cart = () => {
   //misc
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const { userInfo, isAuthenticated, isReload } = useSelector(
     (state) => state.authReducer
   );
   const { cartItems } = useSelector((state) => state.orderReducer);
   //func
-  const handleIncrement = (id, qty, stock) => {
-    console.log({ id, qty, stock }, "incremented");
+  const handleIncrement = (id) => {
+    dispatch(increaseQuantity(id));
   };
-  const handleDecrement = (id, qty) => {
-    console.log({ id, qty }, "Decremented");
+  const handleDecrement = (id) => {
+    dispatch(decreaseQuantity(id));
   };
 
   return (
@@ -125,6 +127,7 @@ const Cart = () => {
                   key={_id}
                   product={product}
                   navigate={navigation}
+                  item={item}
                 />
               );
             })
