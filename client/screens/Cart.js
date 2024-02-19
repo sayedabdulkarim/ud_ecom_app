@@ -109,7 +109,8 @@ const Cart = () => {
         <ScrollView showsVerticalScrollIndicator={false}>
           {cartItems.length ? (
             cartItems?.map((item, idx) => {
-              const { id, name, image, product, stock, price, quantity } = item;
+              const { _id, name, image, product, stock, price, quantity } =
+                item;
               return (
                 <CartItem
                   name={name}
@@ -118,10 +119,10 @@ const Cart = () => {
                   stock={stock}
                   index={idx}
                   imgSrc={image}
-                  id={id}
+                  id={_id}
                   decrementHandler={handleDecrement}
                   incrementhandler={handleIncrement}
-                  key={id}
+                  key={_id}
                   product={product}
                   navigate={navigation}
                 />
