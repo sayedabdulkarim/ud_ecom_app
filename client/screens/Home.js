@@ -8,8 +8,8 @@ import {
   View,
 } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 import { useSelector, useDispatch } from "react-redux";
-
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
 import { Avatar } from "react-native-paper";
@@ -24,6 +24,7 @@ import {
 } from "../apiSlices/productApiSlice";
 import Loader from "../component/Loader";
 import { debounce } from "../utils/commonHelper";
+import { addToCart } from "../slices/ordersSlice";
 
 const Home = () => {
   //misc
@@ -77,8 +78,12 @@ const Home = () => {
     setSelectedCategory(val);
   };
 
-  const addToCartHandler = (id) => {
-    console.log({ id });
+  const addToCartHandler = (data) => {
+    dispatch(addToCart(data));
+    Toast.show({
+      type: "success",
+      text1: "Added To Cart.",
+    });
   };
 
   //async

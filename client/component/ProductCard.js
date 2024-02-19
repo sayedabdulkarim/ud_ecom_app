@@ -8,6 +8,9 @@ import {
 } from "react-native";
 import { colors } from "../styles/common";
 import { Button } from "react-native-paper";
+import { useSelector, useDispatch } from "react-redux";
+import { isInCart } from "../utils/commonHelper";
+
 const ProductCard = ({
   id,
   idx,
@@ -19,6 +22,7 @@ const ProductCard = ({
   navigateHandler,
   item,
 }) => {
+  const { cartItems } = useSelector((state) => state.orderReducer);
   return (
     <TouchableOpacity
       activeOpacity={1}
@@ -89,13 +93,28 @@ const ProductCard = ({
             borderBottomLeftRadius: 20,
             width: "100%",
           }}
+          // disabled
+          disabled={item?.stock === 0 || isInCart(cartItems, id)}
+          onPress={() => addToCartHandler(item)}
         >
           <Button
             textColor={idx % 2 === 0 ? colors.color1 : colors.color2}
             // onPress={() => addToCartHandler(id, stock)}
-            onPress={() => addToCartHandler(item)}
+            style={[
+              styles.btn,
+              item?.stock === 0 ||
+                (isInCart(cartItems, item?._id) && styles.btnDisabled),
+            ]}
+            labelStyle={[
+              styles.btnText,
+              item?.stock === 0 && styles.btnTextDisabled,
+            ]}
           >
-            Add To Cart
+            {item?.stock === 0
+              ? "Out Of Stock"
+              : isInCart(cartItems, id)
+              ? "Added to Cart"
+              : "Add To Cart"}
           </Button>
         </TouchableOpacity>
       </View>
@@ -105,4 +124,24 @@ const ProductCard = ({
 
 export default ProductCard;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  btn: {
+    // backgroundColor: colors.color3,
+    // borderRadius: 100,
+    // padding: 5,
+    // marginVertical: 35,
+    // borderWidth: 1,
+    // borderColor: "red",
+    // marginTop: 1,
+  },
+  btnDisabled: {
+    // Styles for disabled button, if needed to adjust background etc.
+    opacity: 0.5, // Example to make button look disabled
+  },
+  btnText: {
+    // color: "#FFFFFF", // Ensuring text is white
+  },
+  btnTextDisabled: {
+    // color: "#FFFFFF", // Keeping text white even when disabled
+  },
+});
