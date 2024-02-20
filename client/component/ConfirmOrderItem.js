@@ -22,7 +22,13 @@ const ConfirmOrderItem = ({ price, quantity, image, name }) => {
         }}
       />
 
-      <Text>{name}</Text>
+      <Text
+        style={{ maxWidth: 100, flexShrink: 1 }}
+        numberOfLines={1}
+        ellipsizeMode="tail"
+      >
+        {name}
+      </Text>
       <View
         style={{
           flexDirection: "row",

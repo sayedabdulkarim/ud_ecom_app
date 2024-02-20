@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -6,7 +7,8 @@ import {
   View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { cartItems } from "./Cart";
+import { useSelector, useDispatch } from "react-redux";
+// import { cartItems } from "./Cart";
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
 import Heading from "../component/Heading";
@@ -15,11 +17,29 @@ import { Button } from "react-native-paper";
 
 const ConfirmModal = () => {
   //misc
-  const itemPrice = 4000;
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const { userInfo, isAuthenticated, isReload } = useSelector(
+    (state) => state.authReducer
+  );
+  const { cartItems } = useSelector((state) => state.orderReducer);
+
+  //state
+  const [itemPrice, setItemPrice] = useState(0);
   const shippingCharges = 200;
   const tax = 0.18 * itemPrice;
   const totalAmount = itemPrice + shippingCharges + tax;
-  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (cartItems && cartItems?.length) {
+      let total = cartItems?.reduce(
+        (prev, current) => prev + current.quantity * current.price,
+        0
+      );
+      setItemPrice(total);
+      // itemPrice = total;
+    }
+  }, [cartItems]);
 
   return (
     <View
@@ -37,12 +57,15 @@ const ConfirmModal = () => {
         }}
       />
       <View style={{ paddingVertical: 20, flex: 1 }}>
+        <Text onPress={() => console.log({ cartItems, itemPrice }, " storeee")}>
+          STORE
+        </Text>
         <ScrollView>
           {cartItems?.map((item) => {
-            const { name, image, id, product, stock, price, quantity } = item;
+            const { name, image, _id, product, stock, price, quantity } = item;
             return (
               <ConfirmOrderItem
-                key={id}
+                key={_id}
                 image={image}
                 name={name}
                 price={price}
