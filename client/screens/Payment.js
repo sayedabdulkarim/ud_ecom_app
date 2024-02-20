@@ -1,5 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
 import Heading from "../component/Heading";
@@ -7,15 +8,25 @@ import { Button, RadioButton } from "react-native-paper";
 
 const Payment = ({ navigation, route }) => {
   //misc
-  const isAuthenticated = false;
+  // const isAuthenticated = false;
+  const dispatch = useDispatch();
+  const { userInfo, isAuthenticated, isReload } = useSelector(
+    (state) => state.authReducer
+  );
+  const { cartItems } = useSelector((state) => state.orderReducer);
+
   //state
   const [paymentMethod, setPaymentMethod] = useState("COD");
   //func
   const redirectToLogin = () => {
     navigation.navigate("login");
   };
-  const handleCODPayment = () => {};
-  const handleOnlinePayment = () => {};
+  const handleCODPayment = () => {
+    console.log("cod");
+  };
+  const handleOnlinePayment = () => {
+    console.log("online");
+  };
 
   return (
     <View style={defaultStyle}>
