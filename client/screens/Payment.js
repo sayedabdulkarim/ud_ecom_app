@@ -8,6 +8,7 @@ import { Button, RadioButton } from "react-native-paper";
 import { useCreateOrderMutation } from "../apiSlices/orderApiSlice";
 import { showToast } from "../utils/commonHelper";
 import { clearCart } from "../slices/ordersSlice";
+import Loader from "../component/Loader";
 
 const Payment = ({ navigation, route }) => {
   //misc
@@ -98,42 +99,51 @@ const Payment = ({ navigation, route }) => {
           paddingTop: 70,
         }}
       />
-      <View style={styles.container}>
-        <RadioButton.Group
-          value={paymentMethod}
-          onValueChange={setPaymentMethod}
-        >
-          <View style={styles.radioStyle}>
-            <Text style={styles.radioStyleText}>Cash On Delivery</Text>
-            <RadioButton color={colors.color1} value="COD" />
+      {/* <Loader /> */}
+      {isLoadingCreateOrder ? (
+        <Loader />
+      ) : (
+        <>
+          <View style={styles.container}>
+            <RadioButton.Group
+              value={paymentMethod}
+              onValueChange={setPaymentMethod}
+            >
+              <View style={styles.radioStyle}>
+                <Text style={styles.radioStyleText}>Cash On Delivery</Text>
+                <RadioButton color={colors.color1} value="COD" />
+              </View>
+              <View style={styles.radioStyle}>
+                <Text style={styles.radioStyleText}>ONLINE</Text>
+                <RadioButton color={colors.color1} value="ONLINE" />
+              </View>
+            </RadioButton.Group>
           </View>
-          <View style={styles.radioStyle}>
-            <Text style={styles.radioStyleText}>ONLINE</Text>
-            <RadioButton color={colors.color1} value="ONLINE" />
-          </View>
-        </RadioButton.Group>
-      </View>
 
-      {/*  */}
-      <TouchableOpacity
-        onPress={
-          !isAuthenticated
-            ? redirectToLogin
-            : paymentMethod === "COD"
-            ? handleCODPayment
-            : handleOnlinePayment
-        }
-      >
-        <Button
-          style={styles.btn}
-          textColor={colors.color2}
-          icon={
-            paymentMethod === "COD" ? "check-circle" : "circle-multiple-outline"
-          }
-        >
-          {paymentMethod === "COD" ? "Place Order " : "Pay"}
-        </Button>
-      </TouchableOpacity>
+          {/*  */}
+          <TouchableOpacity
+            onPress={
+              !isAuthenticated
+                ? redirectToLogin
+                : paymentMethod === "COD"
+                ? handleCODPayment
+                : handleOnlinePayment
+            }
+          >
+            <Button
+              style={styles.btn}
+              textColor={colors.color2}
+              icon={
+                paymentMethod === "COD"
+                  ? "check-circle"
+                  : "circle-multiple-outline"
+              }
+            >
+              {paymentMethod === "COD" ? "Place Order " : "Pay"}
+            </Button>
+          </TouchableOpacity>
+        </>
+      )}
     </View>
   );
 };
