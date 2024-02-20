@@ -68,6 +68,9 @@ const CartItem = ({
         >
           ₹{amount}
         </Text>
+        {stock < 5 ? (
+          <Text style={{ color: "red", fontSize: 10 }}>Only {stock} left</Text>
+        ) : null}
       </View>
 
       <View style={styles.qtyContainer}>

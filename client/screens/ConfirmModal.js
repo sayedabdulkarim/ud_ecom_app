@@ -80,8 +80,8 @@ const ConfirmModal = () => {
           })}
         </ScrollView>
       </View>
-      <PriceTag heading={"Subtotal"} value={itemPrice} />
-      <PriceTag heading={"Shipping"} value={shippingCharges} />
+      <PriceTag heading={"Subtotal"} value={itemPrice.toFixed(2)} />
+      <PriceTag heading={"Shipping"} value={shippingCharges.toFixed(2)} />
       <PriceTag heading={"Tax"} value={tax.toFixed(2)} />
       <PriceTag heading={"Total"} value={totalAmount.toFixed(2)} />
 

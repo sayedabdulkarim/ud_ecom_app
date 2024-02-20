@@ -122,7 +122,9 @@ const Cart = () => {
           //   borderColor: "red",
         }}
       >
-        <Text onPress={() => console.log({ userInfo }, " cartttt")}>USER</Text>
+        <Text onPress={() => console.log({ userInfo, cartItems }, " cartttt")}>
+          USER
+        </Text>
         <ScrollView showsVerticalScrollIndicator={false}>
           {cartItems.length ? (
             cartItems?.map((item, idx) => {
