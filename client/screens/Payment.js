@@ -59,9 +59,6 @@ const Payment = ({ navigation, route }) => {
     try {
       const order = await createOrder(payload).unwrap();
       console.log(order, " order succcesss");
-      // Assuming you have a way to manage global app state or UI state
-      // dispatch(setOrderDetails(order));
-
       showToast({
         type: "success",
         text1: "Order Successful",
@@ -69,7 +66,6 @@ const Payment = ({ navigation, route }) => {
         duration: 5000,
       });
       dispatch(clearCart());
-      // Here you might want to navigate the user to a confirmation page or order details page
       navigation.navigate("home");
     } catch (error) {
       console.log({ error }, "error from create order");
