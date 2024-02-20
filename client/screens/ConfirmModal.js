@@ -58,7 +58,11 @@ const ConfirmModal = () => {
         }}
       />
       <View style={{ paddingVertical: 20, flex: 1 }}>
-        <Text onPress={() => console.log({ cartItems, itemPrice }, " storeee")}>
+        <Text
+          onPress={() =>
+            console.log({ cartItems, itemPrice, userInfo }, " storeee")
+          }
+        >
           STORE
         </Text>
         <ScrollView>
