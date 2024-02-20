@@ -118,13 +118,18 @@ const Payment = ({ navigation, route }) => {
     try {
       // Process the payment
       const paymentResponse = await processPayment({
-        totalAmount: payload.totalAmount,
+        totalAmount: totalAmount,
       }).unwrap();
       const clientSecret = paymentResponse.clientSecret;
 
       // Confirm the payment with Stripe using the clientSecret
-      const result = await stripe.confirmCardPayment(clientSecret, {
-        // Add payment method details here
+      // const result = await stripe.confirmCardPayment(clientSecret, {
+      //   // Add payment method details here
+      // });
+
+      const result = await stripe.initPaymentSheet({
+        paymentIntentClientSecret: clientSecret,
+        merchantDisplayName: "native@ecom",
       });
 
       if (result.error) {
