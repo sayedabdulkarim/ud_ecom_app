@@ -1,17 +1,22 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
+import { useStripe } from "@stripe/stripe-react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
 import Heading from "../component/Heading";
 import { Button, RadioButton } from "react-native-paper";
-import { useCreateOrderMutation } from "../apiSlices/orderApiSlice";
+import {
+  useCreateOrderMutation,
+  useProcessPaymentMutation,
+} from "../apiSlices/orderApiSlice";
 import { showToast } from "../utils/commonHelper";
 import { clearCart } from "../slices/ordersSlice";
 import Loader from "../component/Loader";
 
 const Payment = ({ navigation, route }) => {
   //misc
+  const stripe = useStripe();
   const { itemPrice, shippingCharges, tax, totalAmount } = route.params;
   const dispatch = useDispatch();
   const { userInfo, isAuthenticated, isReload } = useSelector(
@@ -24,6 +29,8 @@ const Payment = ({ navigation, route }) => {
 
   //RTQ query n mutation
   const [createOrder, { isLoadingCreateOrder }] = useCreateOrderMutation();
+  const [processPayment, { isLoadingProcessPayment }] =
+    useProcessPaymentMutation();
   //func
   const redirectToLogin = () => {
     navigation.navigate("login");
@@ -81,8 +88,86 @@ const Payment = ({ navigation, route }) => {
     }
   };
 
-  const handleOnlinePayment = () => {
-    console.log("online");
+  const handleOnlinePayment = async () => {
+    const { _id: userId, address, city, country, pinCode } = userInfo?.data;
+
+    const newOrderItems = cartItems.map((item) => ({
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.images[0] || "default_image_url",
+      product: item._id,
+    }));
+
+    const payload = {
+      shippingInfo: {
+        address,
+        city,
+        country,
+        pinCode,
+      },
+      orderItems: newOrderItems,
+      userType: userId,
+      paymentMethod: "Online",
+      itemPrice: itemPrice,
+      taxPrice: tax,
+      shippingCharges,
+      totalAmount,
+    };
+
+    try {
+      // Process the payment
+      const paymentResponse = await processPayment({
+        totalAmount: payload.totalAmount,
+      }).unwrap();
+      const clientSecret = paymentResponse.clientSecret;
+
+      // Confirm the payment with Stripe using the clientSecret
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        // Add payment method details here
+      });
+
+      if (result.error) {
+        // Payment failed: display an error message to your customer
+        showToast({
+          type: "error",
+          text1: "Payment Failed",
+          text2: result.error.message,
+          duration: 5000,
+        });
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          // Payment succeeded: create the order
+          const order = await createOrder({
+            ...payload,
+            paymentInfo: {
+              id: result.paymentIntent.id,
+              status: result.paymentIntent.status,
+            },
+          }).unwrap();
+
+          showToast({
+            type: "success",
+            text1: "Payment Successful",
+            text2: "Your order has been placed!",
+            duration: 5000,
+          });
+          dispatch(clearCart());
+          navigation.navigate("OrderSuccess", { orderId: order._id });
+        }
+      }
+    } catch (error) {
+      console.log({ error }, "error from handleOnlinePayment");
+      const errorMessage =
+        error?.data?.message ??
+        "An error occurred while processing your payment. Please try again.";
+      showToast({
+        type: "error",
+        text1: "Payment Processing Failed",
+        text2: errorMessage,
+        duration: 5000,
+      });
+    }
   };
 
   return (
