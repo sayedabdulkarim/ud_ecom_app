@@ -5,10 +5,13 @@ import { colors, defaultStyle } from "../styles/common";
 import Header from "../component/Header";
 import Heading from "../component/Heading";
 import { Button, RadioButton } from "react-native-paper";
+import { useCreateOrderMutation } from "../apiSlices/orderApiSlice";
+import { showToast } from "../utils/commonHelper";
+import { clearCart } from "../slices/ordersSlice";
 
 const Payment = ({ navigation, route }) => {
   //misc
-  // const isAuthenticated = false;
+  const { itemPrice, shippingCharges, tax, totalAmount } = route.params;
   const dispatch = useDispatch();
   const { userInfo, isAuthenticated, isReload } = useSelector(
     (state) => state.authReducer
@@ -17,13 +20,70 @@ const Payment = ({ navigation, route }) => {
 
   //state
   const [paymentMethod, setPaymentMethod] = useState("COD");
+
+  //RTQ query n mutation
+  const [createOrder, { isLoadingCreateOrder }] = useCreateOrderMutation();
   //func
   const redirectToLogin = () => {
     navigation.navigate("login");
   };
-  const handleCODPayment = () => {
-    console.log("cod");
+  const handleCODPayment = async () => {
+    const { _id: userId, address, city, country, pinCode } = userInfo?.data;
+
+    const newOrderItems = cartItems.map((item) => ({
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.images[0] || "default_image_url",
+      product: item._id,
+    }));
+
+    const payload = {
+      shippingInfo: {
+        address,
+        city,
+        country,
+        pinCode,
+      },
+      orderItems: newOrderItems,
+      userType: userId,
+      paymentMethod: "COD",
+      itemPrice: itemPrice,
+      taxPrice: tax,
+      shippingCharges,
+      totalAmount,
+    };
+    console.log({ payload, userInfo }, "cod");
+
+    try {
+      const order = await createOrder(payload).unwrap();
+      console.log(order, " order succcesss");
+      // Assuming you have a way to manage global app state or UI state
+      // dispatch(setOrderDetails(order));
+
+      showToast({
+        type: "success",
+        text1: "Order Successful",
+        text2: "Your order has been placed!",
+        duration: 5000,
+      });
+      dispatch(clearCart());
+      // Here you might want to navigate the user to a confirmation page or order details page
+      navigation.navigate("home");
+    } catch (error) {
+      console.log({ error }, "error from create order");
+      const errorMessage =
+        error?.data?.message ??
+        "An error occurred while placing your order. Please try again.";
+      showToast({
+        type: "error",
+        text1: "Order Failed",
+        text2: errorMessage,
+        duration: 5000,
+      });
+    }
   };
+
   const handleOnlinePayment = () => {
     console.log("online");
   };
