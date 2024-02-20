@@ -30,6 +30,7 @@ const ConfirmModal = () => {
   const tax = 0.18 * itemPrice;
   const totalAmount = itemPrice + shippingCharges + tax;
 
+  //async
   useEffect(() => {
     if (cartItems && cartItems?.length) {
       let total = cartItems?.reduce(
@@ -77,8 +78,8 @@ const ConfirmModal = () => {
       </View>
       <PriceTag heading={"Subtotal"} value={itemPrice} />
       <PriceTag heading={"Shipping"} value={shippingCharges} />
-      <PriceTag heading={"Tax"} value={tax} />
-      <PriceTag heading={"Total"} value={totalAmount} />
+      <PriceTag heading={"Tax"} value={tax.toFixed(2)} />
+      <PriceTag heading={"Total"} value={totalAmount.toFixed(2)} />
 
       <TouchableOpacity
         onPress={() =>

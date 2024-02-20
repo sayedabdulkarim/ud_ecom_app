@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -70,6 +71,8 @@ const Cart = () => {
     (state) => state.authReducer
   );
   const { cartItems } = useSelector((state) => state.orderReducer);
+  //state
+  const [totalPrice, setTotalPrice] = useState(0);
   //func
   const handleIncrement = (id) => {
     dispatch(increaseQuantity(id));
@@ -77,6 +80,18 @@ const Cart = () => {
   const handleDecrement = (id) => {
     dispatch(decreaseQuantity(id));
   };
+  //async
+  //async
+  useEffect(() => {
+    if (cartItems && cartItems?.length) {
+      let total = cartItems?.reduce(
+        (prev, current) => prev + current.quantity * current.price,
+        0
+      );
+      setTotalPrice(total);
+      // itemPrice = total;
+    }
+  }, [cartItems]);
 
   return (
     <View
@@ -154,8 +169,11 @@ const Cart = () => {
             paddingHorizontal: 35,
           }}
         >
-          <Text>5 Items</Text>
-          <Text>₹ 5 </Text>
+          {/* <Text>5 Items</Text> */}
+          <Text>
+            {cartItems?.length} {`${cartItems?.length > 1 ? "Items" : "Item"}`}
+          </Text>
+          <Text>₹ {totalPrice?.toFixed(2)} </Text>
         </View>
 
         <TouchableOpacity
