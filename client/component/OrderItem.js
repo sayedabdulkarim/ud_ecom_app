@@ -55,7 +55,7 @@ const OrderItem = ({
           loading={loading}
           disabled={loading}
         >
-          Update
+          {status}
         </Button>
       )}
     </View>

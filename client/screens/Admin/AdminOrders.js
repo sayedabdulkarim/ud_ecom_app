@@ -6,17 +6,22 @@ import Header from "../../component/Header";
 import Loader from "../../component/Loader";
 import OrderItem from "../../component/OrderItem";
 import { Headline } from "react-native-paper";
-import { useGetAllOrdersQuery } from "../../apiSlices/orderApiSlice";
-// import { useGetOrders, useMessageAndErrorOther } from "../../utils/hooks";
-// import { useIsFocused } from "@react-navigation/native";
+import {
+  useGetAllOrdersQuery,
+  useUpdateOrderStatusMutation,
+} from "../../apiSlices/orderApiSlice";
 import { useDispatch } from "react-redux";
-// import { processOrder } from "../../redux/actions/otherAction";
+import { showToast } from "../../utils/commonHelper";
 
 const AdminOrders = ({ navigation }) => {
   //misc
   const isFocused = useIsFocused();
   const { data: orders, isLoading, isError, refetch } = useGetAllOrdersQuery();
   const dispatch = useDispatch();
+
+  //rtq query n mutation
+  const [updateOrderStatus, { isLoading: isUpdating, isSuccess }] =
+    useUpdateOrderStatusMutation();
 
   //   const { loading, orders } = useGetOrders(isFocused, true);
 
@@ -27,8 +32,34 @@ const AdminOrders = ({ navigation }) => {
   //     "adminpanel"
   //   );
 
-  const updateHandler = (id) => {
+  const updateStatusHandler = async (id) => {
     console.log(id, " iddd");
+    try {
+      // Call the mutation with the order ID and the new status
+      const response = await updateOrderStatus({ orderid: id }).unwrap();
+      refetch();
+      // Display a success toast with the response message
+      showToast({
+        type: "success",
+        text1: "Update Successful",
+        text2: response.message || "Order status updated successfully!",
+        duration: 5000,
+      });
+
+      // Here you might want to update local state or refetch data as necessary
+    } catch (error) {
+      console.error("Failed to update order status", error);
+      // Display an error toast with the error message
+      const errorMessage =
+        error?.data?.message ||
+        "Failed to update the order status. Please try again.";
+      showToast({
+        type: "error",
+        text1: "Update Failed",
+        text2: errorMessage,
+        duration: 5000,
+      });
+    }
   };
 
   //async
@@ -48,7 +79,9 @@ const AdminOrders = ({ navigation }) => {
 
       {/* Heading */}
       <View style={{ marginBottom: 20, paddingTop: 70 }}>
-        <Text style={formHeading}>All Orders</Text>
+        <Text style={formHeading} onPress={() => console.log({ orders })}>
+          All Orders
+        </Text>
       </View>
 
       {isLoading ? (
@@ -76,7 +109,7 @@ const AdminOrders = ({ navigation }) => {
                   }
                   address={`${item.shippingInfo.address}, ${item.shippingInfo.city}, ${item.shippingInfo.country} ${item.shippingInfo.pinCode}`}
                   admin={true}
-                  updateHandler={updateHandler}
+                  updateHandler={updateStatusHandler}
                   loading={processOrderLoading}
                 />
               ))
