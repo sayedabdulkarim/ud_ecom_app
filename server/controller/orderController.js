@@ -108,7 +108,7 @@ const processPayment = asyncHandler(async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Payment processed successfully",
-      clientSecret: client_secret, // Used for client-side to confirm the payment
+      client_secret, // Used for client-side to confirm the payment
     });
   } catch (error) {
     console.error("Payment processing error:", error);

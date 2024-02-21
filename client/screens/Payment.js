@@ -26,7 +26,7 @@ const Payment = ({ navigation, route }) => {
 
   //state
   const [paymentMethod, setPaymentMethod] = useState("COD");
-
+  const [loaderLoading, setLoaderLoading] = useState(false);
   //RTQ query n mutation
   const [createOrder, { isLoadingCreateOrder }] = useCreateOrderMutation();
   const [processPayment, { isLoadingProcessPayment }] =
@@ -55,7 +55,7 @@ const Payment = ({ navigation, route }) => {
       },
       orderItems: newOrderItems,
       userType: userId,
-      paymentMethod: "COD",
+      paymentMethod,
       itemPrice: itemPrice,
       taxPrice: tax,
       shippingCharges,
@@ -108,7 +108,7 @@ const Payment = ({ navigation, route }) => {
       },
       orderItems: newOrderItems,
       userType: userId,
-      paymentMethod: "Online",
+      paymentMethod: "ONLINE",
       itemPrice: itemPrice,
       taxPrice: tax,
       shippingCharges,
@@ -116,53 +116,67 @@ const Payment = ({ navigation, route }) => {
     };
 
     try {
-      // Process the payment
+      const amountInSmallestUnit = Math.round((totalAmount * 100).toFixed(2));
+
       const paymentResponse = await processPayment({
-        totalAmount: totalAmount,
+        totalAmount: amountInSmallestUnit,
       }).unwrap();
-      const clientSecret = paymentResponse.clientSecret;
-
-      // Confirm the payment with Stripe using the clientSecret
-      // const result = await stripe.confirmCardPayment(clientSecret, {
-      //   // Add payment method details here
-      // });
-
-      const result = await stripe.initPaymentSheet({
-        paymentIntentClientSecret: clientSecret,
-        merchantDisplayName: "native@ecom",
+      const client_secret = paymentResponse.client_secret;
+      console.log({ paymentResponse, totalAmount }, " payyyy");
+      ///
+      const init = await stripe.initPaymentSheet({
+        paymentIntentClientSecret: client_secret,
+        merchantDisplayName: "nativeecom",
       });
 
-      if (result.error) {
-        // Payment failed: display an error message to your customer
+      if (init.error) {
         showToast({
           type: "error",
-          text1: "Payment Failed",
-          text2: result.error.message,
+          text1: init.error.message,
           duration: 5000,
         });
-      } else {
-        if (result.paymentIntent.status === "succeeded") {
-          // Payment succeeded: create the order
-          const order = await createOrder({
-            ...payload,
-            paymentInfo: {
-              id: result.paymentIntent.id,
-              status: result.paymentIntent.status,
-            },
-          }).unwrap();
+      }
+      ///
+      const presentSheet = await stripe.presentPaymentSheet();
+      setLoaderLoading(true);
+      if (presentSheet.error) {
+        setLoaderLoading(false);
+        showToast({
+          type: "error",
+          text1: presentSheet.error.message,
+          duration: 5000,
+        });
+      }
 
-          showToast({
-            type: "success",
-            text1: "Payment Successful",
-            text2: "Your order has been placed!",
-            duration: 5000,
-          });
-          dispatch(clearCart());
-          navigation.navigate("OrderSuccess", { orderId: order._id });
-        }
+      /////
+      const { paymentIntent, error: retrieveError } =
+        await stripe.retrievePaymentIntent(client_secret);
+
+      if (paymentIntent.status === "Succeeded") {
+        console.log({ paymentIntent });
+        const order = await createOrder(payload).unwrap();
+        console.log({
+          paymentResponse,
+          order,
+        });
+        showToast({
+          type: "success",
+          text1: "Payment Successful",
+          text2: "Your order has been placed!",
+          duration: 5000,
+        });
+        dispatch(clearCart());
+
+        // handleCODPayment({})
+        // showToast({
+        //   type: "error",
+        //   text1: "Payment Confirmation Failed",
+        //   text2: retrieveError.message,
+        //   duration: 5000,
+        // });
       }
     } catch (error) {
-      console.log({ error }, "error from handleOnlinePayment");
+      console.log({ error, totalAmount }, " errror from payment");
       const errorMessage =
         error?.data?.message ??
         "An error occurred while processing your payment. Please try again.";
@@ -174,6 +188,8 @@ const Payment = ({ navigation, route }) => {
       });
     }
   };
+
+  console.log(loaderLoading, " lllll");
 
   return (
     <View style={defaultStyle}>
