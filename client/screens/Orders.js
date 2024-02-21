@@ -12,7 +12,6 @@ import { useGetAllOrdersQuery } from "../apiSlices/orderApiSlice";
 const Orders = () => {
   const isFocused = useIsFocused();
   const { data: orders, isLoading, isError, refetch } = useGetAllOrdersQuery();
-  const loading = false;
   const dummy = [
     {
       _id: "sdfgb",
@@ -74,7 +73,7 @@ const Orders = () => {
         <Text style={formHeading}>Orders</Text>
       </View>
 
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <View
