@@ -35,7 +35,7 @@ const OrderItem = ({
 
       <TextBox title={"Address"} value={address} i={i} />
       <TextBox title={"Ordered On"} value={orderedOn} i={i} />
-      <TextBox title={"Price"} value={price} i={i} />
+      <TextBox title={"Price"} value={price.toFixed(2)} i={i} />
       <TextBox title={"Status"} value={status} i={i} />
       <TextBox title={"Payment Method"} value={paymentMethod} i={i} />
 

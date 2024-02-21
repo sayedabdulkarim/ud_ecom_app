@@ -11,7 +11,7 @@ import { useGetAllOrdersQuery } from "../apiSlices/orderApiSlice";
 
 const Orders = () => {
   const isFocused = useIsFocused();
-  const { data: orders, isLoading, isError } = useGetAllOrdersQuery();
+  const { data: orders, isLoading, isError, refetch } = useGetAllOrdersQuery();
   const loading = false;
   const dummy = [
     {
@@ -56,8 +56,9 @@ const Orders = () => {
   ];
 
   useEffect(() => {
+    refetch();
     console.log({ orders }, " orderss");
-  }, [orders]);
+  }, [isFocused]);
 
   return (
     <View
