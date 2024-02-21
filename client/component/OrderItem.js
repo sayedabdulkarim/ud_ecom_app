@@ -50,7 +50,7 @@ const OrderItem = ({
             marginTop: 10,
             backgroundColor: i % 2 === 0 ? colors.color3 : colors.color2,
           }}
-          onPress={updateHandler(id)}
+          onPress={() => updateHandler(id)}
           // onPress={() => console.log(" callled")}
           loading={loading}
           disabled={loading}

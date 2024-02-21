@@ -1,88 +1,23 @@
 import { View, Text, ScrollView } from "react-native";
-import React from "react";
+import { useIsFocused } from "@react-navigation/native";
+import React, { useEffect } from "react";
 import { colors, defaultStyle, formHeading } from "../../styles/common";
 import Header from "../../component/Header";
 import Loader from "../../component/Loader";
 import OrderItem from "../../component/OrderItem";
 import { Headline } from "react-native-paper";
+import { useGetAllOrdersQuery } from "../../apiSlices/orderApiSlice";
 // import { useGetOrders, useMessageAndErrorOther } from "../../utils/hooks";
 // import { useIsFocused } from "@react-navigation/native";
-// import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 // import { processOrder } from "../../redux/actions/otherAction";
 
 const AdminOrders = ({ navigation }) => {
-  //   const isFocused = useIsFocused();
-  //   const dispatch = useDispatch();
+  //misc
+  const isFocused = useIsFocused();
+  const { data: orders, isLoading, isError, refetch } = useGetAllOrdersQuery();
+  const dispatch = useDispatch();
 
-  const loading = false;
-  //   const orders = [];
-  const orders = [
-    {
-      _id: "sdfgb",
-      shippingInfo: {
-        address: "123 Apple Street",
-        city: "Mumbai",
-        country: "India",
-        pinCode: "400001",
-      },
-      createdAt: new Date(),
-      orderStatus: "processing",
-      paymentMethod: "COD",
-      totalAmount: 2000,
-    },
-    {
-      _id: "abcde",
-      shippingInfo: {
-        address: "456 Orange Avenue",
-        city: "Delhi",
-        country: "India",
-        pinCode: "110001",
-      },
-      createdAt: new Date(),
-      orderStatus: "shipped",
-      paymentMethod: "Online",
-      totalAmount: 1500,
-    },
-    {
-      _id: "fghij",
-      shippingInfo: {
-        address: "789 Banana Blvd",
-        city: "Bangalore",
-        country: "India",
-        pinCode: "560001",
-      },
-      createdAt: new Date(),
-      orderStatus: "delivered",
-      paymentMethod: "COD",
-      totalAmount: 2500,
-    },
-    {
-      _id: "klmno",
-      shippingInfo: {
-        address: "101 Pineapple Place",
-        city: "Chennai",
-        country: "India",
-        pinCode: "600001",
-      },
-      createdAt: new Date(),
-      orderStatus: "processing",
-      paymentMethod: "Online",
-      totalAmount: 3000,
-    },
-    {
-      _id: "pqrst",
-      shippingInfo: {
-        address: "202 Mango Lane",
-        city: "Kolkata",
-        country: "India",
-        pinCode: "700001",
-      },
-      createdAt: new Date(),
-      orderStatus: "cancelled",
-      paymentMethod: "COD",
-      totalAmount: 1000,
-    },
-  ];
   //   const { loading, orders } = useGetOrders(isFocused, true);
 
   const processOrderLoading = false;
@@ -93,8 +28,15 @@ const AdminOrders = ({ navigation }) => {
   //   );
 
   const updateHandler = (id) => {
-    // dispatch(processOrder(id));
+    console.log(id, " iddd");
   };
+
+  //async
+  useEffect(() => {
+    refetch();
+    console.log({ orders }, " orderss");
+  }, [isFocused]);
+
   return (
     <View
       style={{
@@ -109,7 +51,7 @@ const AdminOrders = ({ navigation }) => {
         <Text style={formHeading}>All Orders</Text>
       </View>
 
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <View
@@ -119,8 +61,8 @@ const AdminOrders = ({ navigation }) => {
           }}
         >
           <ScrollView showsVerticalScrollIndicator={false}>
-            {orders.length > 0 ? (
-              orders.map((item, index) => (
+            {orders?.orders.length > 0 ? (
+              orders?.orders.map((item, index) => (
                 <OrderItem
                   key={item._id}
                   id={item._id}
