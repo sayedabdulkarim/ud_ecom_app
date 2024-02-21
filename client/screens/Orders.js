@@ -70,7 +70,9 @@ const Orders = () => {
 
       {/* Heading */}
       <View style={{ marginBottom: 20, paddingTop: 70 }}>
-        <Text style={formHeading}>Orders</Text>
+        <Text style={formHeading} onPress={() => console.log({ orders })}>
+          Orders
+        </Text>
       </View>
 
       {isLoading ? (
