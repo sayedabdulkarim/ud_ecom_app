@@ -5,7 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   colors,
   defaultStyle,
@@ -14,10 +14,10 @@ import {
 } from "../../styles/common";
 import Header from "../../component/Header";
 import { Avatar, Button, TextInput } from "react-native-paper";
-//   import { useMessageAndErrorOther, useSetCategories } from "../../utils/hooks";
-//   import { useIsFocused } from "@react-navigation/native";
-//   import { useDispatch } from "react-redux";
-//   import { addCategory, deleteCategory } from "../../redux/actions/otherAction";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { useGetallcategoriesQuery } from "../../apiSlices/productApiSlice";
+import Loader from "../../component/Loader";
 
 const data = [
   {
@@ -35,17 +35,23 @@ const data = [
 ];
 
 const Categories = ({ navigation }) => {
+  //misc
+  const loading = false;
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+
+  //state
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState(data);
 
-  // const isFocused = useIsFocused();
-  // const dispatch = useDispatch();
+  // RTK Query
+  const {
+    data: categoriesData,
+    error: categoriesError,
+    isLoading: categoriesLoading,
+  } = useGetallcategoriesQuery();
 
-  // useSetCategories(setCategories, isFocused);
-
-  // const loading = useMessageAndErrorOther(dispatch, navigation, "adminpanel");
-  const loading = false;
-
+  //func
   const deleteHandler = (id) => {
     //   dispatch(deleteCategory(id));
   };
@@ -53,6 +59,14 @@ const Categories = ({ navigation }) => {
   const submitHandler = () => {
     //   dispatch(addCategory(category));
   };
+
+  //async
+  useEffect(() => {
+    if (categoriesData) {
+      console.log({ categoriesData }, " ccccDDDD");
+      setCategories(categoriesData?.categories);
+    }
+  }, [categoriesData, categoriesError, categoriesLoading]);
 
   return (
     <View style={{ ...defaultStyle, backgroundColor: colors.color5 }}>
@@ -63,11 +77,7 @@ const Categories = ({ navigation }) => {
         <Text style={formHeading}>Categories</Text>
       </View>
 
-      <ScrollView
-        style={{
-          marginBottom: 20,
-        }}
-      >
+      <ScrollView style={{ marginBottom: 20 }}>
         <View
           style={{
             backgroundColor: colors.color2,
@@ -75,14 +85,29 @@ const Categories = ({ navigation }) => {
             minHeight: 400,
           }}
         >
-          {categories.map((i) => (
-            <CategoryCard
-              name={i.category}
-              id={i._id}
-              key={i._id}
-              deleteHandler={deleteHandler}
-            />
-          ))}
+          {categoriesLoading ? (
+            <Loader /> // Show loader while loading
+          ) : !categories.length > 0 ? (
+            categories.map((i) => (
+              <CategoryCard
+                name={i.category}
+                id={i._id}
+                key={i._id}
+                deleteHandler={deleteHandler}
+              />
+            ))
+          ) : (
+            <Text
+              style={{
+                height: 100,
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              No categories, please add.
+            </Text> // Show this message if there are no categories
+          )}
         </View>
       </ScrollView>
 

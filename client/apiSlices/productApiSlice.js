@@ -39,6 +39,14 @@ export const productApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+    getAdminProducts: builder.query({
+      query: () => {
+        return {
+          url: `${USERS_URL}/getAdminproducts`,
+          method: "GET",
+        };
+      },
+    }),
     getallcategories: builder.query({
       query: () => {
         return {
@@ -47,20 +55,18 @@ export const productApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
-    addcategory: builder.mutation({
+    addCategory: builder.mutation({
       query: (data) => ({
         url: `${USERS_URL}/addcategory`,
         method: "POST",
         body: data,
       }),
     }),
-    getAdminProducts: builder.query({
-      query: () => {
-        return {
-          url: `${USERS_URL}/getAdminproducts`,
-          method: "GET",
-        };
-      },
+    deleteCategory: builder.mutation({
+      query: ({ id }) => ({
+        url: `${USERS_URL}/deleteCategory/${id}`,
+        method: "DELETE",
+      }),
     }),
   }),
 });
@@ -72,5 +78,6 @@ export const {
   useGetProductDetailsByIdQuery,
   //category
   useGetallcategoriesQuery,
-  useAddcategoryMutation,
+  useAddCategoryMutation,
+  useDeleteCategoryMutation,
 } = productApiSlice;
