@@ -77,39 +77,40 @@ const Categories = ({ navigation }) => {
         <Text style={formHeading}>Categories</Text>
       </View>
 
-      <ScrollView style={{ marginBottom: 20 }}>
-        <View
-          style={{
-            backgroundColor: colors.color2,
-            padding: 20,
-            minHeight: 400,
-          }}
-        >
-          {categoriesLoading ? (
-            <Loader /> // Show loader while loading
-          ) : !categories.length > 0 ? (
-            categories.map((i) => (
+      {categoriesLoading ? (
+        <Loader />
+      ) : categories.length > 0 ? (
+        <ScrollView style={{ marginBottom: 20 }}>
+          <View
+            style={{
+              backgroundColor: colors.color2,
+              padding: 20,
+              minHeight: 400,
+            }}
+          >
+            {categories.map((i) => (
               <CategoryCard
                 name={i.category}
                 id={i._id}
                 key={i._id}
                 deleteHandler={deleteHandler}
               />
-            ))
-          ) : (
-            <Text
-              style={{
-                height: 100,
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              No categories, please add.
-            </Text> // Show this message if there are no categories
-          )}
+            ))}
+          </View>
+        </ScrollView>
+      ) : (
+        <View
+          style={{
+            backgroundColor: colors.color2,
+            padding: 20,
+            minHeight: 200,
+            alignItems: "center", // Adjusted for center alignment
+            justifyContent: "center", // Adjusted for center alignment
+          }}
+        >
+          <Text>No categories, please add.</Text>
         </View>
-      </ScrollView>
+      )}
 
       <View style={styles.container}>
         <TextInput
