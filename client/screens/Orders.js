@@ -12,47 +12,6 @@ import { useGetAllOrdersQuery } from "../apiSlices/orderApiSlice";
 const Orders = () => {
   const isFocused = useIsFocused();
   const { data: orders, isLoading, isError, refetch } = useGetAllOrdersQuery();
-  const dummy = [
-    {
-      _id: "sdfgb",
-      shippingInfo: {
-        address: "123 Apple Street",
-        city: "Mumbai",
-        country: "India",
-        pinCode: "400001",
-      },
-      createdAt: new Date(),
-      orderStatus: "processing",
-      paymentMethod: "COD",
-      totalAmount: 2000,
-    },
-    {
-      _id: "abcde",
-      shippingInfo: {
-        address: "456 Orange Avenue",
-        city: "Delhi",
-        country: "India",
-        pinCode: "110001",
-      },
-      createdAt: new Date(),
-      orderStatus: "shipped",
-      paymentMethod: "Online",
-      totalAmount: 1500,
-    },
-    {
-      _id: "fghij",
-      shippingInfo: {
-        address: "789 Banana Blvd",
-        city: "Bangalore",
-        country: "India",
-        pinCode: "560001",
-      },
-      createdAt: new Date(),
-      orderStatus: "delivered",
-      paymentMethod: "COD",
-      totalAmount: 2500,
-    },
-  ];
 
   useEffect(() => {
     refetch();

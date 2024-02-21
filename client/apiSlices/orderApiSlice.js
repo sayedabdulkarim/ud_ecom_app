@@ -26,6 +26,14 @@ export const orderApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
+    updateOrderStatus: builder.query({
+      query: (orderid) => {
+        return {
+          url: `${USERS_URL}/updateOrderStatus${orderid}`,
+          method: "PUT",
+        };
+      },
+    }),
   }),
 });
 
@@ -33,4 +41,5 @@ export const {
   useCreateOrderMutation,
   useProcessPaymentMutation,
   useGetAllOrdersQuery,
+  useUpdateOrderStatusQuery,
 } = orderApiSlice;

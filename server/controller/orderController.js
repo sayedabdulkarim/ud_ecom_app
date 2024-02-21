@@ -123,30 +123,8 @@ const processPayment = asyncHandler(async (req, res) => {
 // route GET /api/orders/getAllOrders
 // @access PRIVATE
 
-// const getAllOrders = asyncHandler(async (req, res) => {
-//   try {
-//     const orders = await OrderModal.find()
-//       .populate({
-//         path: "orderItems.product", // Path to the product ID in the orderItems array
-//         select: "name description price", // Fields you want to include from the Product documents
-//       })
-//       .populate({
-//         path: "userType", // Path to the user ID
-//         select: "name email", // Fields you want to include from the User documents
-//       });
-
-//     if (!orders.length) {
-//       return res.status(404).json({ message: "No orders found" });
-//     }
-//     res.json({ message: "All Orders fetched successfully.", orders });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
-
 const getAllOrders = asyncHandler(async (req, res) => {
   try {
-    // Assuming req.user._id contains the authenticated user's ID
     const userId = req.user._id;
 
     // Find orders where the userType matches the authenticated user's ID
