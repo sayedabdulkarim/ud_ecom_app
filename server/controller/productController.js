@@ -59,6 +59,7 @@ const getAllProducts = asyncHandler(async (req, res) => {
 const getAdminProducts = asyncHandler(async (req, res) => {
   try {
     const products = await ProductModal.find({}).populate("category");
+    // const products = await ProductModal.find({});
     const outOfStock = products.filter((product) => product.stock === 0);
 
     res.status(200).json({

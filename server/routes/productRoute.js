@@ -30,8 +30,8 @@ router.get("/getAllProducts", getAllProducts);
 router.route("/getProduct/:id").get(getProductDetails);
 router.post(
   "/createproduct",
-  protectedRoutesWithParser,
-  adminMiddleware,
+  // protectedRoutesWithParser,
+  // adminMiddleware,
   createProduct
 );
 router.put(

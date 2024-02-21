@@ -239,8 +239,8 @@ const AdminPanel = ({ navigation }) => {
           <ScrollView showsVerticalScrollIndicator={false}>
             <View>
               {!loadingDelete &&
-                products.map((item, index) => (
-                  // getAdminProducts?.products.map((item, index) => (
+                // products.map((item, index) => (
+                getAdminProducts?.products.map((item, index) => (
                   <ProductListItem
                     navigate={navigation}
                     deleteHandler={deleteProductHandler}
@@ -251,7 +251,7 @@ const AdminPanel = ({ navigation }) => {
                     stock={item.stock}
                     name={item.name}
                     // category={item.category?.category}
-                    category={item.category}
+                    category={item?.category?.category ?? "N/A"}
                     imgSrc={item?.images[0]?.url}
                   />
                 ))}
