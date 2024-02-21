@@ -27,6 +27,8 @@ const OrderItem = ({
           ...styles.text,
           backgroundColor: i % 2 === 0 ? colors.color3 : colors.color1,
         }}
+        numberOfLines={1}
+        ellipsizeMode="middle"
       >
         ID - #{id}
       </Text>

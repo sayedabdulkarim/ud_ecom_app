@@ -18,8 +18,19 @@ export const orderApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    getAllOrders: builder.query({
+      query: () => {
+        return {
+          url: `${USERS_URL}/getAllOrders`,
+          method: "GET",
+        };
+      },
+    }),
   }),
 });
 
-export const { useCreateOrderMutation, useProcessPaymentMutation } =
-  orderApiSlice;
+export const {
+  useCreateOrderMutation,
+  useProcessPaymentMutation,
+  useGetAllOrdersQuery,
+} = orderApiSlice;

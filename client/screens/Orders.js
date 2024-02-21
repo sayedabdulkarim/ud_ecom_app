@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { colors, defaultStyle, formHeading } from "../styles/common";
 import Loader from "../component/Loader";
 import { Headline } from "react-native-paper";
@@ -7,12 +7,13 @@ import OrderItem from "../component/OrderItem";
 // import { useGetOrders } from "../utils/hooks";
 import { useIsFocused } from "@react-navigation/native";
 import Header from "../component/Header";
+import { useGetAllOrdersQuery } from "../apiSlices/orderApiSlice";
 
 const Orders = () => {
   const isFocused = useIsFocused();
-  //   const { loading, orders } = useGetOrders(isFocused);
+  const { data: orders, isLoading, isError } = useGetAllOrdersQuery();
   const loading = false;
-  const orders = [
+  const dummy = [
     {
       _id: "sdfgb",
       shippingInfo: {
@@ -52,33 +53,11 @@ const Orders = () => {
       paymentMethod: "COD",
       totalAmount: 2500,
     },
-    {
-      _id: "klmno",
-      shippingInfo: {
-        address: "101 Pineapple Place",
-        city: "Chennai",
-        country: "India",
-        pinCode: "600001",
-      },
-      createdAt: new Date(),
-      orderStatus: "processing",
-      paymentMethod: "Online",
-      totalAmount: 3000,
-    },
-    {
-      _id: "pqrst",
-      shippingInfo: {
-        address: "202 Mango Lane",
-        city: "Kolkata",
-        country: "India",
-        pinCode: "700001",
-      },
-      createdAt: new Date(),
-      orderStatus: "cancelled",
-      paymentMethod: "COD",
-      totalAmount: 1000,
-    },
   ];
+
+  useEffect(() => {
+    console.log({ orders }, " orderss");
+  }, [orders]);
 
   return (
     <View
@@ -104,9 +83,11 @@ const Orders = () => {
           }}
         >
           <ScrollView showsVerticalScrollIndicator={false}>
-            {[orders].length > 0 ? (
+            {orders?.orders.length > 0 ? (
+              // {dummy.length > 0 ? (
               //   <Text>Hello</Text>
-              orders.map((item, index) => (
+              // dummy.map((item, index) => (
+              orders?.orders?.map((item, index) => (
                 <OrderItem
                   key={item._id}
                   id={item._id}
