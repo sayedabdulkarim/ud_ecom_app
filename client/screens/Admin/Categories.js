@@ -16,8 +16,12 @@ import Header from "../../component/Header";
 import { Avatar, Button, TextInput } from "react-native-paper";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { useGetallcategoriesQuery } from "../../apiSlices/productApiSlice";
+import {
+  useAddCategoryMutation,
+  useGetallcategoriesQuery,
+} from "../../apiSlices/productApiSlice";
 import Loader from "../../component/Loader";
+import { showToast } from "../../utils/commonHelper";
 
 const data = [
   {
@@ -42,22 +46,48 @@ const Categories = ({ navigation }) => {
 
   //state
   const [category, setCategory] = useState("");
-  const [categories, setCategories] = useState(data);
+  const [categories, setCategories] = useState([]);
 
   // RTK Query
   const {
     data: categoriesData,
     error: categoriesError,
     isLoading: categoriesLoading,
+    refetch: refetchCategoriesData,
   } = useGetallcategoriesQuery();
 
+  const [addCategory, { isLoading: addCategoryLoading }] =
+    useAddCategoryMutation();
+
   //func
+
   const deleteHandler = (id) => {
     //   dispatch(deleteCategory(id));
   };
 
-  const submitHandler = () => {
-    //   dispatch(addCategory(category));
+  const submitHandler = async () => {
+    try {
+      const newCategory = await addCategory({ category }).unwrap();
+      showToast({
+        type: "success",
+        text1: newCategory.message,
+        text2: "Category Successfully added.",
+        duration: 5000,
+      });
+      setCategory("");
+      refetchCategoriesData();
+    } catch (error) {
+      console.log({ error }, " err from login");
+      const errorMessage =
+        error?.data?.message ??
+        "An error occurred. Please check your credentials and try again.";
+      showToast({
+        type: "error",
+        text1: "Adding Category Failed",
+        text2: errorMessage,
+        duration: 5000,
+      });
+    }
   };
 
   //async
@@ -77,7 +107,7 @@ const Categories = ({ navigation }) => {
         <Text style={formHeading}>Categories</Text>
       </View>
 
-      {categoriesLoading ? (
+      {categoriesLoading || addCategoryLoading ? (
         <Loader />
       ) : categories.length > 0 ? (
         <ScrollView style={{ marginBottom: 20 }}>
@@ -127,7 +157,7 @@ const Categories = ({ navigation }) => {
             margin: 20,
             padding: 6,
           }}
-          loading={loading}
+          loading={addCategoryLoading}
           disabled={!category}
           onPress={submitHandler}
         >
