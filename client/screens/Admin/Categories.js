@@ -18,6 +18,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import {
   useAddCategoryMutation,
+  useDeleteCategoryMutation,
   useGetallcategoriesQuery,
 } from "../../apiSlices/productApiSlice";
 import Loader from "../../component/Loader";
@@ -59,9 +60,34 @@ const Categories = ({ navigation }) => {
   const [addCategory, { isLoading: addCategoryLoading }] =
     useAddCategoryMutation();
 
+  const [deleteCategory, { isLoading: deleteCategoryLoading }] =
+    useDeleteCategoryMutation();
+
   //func
 
-  const deleteHandler = (id) => {
+  const deleteHandler = async (id) => {
+    console.log(id, " ii");
+    try {
+      const deletedCategory = await deleteCategory({ id }).unwrap();
+      showToast({
+        type: "success",
+        text1: deletedCategory.message,
+        text2: "Category Successfully deleted.",
+        duration: 5000,
+      });
+      refetchCategoriesData();
+    } catch (error) {
+      console.log({ error }, " err from login");
+      const errorMessage =
+        error?.data?.message ??
+        "An error occurred. Please check your credentials and try again.";
+      showToast({
+        type: "error",
+        text1: "Deleting Category Failed",
+        text2: errorMessage,
+        duration: 5000,
+      });
+    }
     //   dispatch(deleteCategory(id));
   };
 
@@ -93,7 +119,6 @@ const Categories = ({ navigation }) => {
   //async
   useEffect(() => {
     if (categoriesData) {
-      console.log({ categoriesData }, " ccccDDDD");
       setCategories(categoriesData?.categories);
     }
   }, [categoriesData, categoriesError, categoriesLoading]);
