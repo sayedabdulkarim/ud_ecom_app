@@ -18,7 +18,12 @@ import {
 } from "../controller/productController.js";
 
 //
-router.get("/getAdminProducts", getAdminProducts);
+router.get(
+  "/getAdminProducts",
+  protectedRoutesWithParser,
+  adminMiddleware,
+  getAdminProducts
+);
 
 ///
 router.get("/getAllProducts", getAllProducts);

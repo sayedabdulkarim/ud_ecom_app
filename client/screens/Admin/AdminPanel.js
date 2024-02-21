@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { colors, defaultStyle, formHeading } from "../../styles/common";
 import Header from "../../component/Header";
 import Loader from "../../component/Loader";
@@ -7,11 +7,9 @@ import ButtonBox from "../../component/ButtonBox";
 import ProductListHeading from "../../component/ProductListHeading";
 import ProductListItem from "../../component/ProductListItem";
 import Chart from "../../component/Chart";
-// import { useAdminProducts, useMessageAndErrorOther } from "../../utils/hooks";
-// import { useDispatch } from "react-redux";
-// import { useIsFocused } from "@react-navigation/native";
-// import { deleteProduct } from "../../redux/actions/otherAction";
-// import { getAdminProducts } from "../../redux/actions/productAction";
+import { useDispatch } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+import { useGetAdminProductsQuery } from "../../apiSlices/productApiSlice";
 
 const AdminPanel = ({ navigation }) => {
   const loading = false;
@@ -140,14 +138,19 @@ const AdminPanel = ({ navigation }) => {
       category: "one",
     },
   ];
-  //   const dispatch = useDispatch();
-  //   const isFocused = useIsFocused();
+  //misc
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
-  //   const { loading, products, inStock, outOfStock } = useAdminProducts(
-  //     dispatch,
-  //     isFocused
-  //   );
+  //query n mutation
+  const {
+    data: getAdminProducts,
+    isLoading: isLoadingGetAdminProducts,
+    isError: isErrorGetAdminProducts,
+    refetch,
+  } = useGetAdminProductsQuery();
 
+  //func
   const navigationHandler = (text) => {
     switch (text) {
       case "Category":
@@ -171,12 +174,15 @@ const AdminPanel = ({ navigation }) => {
     console.log({ id });
   };
 
-  //   const loadingDelete = useMessageAndErrorOther(
-  //     dispatch,
-  //     null,
-  //     null,
-  //     getAdminProducts
-  //   );
+  //async
+  useEffect(() => {
+    console.log(
+      {
+        getAdminProducts,
+      },
+      " getAdminProducts"
+    );
+  }, [getAdminProducts]);
 
   return (
     <View style={defaultStyle}>
@@ -186,7 +192,7 @@ const AdminPanel = ({ navigation }) => {
         <Text style={formHeading}>Admin Panel</Text>
       </View>
 
-      {loading ? (
+      {isLoadingGetAdminProducts ? (
         <Loader />
       ) : (
         <>
@@ -234,6 +240,7 @@ const AdminPanel = ({ navigation }) => {
             <View>
               {!loadingDelete &&
                 products.map((item, index) => (
+                  // getAdminProducts?.products.map((item, index) => (
                   <ProductListItem
                     navigate={navigation}
                     deleteHandler={deleteProductHandler}
@@ -245,7 +252,7 @@ const AdminPanel = ({ navigation }) => {
                     name={item.name}
                     // category={item.category?.category}
                     category={item.category}
-                    imgSrc={item.images[0].url}
+                    imgSrc={item?.images[0]?.url}
                   />
                 ))}
             </View>

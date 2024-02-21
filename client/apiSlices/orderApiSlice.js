@@ -32,6 +32,14 @@ export const orderApiSlice = apiSlice.injectEndpoints({
         method: "PUT",
       }),
     }),
+    getAdminProducts: builder.query({
+      query: () => {
+        return {
+          url: `${USERS_URL}/getAdminProducts`,
+          method: "GET",
+        };
+      },
+    }),
   }),
 });
 
@@ -40,4 +48,5 @@ export const {
   useProcessPaymentMutation,
   useGetAllOrdersQuery,
   useUpdateOrderStatusMutation,
+  useGetAdminProductsQuery,
 } = orderApiSlice;
