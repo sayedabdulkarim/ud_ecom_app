@@ -40,20 +40,47 @@ const OrderItem = ({
       <TextBox title={"Payment Method"} value={paymentMethod} i={i} />
 
       {admin && (
+        // <Button
+        //   icon={"update"}
+        //   mode={"contained"}
+        //   textColor={i % 2 === 0 ? colors.color2 : colors.color3}
+        //   style={{
+        //     width: 120,
+        //     alignSelf: "center",
+        //     marginTop: 10,
+        //     backgroundColor: i % 2 === 0 ? colors.color3 : colors.color2,
+        //   }}
+        //   onPress={() => updateHandler(id)}
+        //   // onPress={() => console.log(" callled")}
+        //   loading={loading}
+        //   disabled={loading}
+        // >
+        //   {status}
+        // </Button>
         <Button
-          icon={"update"}
+          icon={status === "Delivered" ? "" : "update"}
           mode={"contained"}
-          textColor={i % 2 === 0 ? colors.color2 : colors.color3}
+          textColor={
+            status === "Delivered"
+              ? colors.colorDisabledText
+              : i % 2 === 0
+              ? colors.color2
+              : colors.color3
+          }
           style={{
             width: 120,
             alignSelf: "center",
             marginTop: 10,
-            backgroundColor: i % 2 === 0 ? colors.color3 : colors.color2,
+            backgroundColor:
+              status === "Delivered"
+                ? colors.colorDisabled
+                : i % 2 === 0
+                ? colors.color3
+                : colors.color2,
           }}
           onPress={() => updateHandler(id)}
-          // onPress={() => console.log(" callled")}
           loading={loading}
-          disabled={loading}
+          disabled={status === "Delivered" || loading}
         >
           {status}
         </Button>

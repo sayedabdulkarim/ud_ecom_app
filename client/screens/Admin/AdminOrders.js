@@ -84,7 +84,7 @@ const AdminOrders = ({ navigation }) => {
         </Text>
       </View>
 
-      {isLoading ? (
+      {isLoading || isUpdating ? (
         <Loader />
       ) : (
         <View
