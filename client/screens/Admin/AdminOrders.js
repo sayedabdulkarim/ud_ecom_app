@@ -110,7 +110,7 @@ const AdminOrders = ({ navigation }) => {
                   address={`${item.shippingInfo.address}, ${item.shippingInfo.city}, ${item.shippingInfo.country} ${item.shippingInfo.pinCode}`}
                   admin={true}
                   updateHandler={updateStatusHandler}
-                  loading={processOrderLoading}
+                  loading={isUpdating}
                 />
               ))
             ) : (
