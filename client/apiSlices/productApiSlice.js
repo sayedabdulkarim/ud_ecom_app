@@ -39,14 +39,6 @@ export const productApiSlice = apiSlice.injectEndpoints({
         };
       },
     }),
-    getAdminProducts: builder.query({
-      query: () => {
-        return {
-          url: `${USERS_URL}/getAdminproducts`,
-          method: "GET",
-        };
-      },
-    }),
     getallcategories: builder.query({
       query: () => {
         return {
@@ -61,6 +53,14 @@ export const productApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: data,
       }),
+    }),
+    getAdminProducts: builder.query({
+      query: () => {
+        return {
+          url: `${USERS_URL}/getAdminproducts`,
+          method: "GET",
+        };
+      },
     }),
   }),
 });
