@@ -11,11 +11,9 @@ import {
 import Loader from "../../component/Loader";
 import { Button, TextInput } from "react-native-paper";
 import SelectComponent from "../../component/SelectComponent";
-// import { useMessageAndErrorOther, useSetCategories } from "../../utils/hooks";
-// import { useIsFocused } from "@react-navigation/native";
-// import { useDispatch, useSelector } from "react-redux";
-// import { getProductDetails } from "../../redux/actions/productAction";
-// import { updateProduct } from "../../redux/actions/otherAction";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
+import { useGetProductDetailsByIdQuery } from "../../apiSlices/productApiSlice";
 
 const images = [
   {
@@ -37,13 +35,12 @@ const images = [
 ];
 
 const UpdateProduct = ({ navigation, route }) => {
-  //   const isFocused = useIsFocused();
-  //   const dispatch = useDispatch();
-  const [visible, setVisible] = useState(false);
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
   const product = [];
   const loading = false;
-  //   const { product, loading } = useSelector((state) => state.product);
 
+  const [visible, setVisible] = useState(false);
   const [id] = useState(route.params.id);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -56,18 +53,21 @@ const UpdateProduct = ({ navigation, route }) => {
     { _id: "assfd", category: "Footwear" },
     { _id: "assxd", category: "TopWear" },
   ]);
-  console.log({ id });
-  //   useSetCategories(setCategories, isFocused);
 
   const submitHandler = () => {
-    console.log({
-      id,
-      name,
-      description,
-      price,
-      stock,
-      categoryID,
-    });
+    console.log(
+      {
+        id,
+        name,
+        description,
+        price,
+        stock,
+        categoryID,
+        params: route.params,
+      },
+      " update"
+    );
+
     // dispatch(updateProduct(id, name, description, price, stock, categoryID));
   };
   const loadingOther = false;
