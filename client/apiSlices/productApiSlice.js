@@ -18,6 +18,12 @@ export const productApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    deleteProduct: builder.mutation({
+      query: ({ id }) => ({
+        url: `${USERS_URL}/deleteproduct/${id}`,
+        method: "DELETE",
+      }),
+    }),
     // getAllProducts: builder.query({
     //   query: (queryArg) => {
     //     const params = new URLSearchParams(queryArg).toString();
@@ -81,6 +87,7 @@ export const productApiSlice = apiSlice.injectEndpoints({
 export const {
   useCreateproductMutation,
   useUpdateProductMutation,
+  useDeleteProductMutation,
   useGetAllProductsQuery,
   useGetAdminProductsQuery,
   useGetProductDetailsByIdQuery,

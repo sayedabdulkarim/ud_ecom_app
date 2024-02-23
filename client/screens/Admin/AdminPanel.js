@@ -9,7 +9,11 @@ import ProductListItem from "../../component/ProductListItem";
 import Chart from "../../component/Chart";
 import { useDispatch } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
-import { useGetAdminProductsQuery } from "../../apiSlices/productApiSlice";
+import {
+  useDeleteProductMutation,
+  useGetAdminProductsQuery,
+} from "../../apiSlices/productApiSlice";
+import { showToast } from "../../utils/commonHelper";
 
 const AdminPanel = ({ navigation }) => {
   const loading = false;
@@ -150,6 +154,9 @@ const AdminPanel = ({ navigation }) => {
     refetch,
   } = useGetAdminProductsQuery();
 
+  const [deleteProduct, { isLoading: isLoadingDeleteProduct }] =
+    useDeleteProductMutation();
+
   //func
   const navigationHandler = (text) => {
     switch (text) {
@@ -169,9 +176,29 @@ const AdminPanel = ({ navigation }) => {
     }
   };
 
-  const deleteProductHandler = (id) => {
+  const deleteProductHandler = async (id) => {
     // dispatch(deleteProduct(id));
     console.log({ id });
+    try {
+      const deleteItem = await deleteProduct({ id });
+      console.log({ deleteItem }, "Product created successfully");
+      showToast({
+        type: "success",
+        text1: "Deleted product Successfully!",
+        duration: 5000,
+      });
+      refetch();
+    } catch (error) {
+      console.log("error", error);
+      showToast({
+        type: "error",
+        text1: "Product Deletion Failed",
+        text2: error.data
+          ? error.data.message
+          : "An error occurred. Please try again.",
+        duration: 5000,
+      });
+    }
   };
 
   //async
