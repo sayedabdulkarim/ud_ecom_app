@@ -70,6 +70,7 @@ const Home = () => {
     data: getAllProducts,
     error: getAllProductsError,
     isLoading: getAllProductsLoading,
+    refetch: getAllProductsRefetch,
   } = useGetAllProductsQuery(queryParams);
 
   //func
@@ -109,6 +110,12 @@ const Home = () => {
       setAllProducts([]);
     }
   }, [getAllProductsError]);
+
+  useEffect(() => {
+    if (isFocused) {
+      getAllProductsRefetch();
+    }
+  }, [isFocused]);
 
   // console.log(getAllProductsLoading, " querypppp");
   return (
