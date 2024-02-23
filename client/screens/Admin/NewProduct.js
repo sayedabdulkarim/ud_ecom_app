@@ -11,16 +11,18 @@ import {
 import { Avatar, Button, TextInput } from "react-native-paper";
 import SelectComponent from "../../component/SelectComponent";
 // import { useSetCategories, useMessageAndErrorOther } from "../../utils/hooks";
-// import { useIsFocused } from "@react-navigation/native";
-// import { useDispatch } from "react-redux";
-// import mime from "mime";
-// import { createProduct } from "../../redux/actions/otherAction";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { useGetallcategoriesQuery } from "../../apiSlices/productApiSlice";
 
 const NewProduct = ({ navigation, route }) => {
-  //   const isFocused = useIsFocused();
-  //   const dispatch = useDispatch();
-  const [visible, setVisible] = useState(false);
+  //misc
+  const loading = false;
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
 
+  //state
+  const [visible, setVisible] = useState(false);
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -30,11 +32,18 @@ const NewProduct = ({ navigation, route }) => {
   const [categoryID, setCategoryID] = useState(undefined);
   const [categories, setCategories] = useState([]);
 
-  //   useSetCategories(setCategories, isFocused);
-
   const disableBtnCondition =
     !name || !description || !price || !stock || !image;
 
+  // RTK Query
+  const {
+    data: categoriesData,
+    error: categoriesError,
+    isLoading: categoriesLoading,
+    refetch: refetchCategoriesData,
+  } = useGetallcategoriesQuery();
+
+  //func
   const submitHandler = () => {
     const myForm = new FormData();
     myForm.append("name", name);
@@ -52,12 +61,19 @@ const NewProduct = ({ navigation, route }) => {
     // dispatch(createProduct(myForm));
   };
 
-  const loading = false;
-  //   const loading = useMessageAndErrorOther(dispatch, navigation, "adminpanel");
+  //async
 
   useEffect(() => {
     if (route.params?.image) setImage(route.params.image);
   }, [route.params]);
+
+  //async
+  useEffect(() => {
+    if (categoriesData) {
+      console.log(categoriesData, " ccccccccccccccccc");
+      setCategories(categoriesData?.categories);
+    }
+  }, [categoriesData, categoriesError, categoriesLoading]);
 
   return (
     <>
@@ -71,7 +87,17 @@ const NewProduct = ({ navigation, route }) => {
 
         {/* Heading */}
         <View style={{ marginBottom: 20, paddingTop: 70 }}>
-          <Text style={formHeading}>New Product</Text>
+          <Text
+            style={formHeading}
+            onPress={() =>
+              console.log({
+                categories,
+                categoryID,
+              })
+            }
+          >
+            New Product
+          </Text>
         </View>
 
         <ScrollView
