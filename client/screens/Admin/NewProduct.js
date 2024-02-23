@@ -13,7 +13,11 @@ import SelectComponent from "../../component/SelectComponent";
 // import { useSetCategories, useMessageAndErrorOther } from "../../utils/hooks";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { useGetallcategoriesQuery } from "../../apiSlices/productApiSlice";
+import {
+  useCreateproductMutation,
+  useGetallcategoriesQuery,
+} from "../../apiSlices/productApiSlice";
+import { convertImageToBase64, showToast } from "../../utils/commonHelper";
 
 const NewProduct = ({ navigation, route }) => {
   //misc
@@ -43,22 +47,40 @@ const NewProduct = ({ navigation, route }) => {
     refetch: refetchCategoriesData,
   } = useGetallcategoriesQuery();
 
+  const [createProduct, { isLoadingCreateProduct }] =
+    useCreateproductMutation();
+
   //func
-  const submitHandler = () => {
-    const myForm = new FormData();
-    myForm.append("name", name);
-    myForm.append("description", description);
-    myForm.append("price", price);
-    myForm.append("stock", stock);
-    // myForm.append("file", {
-    //   uri: image,
-    //   type: mime.getType(image),
-    //   name: image.split("/").pop(),
-    // });
+  const submitHandler = async () => {
+    console.log("sunmitted");
+    try {
+      let base64Avatar = image;
 
-    if (categoryID) myForm.append("category", categoryID);
+      if (image && !image.startsWith("data:")) {
+        base64Avatar = await convertImageToBase64(image);
+      }
 
-    // dispatch(createProduct(myForm));
+      const formData = {
+        name,
+        description,
+        stock,
+        price,
+        category: categoryID,
+        base64Avatar,
+      };
+
+      console.log({ formData }, " formdata");
+    } catch (error) {
+      console.log(" errr");
+      showToast({
+        type: "error",
+        text1: "Signup Failed",
+        text2: error.data
+          ? error.data.message
+          : "An error occurred. Please try again.",
+        duration: 5000,
+      });
+    }
   };
 
   //async
