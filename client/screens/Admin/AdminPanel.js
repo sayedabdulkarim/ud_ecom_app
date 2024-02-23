@@ -176,13 +176,16 @@ const AdminPanel = ({ navigation }) => {
 
   //async
   useEffect(() => {
+    if (isFocused) {
+      refetch();
+    }
     console.log(
       {
         getAdminProducts,
       },
       " getAdminProducts"
     );
-  }, [getAdminProducts]);
+  }, [getAdminProducts, isFocused]);
 
   return (
     <View style={defaultStyle}>

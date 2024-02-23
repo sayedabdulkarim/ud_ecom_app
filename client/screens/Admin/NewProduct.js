@@ -22,6 +22,7 @@ import {
   generateRandomId,
   showToast,
 } from "../../utils/commonHelper";
+import Loader from "../../component/Loader";
 
 const NewProduct = ({ navigation, route }) => {
   //misc
@@ -51,7 +52,7 @@ const NewProduct = ({ navigation, route }) => {
     refetch: refetchCategoriesData,
   } = useGetallcategoriesQuery();
 
-  const [createProduct, { isLoadingCreateProduct }] =
+  const [createProduct, { isLoading: isLoadingCreateProduct }] =
     useCreateproductMutation();
 
   //func
@@ -88,6 +89,7 @@ const NewProduct = ({ navigation, route }) => {
         // text2: "Welcome to the app!",
         duration: 5000,
       });
+      navigation.navigate("adminpanel");
     } catch (error) {
       console.log("error", error);
       showToast({
@@ -140,111 +142,115 @@ const NewProduct = ({ navigation, route }) => {
           </Text>
         </View>
 
-        <ScrollView
-          style={{
-            padding: 20,
-            elevation: 10,
-            borderRadius: 10,
-            backgroundColor: colors.color3,
-          }}
-        >
-          <View
+        {isLoadingCreateProduct ? (
+          <Loader />
+        ) : (
+          <ScrollView
             style={{
-              justifyContent: "center",
-              height: 650,
+              padding: 20,
+              elevation: 10,
+              borderRadius: 10,
+              backgroundColor: colors.color3,
             }}
           >
             <View
               style={{
-                width: 80,
-                height: 80,
-                alignSelf: "center",
-                marginBottom: 20,
+                justifyContent: "center",
+                height: 650,
               }}
             >
-              <Avatar.Image
-                size={80}
+              <View
                 style={{
-                  backgroundColor: colors.color1,
+                  width: 80,
+                  height: 80,
+                  alignSelf: "center",
+                  marginBottom: 20,
                 }}
-                source={{
-                  uri: image ? image : null,
-                }}
-              />
-              <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("camera", { newProduct: true })
-                }
               >
-                <Avatar.Icon
-                  icon={"camera"}
-                  size={30}
-                  color={colors.color3}
+                <Avatar.Image
+                  size={80}
                   style={{
-                    backgroundColor: colors.color2,
-                    position: "absolute",
-                    bottom: 0,
-                    right: -5,
+                    backgroundColor: colors.color1,
+                  }}
+                  source={{
+                    uri: image ? image : null,
                   }}
                 />
-              </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("camera", { newProduct: true })
+                  }
+                >
+                  <Avatar.Icon
+                    icon={"camera"}
+                    size={30}
+                    color={colors.color3}
+                    style={{
+                      backgroundColor: colors.color2,
+                      position: "absolute",
+                      bottom: 0,
+                      right: -5,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              <TextInput
+                {...inputOptions}
+                placeholder="Name"
+                value={name}
+                onChangeText={setName}
+              />
+              <TextInput
+                {...inputOptions}
+                placeholder="Description"
+                value={description}
+                onChangeText={setDescription}
+              />
+
+              <TextInput
+                {...inputOptions}
+                placeholder="Price"
+                keyboardType="number-pad"
+                value={price}
+                onChangeText={setPrice}
+              />
+              <TextInput
+                {...inputOptions}
+                keyboardType="number-pad"
+                placeholder="Stock"
+                value={stock}
+                onChangeText={setStock}
+              />
+
+              <Text
+                style={{
+                  ...inputStyling,
+                  textAlign: "center",
+                  textAlignVertical: "center",
+                  borderRadius: 3,
+                }}
+                onPress={() => setVisible(true)}
+              >
+                {category}
+              </Text>
+
+              <Button
+                textColor={colors.color2}
+                style={{
+                  backgroundColor: colors.color1,
+                  margin: 20,
+                  padding: 6,
+                }}
+                onPress={submitHandler}
+                loading={isLoadingCreateProduct}
+                disabled={disableBtnCondition || isLoadingCreateProduct}
+              >
+                Create
+              </Button>
             </View>
-
-            <TextInput
-              {...inputOptions}
-              placeholder="Name"
-              value={name}
-              onChangeText={setName}
-            />
-            <TextInput
-              {...inputOptions}
-              placeholder="Description"
-              value={description}
-              onChangeText={setDescription}
-            />
-
-            <TextInput
-              {...inputOptions}
-              placeholder="Price"
-              keyboardType="number-pad"
-              value={price}
-              onChangeText={setPrice}
-            />
-            <TextInput
-              {...inputOptions}
-              keyboardType="number-pad"
-              placeholder="Stock"
-              value={stock}
-              onChangeText={setStock}
-            />
-
-            <Text
-              style={{
-                ...inputStyling,
-                textAlign: "center",
-                textAlignVertical: "center",
-                borderRadius: 3,
-              }}
-              onPress={() => setVisible(true)}
-            >
-              {category}
-            </Text>
-
-            <Button
-              textColor={colors.color2}
-              style={{
-                backgroundColor: colors.color1,
-                margin: 20,
-                padding: 6,
-              }}
-              onPress={submitHandler}
-              loading={loading}
-              disabled={disableBtnCondition || loading}
-            >
-              Create
-            </Button>
-          </View>
-        </ScrollView>
+          </ScrollView>
+        )}
       </View>
 
       <SelectComponent
