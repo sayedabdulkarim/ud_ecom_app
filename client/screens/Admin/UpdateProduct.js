@@ -35,11 +35,14 @@ const images = [
 ];
 
 const UpdateProduct = ({ navigation, route }) => {
+  //misc
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  const product = [];
+  // const product = [];
   const loading = false;
+  const loadingOther = false;
 
+  //state
   const [visible, setVisible] = useState(false);
   const [id] = useState(route.params.id);
   const [name, setName] = useState("");
@@ -48,12 +51,21 @@ const UpdateProduct = ({ navigation, route }) => {
   const [stock, setStock] = useState("");
   const [category, setCategory] = useState("");
   const [categoryID, setCategoryID] = useState("");
+  const [productId, setProductId] = useState("");
   const [categories, setCategories] = useState([
     { _id: "asd", category: "Laptop" },
     { _id: "assfd", category: "Footwear" },
     { _id: "assxd", category: "TopWear" },
   ]);
 
+  //query n mutation
+  const {
+    data: product,
+    error,
+    isLoading: isLoadingGetProductDetails,
+  } = useGetProductDetailsByIdQuery(route.params.id);
+
+  //func
   const submitHandler = () => {
     console.log(
       {
@@ -67,28 +79,31 @@ const UpdateProduct = ({ navigation, route }) => {
       },
       " update"
     );
-
-    // dispatch(updateProduct(id, name, description, price, stock, categoryID));
   };
-  const loadingOther = false;
-  //   const loadingOther = useMessageAndErrorOther(
-  //     dispatch,
-  //     navigation,
-  //     "adminpanel"
-  //   );
 
-  //   useEffect(() => {
-  //     dispatch(getProductDetails(id));
-  //   }, [dispatch, id, isFocused]);
-
+  //async
   useEffect(() => {
     if (product) {
-      setName(product.name);
-      setDescription(product.description);
-      setPrice(String(product.price));
-      setStock(String(product.stock));
-      setCategory(product.category?.category);
-      setCategoryID(product.category?._id);
+      const { _id, category, description, images, name, price, stock } =
+        product.product;
+      console.log(
+        {
+          _id,
+          category,
+          description,
+          images,
+          name,
+          price,
+          stock,
+        },
+        " prod details"
+      );
+      setName(name);
+      setDescription(description);
+      setPrice(String(price));
+      setStock(String(stock));
+      setCategory(category?.category);
+      setCategoryID(category?._id);
     }
   }, [product]);
 
@@ -107,7 +122,7 @@ const UpdateProduct = ({ navigation, route }) => {
           <Text style={formHeading}>Update Product</Text>
         </View>
 
-        {loading ? (
+        {isLoadingGetProductDetails ? (
           <Loader />
         ) : (
           <ScrollView
