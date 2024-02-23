@@ -13,7 +13,11 @@ import { Button, TextInput } from "react-native-paper";
 import SelectComponent from "../../component/SelectComponent";
 import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetProductDetailsByIdQuery } from "../../apiSlices/productApiSlice";
+import {
+  useGetProductDetailsByIdQuery,
+  useUpdateProductMutation,
+} from "../../apiSlices/productApiSlice";
+import { showToast } from "../../utils/commonHelper";
 
 const images = [
   {
@@ -63,22 +67,45 @@ const UpdateProduct = ({ navigation, route }) => {
     data: product,
     error,
     isLoading: isLoadingGetProductDetails,
+    refetch: productRefetch,
   } = useGetProductDetailsByIdQuery(route.params.id);
 
+  const [updateProduct, { isLoading: isLoadingUpdateProduct }] =
+    useUpdateProductMutation();
+
   //func
-  const submitHandler = () => {
+  const submitHandler = async () => {
+    const payload = { name, description, stock, category: categoryID, price };
+
     console.log(
       {
-        id,
-        name,
-        description,
-        price,
-        stock,
-        categoryID,
-        params: route.params,
+        payload,
       },
       " update"
     );
+
+    try {
+      console.log({ payload }, " payload");
+
+      const product = await updateProduct({ id: productId, data: payload });
+      console.log({ product }, "Product created successfully");
+      showToast({
+        type: "success",
+        text1: "Updated product Successfully!",
+        duration: 5000,
+      });
+      navigation.navigate("adminpanel");
+    } catch (error) {
+      console.log("error", error);
+      showToast({
+        type: "error",
+        text1: "Product Update Failed",
+        text2: error.data
+          ? error.data.message
+          : "An error occurred. Please try again.",
+        duration: 5000,
+      });
+    }
   };
 
   //async
@@ -104,8 +131,15 @@ const UpdateProduct = ({ navigation, route }) => {
       setStock(String(stock));
       setCategory(category?.category);
       setCategoryID(category?._id);
+      setProductId(_id);
     }
   }, [product]);
+
+  useEffect(() => {
+    if (isFocused) {
+      productRefetch();
+    }
+  }, [isFocused]);
 
   return (
     <>
