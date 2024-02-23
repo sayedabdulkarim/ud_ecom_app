@@ -59,3 +59,10 @@ export const quantityInCart = (arr, _id) => {
   console.log(item, " itemem quantity");
   return item;
 };
+
+export const generateRandomId = () => {
+  return (
+    Math.random().toString(36).substring(2, 15) +
+    Math.random().toString(36).substring(2, 15)
+  );
+};

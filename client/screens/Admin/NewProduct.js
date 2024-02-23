@@ -17,7 +17,11 @@ import {
   useCreateproductMutation,
   useGetallcategoriesQuery,
 } from "../../apiSlices/productApiSlice";
-import { convertImageToBase64, showToast } from "../../utils/commonHelper";
+import {
+  convertImageToBase64,
+  generateRandomId,
+  showToast,
+} from "../../utils/commonHelper";
 
 const NewProduct = ({ navigation, route }) => {
   //misc
@@ -52,13 +56,13 @@ const NewProduct = ({ navigation, route }) => {
 
   //func
   const submitHandler = async () => {
-    console.log("sunmitted");
     try {
       let base64Avatar = image;
 
       if (image && !image.startsWith("data:")) {
         base64Avatar = await convertImageToBase64(image);
       }
+      const publicId = generateRandomId();
 
       const formData = {
         name,
@@ -66,15 +70,29 @@ const NewProduct = ({ navigation, route }) => {
         stock,
         price,
         category: categoryID,
-        base64Avatar,
+        images: [
+          {
+            public_id: publicId,
+            url: base64Avatar,
+          },
+        ],
       };
 
-      console.log({ formData }, " formdata");
+      console.log({ formData }, " formData");
+
+      const product = await createProduct(formData);
+      console.log({ product }, "Product created successfully");
+      showToast({
+        type: "success",
+        text1: "Added product Successfully!",
+        // text2: "Welcome to the app!",
+        duration: 5000,
+      });
     } catch (error) {
-      console.log(" errr");
+      console.log("error", error);
       showToast({
         type: "error",
-        text1: "Signup Failed",
+        text1: "Product Creation Failed",
         text2: error.data
           ? error.data.message
           : "An error occurred. Please try again.",
