@@ -136,7 +136,7 @@ const UpdateProduct = ({ navigation, route }) => {
             <View
               style={{
                 justifyContent: "center",
-                height: 650,
+                // height: 650,
               }}
             >
               <Button
