@@ -20,24 +20,24 @@ import {
 } from "../../apiSlices/productApiSlice";
 import { showToast } from "../../utils/commonHelper";
 
-const images = [
-  {
-    url: "https://static.thenounproject.com/png/524455-200.png",
-    _id: "1",
-  },
-  {
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkXAUltzl1IumAF8kCEgFOGJz5nCSrVEfb-ZiqUQya4Q&s",
-    _id: "2",
-  },
-  {
-    url: "https://static.thenounproject.com/png/524455-200.png",
-    _id: "1",
-  },
-  {
-    url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkXAUltzl1IumAF8kCEgFOGJz5nCSrVEfb-ZiqUQya4Q&s",
-    _id: "2",
-  },
-];
+// const images = [
+//   {
+//     url: "https://static.thenounproject.com/png/524455-200.png",
+//     _id: "1",
+//   },
+//   {
+//     url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkXAUltzl1IumAF8kCEgFOGJz5nCSrVEfb-ZiqUQya4Q&s",
+//     _id: "2",
+//   },
+//   {
+//     url: "https://static.thenounproject.com/png/524455-200.png",
+//     _id: "1",
+//   },
+//   {
+//     url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkXAUltzl1IumAF8kCEgFOGJz5nCSrVEfb-ZiqUQya4Q&s",
+//     _id: "2",
+//   },
+// ];
 
 const UpdateProduct = ({ navigation, route }) => {
   //misc
@@ -58,6 +58,7 @@ const UpdateProduct = ({ navigation, route }) => {
   const [categoryID, setCategoryID] = useState("");
   const [productId, setProductId] = useState("");
   const [categories, setCategories] = useState([]);
+  const [images, setImages] = useState([]);
 
   //query n mutation
   const {
@@ -135,6 +136,7 @@ const UpdateProduct = ({ navigation, route }) => {
       setCategory(category?.category);
       setCategoryID(category?._id);
       setProductId(_id);
+      setImages(images);
     }
   }, [product]);
 

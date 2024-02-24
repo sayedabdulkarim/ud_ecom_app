@@ -30,6 +30,8 @@ const ProductImages = ({ navigation, route }) => {
   const submitHandler = () => {
     const myForm = new FormData();
 
+    console.log({ images }, " from prodct images ");
+
     // myForm.append("file", {
     //   uri: image,
     //   type: mime.getType(image),
@@ -41,6 +43,7 @@ const ProductImages = ({ navigation, route }) => {
 
   useEffect(() => {
     if (route.params?.image) {
+      console.log(params, " ppppppppppppppppppppppp");
       setImage(route.params.image);
       setImageChanged(true);
     }
