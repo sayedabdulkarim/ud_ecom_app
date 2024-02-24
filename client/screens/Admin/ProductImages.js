@@ -26,13 +26,37 @@ const ProductImages = ({ navigation, route }) => {
     useUpdateProductMutation();
 
   //func
-  const deleteHandler = (imageId) => {
-    // dispatch(deleteProductImage(productId, imageId));
+  const deleteHandler = async (imageId) => {
+    console.log({ imageId });
+    try {
+      let filteredImages = images.filter((o) => o._id !== imageId);
+      const payload = {
+        images: filteredImages,
+      };
+      console.log({ payload, productId, filteredImages });
+
+      const product = await updateProduct({ id: productId, data: payload });
+      console.log({ product }, "Product image deleted successfully");
+      showToast({
+        type: "success",
+        text1: "Product image deleted successfully!",
+        duration: 5000,
+      });
+      navigation.navigate("adminpanel");
+    } catch (error) {
+      console.log("error", error);
+      showToast({
+        type: "error",
+        text1: "Product Deletion Failed",
+        text2: error.data
+          ? error.data.message
+          : "An error occurred. Please try again.",
+        duration: 5000,
+      });
+    }
   };
 
   const submitHandler = async () => {
-    // console.log({ images, image }, " from prodct images ");
-
     try {
       let base64Avatar = image;
 
@@ -96,7 +120,9 @@ const ProductImages = ({ navigation, route }) => {
         <>
           {/* Heading */}
           <View style={{ marginBottom: 20, paddingTop: 70 }}>
-            <Text style={formHeading}>Images</Text>
+            <Text style={formHeading} onPress={() => console.log({ images })}>
+              Images
+            </Text>
           </View>
 
           <ScrollView
