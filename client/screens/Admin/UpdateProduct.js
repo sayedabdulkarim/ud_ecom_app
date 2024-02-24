@@ -15,6 +15,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   useGetProductDetailsByIdQuery,
+  useGetallcategoriesQuery,
   useUpdateProductMutation,
 } from "../../apiSlices/productApiSlice";
 import { showToast } from "../../utils/commonHelper";
@@ -56,11 +57,7 @@ const UpdateProduct = ({ navigation, route }) => {
   const [category, setCategory] = useState("");
   const [categoryID, setCategoryID] = useState("");
   const [productId, setProductId] = useState("");
-  const [categories, setCategories] = useState([
-    { _id: "asd", category: "Laptop" },
-    { _id: "assfd", category: "Footwear" },
-    { _id: "assxd", category: "TopWear" },
-  ]);
+  const [categories, setCategories] = useState([]);
 
   //query n mutation
   const {
@@ -72,6 +69,12 @@ const UpdateProduct = ({ navigation, route }) => {
 
   const [updateProduct, { isLoading: isLoadingUpdateProduct }] =
     useUpdateProductMutation();
+
+  const {
+    data: categoriesData,
+    error: categoriesError,
+    isLoading: categoriesLoading,
+  } = useGetallcategoriesQuery();
 
   //func
   const submitHandler = async () => {
@@ -140,6 +143,12 @@ const UpdateProduct = ({ navigation, route }) => {
       productRefetch();
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (categoriesData) {
+      setCategories(categoriesData?.categories);
+    }
+  }, [categoriesData, categoriesError, categoriesLoading]);
 
   return (
     <>
@@ -220,10 +229,13 @@ const UpdateProduct = ({ navigation, route }) => {
                   textAlign: "center",
                   textAlignVertical: "center",
                   borderRadius: 3,
+                  color: category ? "black" : "gray",
                 }}
                 onPress={() => setVisible(true)}
+                placeholder="Select Category"
               >
-                {category}
+                {category ? category : "Select Category"}
+                {/* {category} */}
               </Text>
 
               <Button
