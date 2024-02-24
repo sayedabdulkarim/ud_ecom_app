@@ -10,6 +10,7 @@ import {
   showToast,
 } from "../../utils/commonHelper";
 import { useUpdateProductMutation } from "../../apiSlices/productApiSlice";
+import Loader from "../../component/Loader";
 
 const ProductImages = ({ navigation, route }) => {
   //state
@@ -89,90 +90,95 @@ const ProductImages = ({ navigation, route }) => {
       }}
     >
       <Header back={true} />
+      {isLoadingUpdateProduct ? (
+        <Loader />
+      ) : (
+        <>
+          {/* Heading */}
+          <View style={{ marginBottom: 20, paddingTop: 70 }}>
+            <Text style={formHeading}>Images</Text>
+          </View>
 
-      {/* Heading */}
-      <View style={{ marginBottom: 20, paddingTop: 70 }}>
-        <Text style={formHeading}>Images</Text>
-      </View>
-
-      <ScrollView
-        style={{
-          marginBottom: 20,
-        }}
-      >
-        <View
-          style={{
-            backgroundColor: colors.color2,
-            padding: 40,
-            minHeight: 400,
-          }}
-        >
-          {images?.map((i) => (
-            <ImageCard
-              key={i._id}
-              src={i.url}
-              id={i._id}
-              deleteHandler={deleteHandler}
-            />
-          ))}
-        </View>
-      </ScrollView>
-
-      <View
-        style={{
-          padding: 20,
-          borderRadius: 10,
-          backgroundColor: colors.color3,
-        }}
-      >
-        <Image
-          style={{
-            backgroundColor: colors.color2,
-            width: 100,
-            height: 100,
-            alignSelf: "center",
-            resizeMode: "contain",
-          }}
-          source={{ uri: image }}
-        />
-
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-          }}
-        >
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() =>
-              navigation.navigate("camera", { updateProduct: true })
-            }
+          <ScrollView
+            style={{
+              marginBottom: 20,
+            }}
           >
-            <Avatar.Icon
-              icon={"camera"}
+            <View
               style={{
                 backgroundColor: colors.color2,
-                margin: 10,
+                padding: 40,
+                minHeight: 400,
               }}
-              size={30}
-              color={colors.color3}
-            />
-          </TouchableOpacity>
-        </View>
+            >
+              {images?.map((i) => (
+                <ImageCard
+                  key={i._id}
+                  src={i.url}
+                  id={i._id}
+                  deleteHandler={deleteHandler}
+                />
+              ))}
+            </View>
+          </ScrollView>
 
-        <Button
-          style={{
-            backgroundColor: colors.color1,
-            padding: 6,
-          }}
-          textColor={colors.color2}
-          loading={loading}
-          onPress={submitHandler}
-          disabled={!imageChanged}
-        >
-          Add
-        </Button>
-      </View>
+          <View
+            style={{
+              padding: 20,
+              borderRadius: 10,
+              backgroundColor: colors.color3,
+            }}
+          >
+            <Image
+              style={{
+                backgroundColor: colors.color2,
+                width: 100,
+                height: 100,
+                alignSelf: "center",
+                resizeMode: "contain",
+              }}
+              source={{ uri: image }}
+            />
+
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+              }}
+            >
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() =>
+                  navigation.navigate("camera", { updateProduct: true })
+                }
+              >
+                <Avatar.Icon
+                  icon={"camera"}
+                  style={{
+                    backgroundColor: colors.color2,
+                    margin: 10,
+                  }}
+                  size={30}
+                  color={colors.color3}
+                />
+              </TouchableOpacity>
+            </View>
+
+            <Button
+              style={{
+                backgroundColor: colors.color1,
+                padding: 6,
+              }}
+              textColor={colors.color2}
+              loading={loading}
+              onPress={submitHandler}
+              disabled={!imageChanged}
+            >
+              Add
+            </Button>
+          </View>
+        </>
+      )}
     </View>
   );
 };
