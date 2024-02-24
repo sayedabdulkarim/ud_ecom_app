@@ -4,13 +4,6 @@ import { colors, defaultStyle, formHeading } from "../../styles/common";
 import Header from "../../component/Header";
 import ImageCard from "../../component/ImageCard";
 import { Avatar, Button } from "react-native-paper";
-// import { useMessageAndErrorOther } from "../../utils/hooks";
-// import { useDispatch } from "react-redux";
-// import mime from "mime";
-// import {
-//   deleteProductImage,
-//   updateProductImage,
-// } from "../../redux/actions/otherAction";
 
 const ProductImages = ({ navigation, route }) => {
   const [images] = useState(route.params.images);
@@ -28,17 +21,7 @@ const ProductImages = ({ navigation, route }) => {
   };
 
   const submitHandler = () => {
-    const myForm = new FormData();
-
     console.log({ images }, " from prodct images ");
-
-    // myForm.append("file", {
-    //   uri: image,
-    //   type: mime.getType(image),
-    //   name: image.split("/").pop(),
-    // });
-
-    // dispatch(updateProductImage(productId, myForm));
   };
 
   useEffect(() => {
