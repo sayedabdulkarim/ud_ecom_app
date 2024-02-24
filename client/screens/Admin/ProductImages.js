@@ -4,29 +4,78 @@ import { colors, defaultStyle, formHeading } from "../../styles/common";
 import Header from "../../component/Header";
 import ImageCard from "../../component/ImageCard";
 import { Avatar, Button } from "react-native-paper";
+import {
+  convertImageToBase64,
+  generateRandomId,
+  showToast,
+} from "../../utils/commonHelper";
+import { useUpdateProductMutation } from "../../apiSlices/productApiSlice";
 
 const ProductImages = ({ navigation, route }) => {
+  //state
   const [images] = useState(route.params.images);
   const [productId] = useState(route.params.id);
   const [image, setImage] = useState(null);
   const [imageChanged, setImageChanged] = useState(false);
 
-  //   const dispatch = useDispatch();
-
   const loading = false;
-  //   const loading = useMessageAndErrorOther(dispatch, navigation, "adminpanel");
 
+  //queries n mutation
+  const [updateProduct, { isLoading: isLoadingUpdateProduct }] =
+    useUpdateProductMutation();
+
+  //func
   const deleteHandler = (imageId) => {
     // dispatch(deleteProductImage(productId, imageId));
   };
 
-  const submitHandler = () => {
-    console.log({ images }, " from prodct images ");
+  const submitHandler = async () => {
+    // console.log({ images, image }, " from prodct images ");
+
+    try {
+      let base64Avatar = image;
+
+      if (image && !image.startsWith("data:")) {
+        base64Avatar = await convertImageToBase64(image);
+      }
+      const publicId = generateRandomId();
+
+      const payload = {
+        images: [
+          ...images,
+          {
+            public_id: publicId,
+            url: base64Avatar,
+          },
+        ],
+      };
+      console.log({ payload, productId });
+
+      const product = await updateProduct({ id: productId, data: payload });
+      console.log({ product }, "Product created successfully");
+      showToast({
+        type: "success",
+        text1: "Updated product Successfully!",
+        duration: 5000,
+      });
+      navigation.navigate("adminpanel");
+    } catch (error) {
+      console.log("error", error);
+      showToast({
+        type: "error",
+        text1: "Product Update Failed",
+        text2: error.data
+          ? error.data.message
+          : "An error occurred. Please try again.",
+        duration: 5000,
+      });
+    }
   };
 
+  //async
   useEffect(() => {
     if (route.params?.image) {
-      console.log(params, " ppppppppppppppppppppppp");
+      // console.log(params, " ppppppppppppppppppppppp");
       setImage(route.params.image);
       setImageChanged(true);
     }
