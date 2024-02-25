@@ -25,6 +25,7 @@ router.put("/updateprofilepic", protectedRoutesWithParser, updateProfilePic);
 router.put("/changepassword", protectedRoutesWithParser, changePassword);
 router.post("/logout", protectedRoutesWithParser, logoutUser);
 
-router.route("/forgotpassword").post(forgotPassword).put(resetPassword);
+router.route("/forgotpassword").post(forgotPassword);
+router.route("/resetpassword").put(resetPassword);
 
 export default router;
