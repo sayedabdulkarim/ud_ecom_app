@@ -10,25 +10,54 @@ import {
 } from "../styles/common";
 import { Button, TextInput } from "react-native-paper";
 import Footer from "../component/Footer";
+import { showToast } from "../utils/commonHelper";
+import { useResetPasswordMutation } from "../apiSlices/userApiSlice";
 
-const Verify = ({ navigation }) => {
+const Verify = ({ navigation, route }) => {
   //misc
   const loading = false;
+  const { useremail } = route.params;
   //state
   const [otp, setOtp] = useState("");
   const [password, setPassword] = useState("");
 
+  //RTK Query n mutation
+  const [resetPassword, { isLoading: isLoadingresetPassword }] =
+    useResetPasswordMutation();
+
   //func
-  const handleSubmit = () => {
-    // alert({
+  const handleSubmit = async () => {
+    // console.log({
+    //   email: useremail,
     //   otp,
     //   password,
     // });
-    console.log({
-      otp,
-      password,
-    });
-    // navigation.navigate("login");
+    const payload = {
+      email: useremail,
+      otp: Number(otp),
+      newPassword: password,
+    };
+    try {
+      const user = await resetPassword(payload).unwrap();
+      console.log(user, " uswer from resetpassword");
+      showToast({
+        type: "success",
+        text1: user.message,
+        duration: 5000,
+      });
+      navigation.navigate("login");
+    } catch (error) {
+      console.log({ error }, " err from resetpassword");
+      const errorMessage =
+        error?.data?.message ??
+        "An error occurred. Please check your credentials and try again.";
+      showToast({
+        type: "error",
+        text1: "Reset Failed",
+        text2: errorMessage,
+        duration: 5000,
+      });
+    }
   };
 
   return (
@@ -41,7 +70,7 @@ const Verify = ({ navigation }) => {
             marginBottom: 20,
           }}
         >
-          <Text style={formHeading}>Forgot Password</Text>
+          <Text style={formHeading}>Reset Password</Text>
         </View>
 
         <View style={styles.container}>
@@ -60,7 +89,7 @@ const Verify = ({ navigation }) => {
             onChangeText={setPassword}
           />
           <Button
-            loading={loading}
+            loading={isLoadingresetPassword}
             style={styles.btn}
             textColor={colors.color2}
             disabled={otp === "" || password === ""}

@@ -22,6 +22,7 @@ const Forgotpassword = ({ navigation }) => {
   //RTK Query n mutation
   const [forgotPassword, { isLoading: isLoadingforgotPassword }] =
     useForgotPasswordMutation();
+
   //func
   const handleSubmit = async () => {
     console.log({ email });
@@ -35,7 +36,7 @@ const Forgotpassword = ({ navigation }) => {
         duration: 5000,
       });
       navigation.navigate("verify", {
-        email,
+        useremail: email,
       });
     } catch (error) {
       console.log({ error }, " err from login");
@@ -44,8 +45,7 @@ const Forgotpassword = ({ navigation }) => {
         "An error occurred. Please check your credentials and try again.";
       showToast({
         type: "error",
-        text1: "Login Failed",
-        text2: errorMessage,
+        text1: errorMessage,
         duration: 5000,
       });
     }
