@@ -34,7 +34,9 @@ const Forgotpassword = ({ navigation }) => {
         text2: user.messageTwo,
         duration: 5000,
       });
-      navigation.navigate("verify");
+      navigation.navigate("verify", {
+        email,
+      });
     } catch (error) {
       console.log({ error }, " err from login");
       const errorMessage =
