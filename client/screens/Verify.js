@@ -20,11 +20,15 @@ const Verify = ({ navigation }) => {
 
   //func
   const handleSubmit = () => {
-    alert({
+    // alert({
+    //   otp,
+    //   password,
+    // });
+    console.log({
       otp,
       password,
     });
-    navigation.navigate("login");
+    // navigation.navigate("login");
   };
 
   return (

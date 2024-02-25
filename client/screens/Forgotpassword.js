@@ -71,7 +71,7 @@ const Forgotpassword = ({ navigation }) => {
             onChangeText={setEmail}
           />
           <Button
-            loading={loading}
+            loading={isLoadingforgotPassword}
             style={styles.btn}
             textColor={colors.color2}
             disabled={email === ""}
