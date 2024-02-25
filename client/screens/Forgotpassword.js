@@ -10,6 +10,8 @@ import {
 } from "../styles/common";
 import { Button, TextInput } from "react-native-paper";
 import Footer from "../component/Footer";
+import { useForgotPasswordMutation } from "../apiSlices/userApiSlice";
+import { showToast } from "../utils/commonHelper";
 
 const Forgotpassword = ({ navigation }) => {
   //misc
@@ -17,12 +19,34 @@ const Forgotpassword = ({ navigation }) => {
   //state
   const [email, setEmail] = useState("");
 
+  //RTK Query n mutation
+  const [forgotPassword, { isLoading: isLoadingforgotPassword }] =
+    useForgotPasswordMutation();
   //func
-  const handleSubmit = () => {
-    alert({
-      email,
-    });
-    navigation.navigate("verify");
+  const handleSubmit = async () => {
+    console.log({ email });
+    try {
+      const user = await forgotPassword({ email }).unwrap();
+      console.log(user, " uswer from forgotpassword");
+      showToast({
+        type: "success",
+        text1: user.messageOne,
+        text2: user.messageTwo,
+        duration: 5000,
+      });
+      navigation.navigate("verify");
+    } catch (error) {
+      console.log({ error }, " err from login");
+      const errorMessage =
+        error?.data?.message ??
+        "An error occurred. Please check your credentials and try again.";
+      showToast({
+        type: "error",
+        text1: "Login Failed",
+        text2: errorMessage,
+        duration: 5000,
+      });
+    }
   };
 
   return (

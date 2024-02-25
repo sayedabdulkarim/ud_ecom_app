@@ -336,7 +336,8 @@ const forgotPassword = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json({
-    message: `OTP sent successfully to ${user.email}. Please check your email.`,
+    messageOne: `OTP sent successfully to ${user.email}.`,
+    messageTwo: `Please check your email.`,
   });
 });
 
